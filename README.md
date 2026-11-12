@@ -1,64 +1,23 @@
 # DevVerse
 
-DevVerse is an **AI-native Unified Developer Operating System** designed to revolutionize the way developers and students learn, build, collaborate, and deploy software. Powered by the AWS ecosystem and integrated AI agents, DevVerse delivers everything from a full cloud IDE to intelligent mentoring, project hosting, technical blogging, and one-click deployment — all in a single, seamless platform.
+**A single place where developers learn, build, get help, share and ship — guided by an AI that actually knows them.**
 
----
+DevVerse brings a browser workspace, a personal AI assistant, coding practice, one-click deploys and a developer
+community together around one idea: a **Developer Profile** that learns your skills, struggles and growth from
+what you actually do — and uses it to help you everywhere.
 
-## What is DevVerse?
+> **Status:** requirements & design phase. No application code yet.
 
-> “The only platform where learning, coding, collaboration, and deployment exist as a single, continuous AI-guided workflow.”
+## Documentation
 
-DevVerse tackles the modern developer's **Fragmentation Fatigue** by eliminating the need to juggle multiple disconnected platforms like code editors, StackOverflow, Udemy, GitHub, and AWS Console.
+| Doc | What's in it |
+|-----|--------------|
+| [01 — Product Vision](docs/01-product-vision.md) | Problem, vision, personas, principles, non-goals |
+| [02 — User Journeys](docs/02-user-journeys.md) | End-to-end scenarios V1 must support |
+| [03 — Functional Requirements](docs/03-functional-requirements.md) | What the system does, by module, with priorities |
+| [04 — Non-Functional Requirements](docs/04-non-functional-requirements.md) | Performance, security, privacy, AI quality, cost targets |
+| [05 — Scope, Roadmap & Decisions](docs/05-scope-and-roadmap.md) | V1 milestones, later phases, decision log, open questions |
+| [07 — Tech Stack](docs/07-tech-stack.md) | Google-first stack for the hackathon build |
+| [docs/archive/](docs/archive/) | Earlier drafts — superseded, kept for history |
 
----
-
-## Core Features
-
-| Module                | Description                                                                 |
-|----------------------|-----------------------------------------------------------------------------|
-| 💻 Cloud IDE          | Browser-based coding environment with inline AI code suggestions            |
-| 🧠 AI Mentor          | Real-time context-aware debugging, explanation, and learning suggestions    |
-| 📘 Learning Hub       | Track weaknesses, gain insights, and explore AI-curated resources           |
-| 🌍 Community          | Developer Q&A, project showcases, collaborative debugging                   |
-| ✍️ Blog System        | AI-assisted technical blogging with community visibility                    |
-| 🚀 One-Click Deploy   | Instantly deploy microservices to AWS (Lambda, Fargate, Amplify, etc.)       |
-
----
-
-## Powered By AWS
-
-DevVerse is 100% AWS-native and uses:
-
-- **Amazon Bedrock** – LLMs for AI mentoring, blogging, and semantic search
-- **Amazon CodeCatalyst / Cloud9** – IDE hosting and runtime
-- **Amazon S3 & EBS** – Code, asset, and project storage
-- **Amazon DynamoDB** – User metadata, project states
-- **Amazon Cognito** – Authentication and user roles
-- **AWS Lambda / Fargate** – Zero-config backend execution
-- **Amazon OpenSearch** – Contextual vector search
-- **CloudWatch / X-Ray** – Logs and observability
-- **Amazon Amplify / CloudFront** – Web hosting and global delivery
-
----
-
-## Tech Stack
-
-- **Frontend:** React, TypeScript, Monaco Editor
-- **Backend:** FastAPI, AWS Lambda, DynamoDB
-- **AI Layer:** Bedrock (Claude, Titan), OpenSearch
-- **DevOps:** CodeCatalyst, Amplify, Fargate
-- **Security:** IAM, Cognito, Secrets Manager
-
----
-
-## Getting Started (For Devs)
-
-```bash
-# Clone this repo
-git clone https://github.com/devverse/devverse.git
-
-# Install dependencies
-cd devverse && npm install
-
-# Launch locally (dev mode)
-npm run dev
+For AI coding agents: start with [AGENTS.md](AGENTS.md).

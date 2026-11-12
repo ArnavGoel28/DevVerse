@@ -1,0 +1,4655 @@
+﻿Tab 1
+Step 1: Functional Requirements
+User Management
+Users should be able to:
+* Register/Login
+* OAuth via GitHub
+* Manage profile
+* Connect repositories
+* View activity history
+GitHub Integration
+Users should be able to:
+* Connect GitHub account
+* Import repositories
+* Open repository in DevVerse IDE
+* Sync commits
+* Create pull requests
+* View repository insights
+AI Workspace
+Users should be able to:
+* Open projects
+* Edit files
+* Run terminal commands
+* Ask AI questions
+* Generate code
+* Refactor code
+* Debug code
+* Generate documentation
+Developer Intelligence
+System should:
+* Track skills
+* Track mistakes
+* Track technologies used
+* Track project history
+* Track learning progress
+* Generate personalized recommendations
+Learning System
+Users should:
+* View learning roadmap
+* Receive AI-generated study plans
+* Learn from project activity
+* Get skill gap analysis
+Community
+Users should:
+* Create posts
+* Ask questions
+* Write articles
+* Comment
+* Upvote
+* Follow topics
+Deployment
+Users should:
+* Deploy projects
+* Configure environment variables
+* Connect cloud provider
+* View deployment logs
+* Rollback deployments
+Non Functional Requirements
+This is where most architectures fail.
+Scalability
+Target:
+10M Registered Users
+1M Monthly Active Users
+100K Daily Active Users
+Availability
+Target:
+99.95%
+IDE Latency
+Editor operations:
+<100ms
+AI Response
+Agent execution:
+2-8 seconds
+Search
+Search latency:
+<200ms
+Community Feed
+Feed generation:
+<300ms
+Deployment Trigger
+Deployment start:
+<5 seconds
+Security
+Requirements:
+* OAuth2
+* RBAC
+* JWT
+* Encryption at rest
+* Encryption in transit
+Core Domain Entities
+Now we define the actual business entities.
+This is more important than services.
+User
+User {
+ id: UUID
+ githubId: string
+
+
+ username: string
+ email: string
+
+
+ avatarUrl: string
+ bio: string
+
+
+ createdAt
+ updatedAt
+}
+Developer Profile
+This is your moat.
+DeveloperProfile {
+ userId: UUID
+
+
+ skills: Skill[]
+
+
+ strengths: string[]
+
+
+ weaknesses: string[]
+
+
+ interests: string[]
+
+
+ learningScore: number
+
+
+ codingScore: number
+
+
+ deploymentScore: number
+
+
+ communityScore: number
+}
+Repository
+Repository {
+ id: UUID
+
+
+ githubRepoId: string
+
+
+ ownerId: UUID
+
+
+ name: string
+
+
+ description: string
+
+
+ language: string
+
+
+ visibility: string
+}
+Workspace
+Workspace {
+ id: UUID
+
+
+ userId: UUID
+
+
+ repoId: UUID
+
+
+ status:
+   RUNNING
+   STOPPED
+
+
+ createdAt
+}
+Agent Task
+AgentTask {
+ id: UUID
+
+
+ userId: UUID
+
+
+ workspaceId: UUID
+
+
+ type:
+   CODE
+   REVIEW
+   DOC
+   RESEARCH
+
+
+ status
+
+
+ createdAt
+}
+Skill
+Skill {
+ id
+
+
+ name
+
+
+ category
+
+
+ confidenceScore
+}
+Learning Event
+LearningEvent {
+ id
+
+
+ userId
+
+
+ skillId
+
+
+ source:
+   PROJECT
+   AI
+   COMMUNITY
+
+
+ scoreDelta
+
+
+ timestamp
+}
+Community Post
+Post {
+ id
+
+
+ authorId
+
+
+ type:
+   QUESTION
+   ARTICLE
+   DISCUSSION
+
+
+ title
+
+
+ content
+
+
+ tags[]
+
+
+ votes
+
+
+ createdAt
+}
+Deployment
+Deployment {
+ id
+
+
+ projectId
+
+
+ environment
+
+
+ status
+
+
+ logs
+
+
+ createdAt
+}
+High Level Architecture
+                    CloudFront
+                         |
+                   API Gateway
+                         |
+                 ----------------
+                 |              |
+             BFF Layer      WebSocket
+                 |
+--------------------------------------------------
+|       |        |        |       |       |       |
+Auth   IDE    AI      Community  Learning Deploy Search
+Svc    Svc    Svc      Svc       Svc      Svc    Svc
+                 |
+           Event Bus
+                 |
+------------------------------------------------
+|          |          |          |             |
+Analytics  Profile   Notify    SearchIdx    AI Memory
+Service Breakdown
+I would start with only 8 services.
+Identity Service
+Responsibilities:
+Authentication
+Authorization
+Github OAuth
+JWT
+Database:
+PostgreSQL
+Workspace Service
+Responsibilities:
+Repository sync
+Workspace lifecycle
+File metadata
+Database:
+PostgreSQL
+AI Service
+Responsibilities:
+LLM Routing
+Agent Orchestration
+Prompt Management
+Database:
+Redis
+Vector DB
+Developer Intelligence Service
+Most important service.
+Responsibilities:
+Skill Tracking
+Weakness Detection
+Learning Analytics
+Recommendations
+Database:
+Neo4j
+PostgreSQL
+Community Service
+Responsibilities:
+Posts
+Comments
+Votes
+Feed
+Database:
+PostgreSQL
+OpenSearch
+Deployment Service
+Responsibilities:
+Build
+Deploy
+Rollback
+Logs
+Database:
+PostgreSQL
+S3
+Search Service
+Responsibilities:
+Semantic Search
+Full Text Search
+Database:
+OpenSearch
+Vector Store
+Notification Service
+Responsibilities:
+Email
+In App
+Push
+Database:
+Redis
+Core APIs
+Authentication
+POST /auth/github
+
+
+POST /auth/callback
+
+
+POST /auth/refresh
+
+
+GET /auth/me
+Repositories
+GET /repos
+
+
+GET /repos/{id}
+
+
+POST /repos/import
+
+
+POST /repos/sync
+Workspaces
+POST /workspaces
+
+
+GET /workspaces/{id}
+
+
+DELETE /workspaces/{id}
+
+
+POST /workspaces/{id}/start
+
+
+POST /workspaces/{id}/stop
+AI
+POST /ai/chat
+
+
+POST /ai/code-review
+
+
+POST /ai/explain
+
+
+POST /ai/refactor
+
+
+POST /ai/document
+Developer Profile
+GET /profile
+
+
+GET /profile/skills
+
+
+GET /profile/recommendations
+
+
+GET /profile/learning-path
+Community
+POST /posts
+
+
+GET /posts
+
+
+GET /posts/{id}
+
+
+POST /posts/{id}/vote
+
+
+POST /posts/{id}/comment
+Deployments
+POST /deployments
+
+
+GET /deployments
+
+
+GET /deployments/{id}
+
+
+POST /deployments/{id}/rollback
+Event Driven Architecture
+Everything important should emit events.
+Examples:
+UserRegistered
+
+
+RepositoryConnected
+
+
+WorkspaceCreated
+
+
+AgentTaskStarted
+
+
+AgentTaskCompleted
+
+
+SkillUpdated
+
+
+ArticlePublished
+
+
+DeploymentStarted
+
+
+DeploymentSucceeded
+
+
+DeploymentFailed
+
+
+Tab 3
+1. Developer Intelligence Service      ✅
+2. AI Gateway + Agent Architecture     ✅
+
+
+3. Knowledge & Memory System
+
+
+4. IDE / Workspace Architecture
+
+
+5. GitHub Integration Service
+
+
+6. Deployment Platform
+
+
+7. Community Platform
+
+
+
+
+Developer Intelligence Service
+The Developer Intelligence Service (DIS) is the central brain of DevVerse.
+Its purpose is to continuously build a Developer Digital Twin from everything a developer does across the platform.
+                   GitHub
+                      │
+                      ▼
+
+
+IDE Events ──► Event Stream ◄── AI Events
+                      │
+                      ▼
+
+
+           Developer Intelligence Service
+                      │
+                      ▼
+
+
+              Developer Digital Twin
+                      │
+     ┌────────────────┼────────────────┐
+     ▼                ▼                ▼
+
+
+Skill Graph     Growth Model     Recommendations
+     │                │                │
+     └────────────────┼────────────────┘
+                      ▼
+
+
+            Personalized AI Assistant
+The service does not store chats.
+The service stores evidence about developer behavior.
+________________
+
+
+Core Responsibilities
+The service owns only four things:
+1. Developer Profile
+Current state of the developer.
+Example:
+{
+ "userId": "123",
+
+
+ "experienceLevel": "Intermediate",
+
+
+ "primaryLanguages": [
+   "TypeScript",
+   "Python"
+ ],
+
+
+ "focusAreas": [
+   "Backend",
+   "Cloud"
+ ],
+
+
+ "topSkills": [
+   "Docker",
+   "NodeJS",
+   "PostgreSQL"
+ ]
+}
+________________
+
+
+2. Skill Graph
+Tracks what the user knows.
+Not a flat list.
+NodeJS
+├── Express
+├── JWT
+├── Middleware
+└── REST APIs
+
+
+Docker
+├── Dockerfiles
+├── Volumes
+├── Networking
+└── Compose
+Each node contains:
+{
+ "skillId": "docker",
+
+
+ "confidence": 0.74,
+
+
+ "lastUsed": "2026-08-17",
+
+
+ "evidenceCount": 92
+}
+________________
+
+
+3. Weakness Graph
+Tracks recurring friction.
+Example:
+{
+ "topic": "Environment Variables",
+
+
+ "occurrences": 15,
+
+
+ "severity": 0.81,
+
+
+ "trend": "increasing"
+}
+Examples:
+Docker Networking
+
+
+Database Indexes
+
+
+Kubernetes Config
+
+
+Testing
+
+
+System Design
+This becomes extremely valuable.
+Most systems track success.
+Very few track repeated struggles.
+________________
+
+
+4. Growth Timeline
+Tracks improvement.
+Example:
+Docker
+
+
+Jan 2026 → 0.21
+
+
+Mar 2026 → 0.37
+
+
+Jun 2026 → 0.61
+
+
+Aug 2026 → 0.82
+This enables:
+Monthly Progress
+
+
+Skill Velocity
+
+
+Learning Trends
+
+
+Developer Insights
+________________
+
+
+Internal Components
+Inside the service.
+Not separate microservices.
+Developer Intelligence Service
+
+
+├── Event Consumer
+├── Feature Extraction Engine
+├── Skill Analyzer
+├── Weakness Analyzer
+├── Growth Analyzer
+├── Recommendation Engine
+└── Profile Builder
+________________
+
+
+Event Sources
+The service learns entirely from events.
+IDE Events
+{
+ "eventType": "FILE_SAVED",
+
+
+ "language": "typescript",
+
+
+ "filesChanged": 4
+}
+________________
+
+
+GitHub Events
+{
+ "eventType": "PR_MERGED",
+
+
+ "repository": "devverse"
+}
+________________
+
+
+AI Events
+{
+ "eventType": "AI_HELP_REQUESTED",
+
+
+ "topic": "docker networking"
+}
+________________
+
+
+Deployment Events
+{
+ "eventType": "DEPLOYMENT_FAILED",
+
+
+ "reason": "missing_env"
+}
+________________
+
+
+Community Events
+{
+ "eventType": "POST_CREATED",
+
+
+ "tags": [
+   "aws",
+   "docker"
+ ]
+}
+________________
+
+
+Database Architecture
+I would use exactly four data stores.
+________________
+
+
+PostgreSQL (Source of Truth)
+Stores:
+developer_profiles
+
+
+skills
+
+
+user_skills
+
+
+weaknesses
+
+
+recommendations
+
+
+growth_snapshots
+________________
+
+
+Neo4j (Knowledge Graph)
+Stores relationships.
+User
+ │
+USES
+ │
+Docker
+
+
+User
+ │
+LEARNS
+ │
+Kubernetes
+
+
+Docker
+ │
+RELATED_TO
+ │
+Kubernetes
+This powers recommendations.
+________________
+
+
+pgvector
+Stores embeddings.
+Examples:
+AI Conversations
+
+
+Project Summaries
+
+
+Architecture Notes
+
+
+Learning Notes
+Since you're already using PostgreSQL:
+Aurora PostgreSQL
++
+pgvector
+is sufficient initially.
+No Pinecone.
+No Weaviate.
+No extra complexity.
+________________
+
+
+Redis
+Stores:
+Hot Profiles
+
+
+Recent Activity
+
+
+Recommendations Cache
+________________
+
+
+Public APIs
+Only expose read-heavy APIs.
+The service should never be updated through REST.
+Everything comes from events.
+________________
+
+
+Profile
+GET /profiles/{userId}
+Returns:
+{
+ "skills": [],
+ "weaknesses": [],
+ "strengths": [],
+ "growthScore": 84
+}
+________________
+
+
+Skills
+GET /profiles/{userId}/skills
+________________
+
+
+Weaknesses
+GET /profiles/{userId}/weaknesses
+________________
+
+
+Recommendations
+GET /profiles/{userId}/recommendations
+________________
+
+
+Timeline
+GET /profiles/{userId}/growth
+________________
+
+
+Event Contracts
+The service subscribes to:
+workspace.file.saved
+
+
+workspace.project.created
+
+
+github.pr.created
+
+
+github.pr.merged
+
+
+github.commit.pushed
+
+
+ai.chat.completed
+
+
+ai.task.completed
+
+
+deployment.started
+
+
+deployment.failed
+
+
+deployment.succeeded
+
+
+community.post.created
+The service publishes:
+developer.profile.updated
+
+
+developer.skill.updated
+
+
+developer.weakness.detected
+
+
+developer.milestone.reached
+
+
+developer.recommendation.generated
+________________
+
+
+The Most Important Data Model
+Everything should revolve around a single concept:
+Evidence
+Instead of:
+User knows Docker
+store:
+{
+ "evidenceType": "DEPLOYMENT",
+
+
+ "skill": "docker",
+
+
+ "weight": 8,
+
+
+ "source": "deployment-service",
+
+
+ "timestamp": "2026-08-17"
+}
+Another:
+{
+ "evidenceType": "AI_HELP",
+
+
+ "skill": "docker",
+
+
+ "weight": 2
+}
+The profile is then computed from accumulated evidence.
+________________
+
+
+Final Architecture Verdict
+If we were starting DevVerse tomorrow, the Developer Intelligence Service would be:
+One Microservice
+│
+├── Event-Driven
+├── PostgreSQL + pgvector
+├── Neo4j
+├── Redis
+│
+├── Skill Graph
+├── Weakness Graph
+├── Growth Timeline
+├── Recommendation Engine
+│
+└── Developer Digital Twin
+The Developer Digital Twin is the final output.
+AI Gateway + Agent Architecture
+Goals of the AI Platform
+The AI layer should be able to:
+Coding
+Build JWT auth
+Refactor service
+Explain code
+Generate tests
+Review PR
+Learning
+What should I learn next?
+Why do I keep failing deployments?
+Explain Kubernetes
+Project Assistance
+Create architecture
+Generate APIs
+Generate documentation
+DevOps
+Deploy project
+Create Dockerfile
+Create Terraform
+Analyze logs
+Personal Growth
+Track weaknesses
+Recommend learning
+Analyze progress
+________________
+
+
+High-Level Architecture
+                  User
+                    │
+                    ▼
+
+
+        Personal AI Assistant API
+                    │
+                    ▼
+
+
+              AI Gateway
+                    │
+                    ▼
+
+
+             Context Engine
+                    │
+                    ▼
+
+
+         Agent Orchestrator
+                    │
+   ┌────────────┬─────────────┬────────────┐
+   ▼            ▼             ▼            ▼
+
+
+Coding      Learning      Research     Deployment
+Agent        Agent         Agent         Agent
+
+
+   └────────────┬─────────────┬────────────┘
+                ▼
+
+
+           Tool Registry
+                │
+                ▼
+
+
+  GitHub   IDE   Search   Deploy   Profile
+________________
+
+
+Core Services
+I would split the AI platform into 5 major components.
+1. AI Gateway Service
+This is the public entry point.
+Responsibilities:
+Authentication
+Rate Limiting
+Model Routing
+Streaming
+Conversation API
+Request Validation
+APIs:
+POST /ai/chat
+
+
+POST /ai/task
+
+
+GET /ai/tasks/{id}
+
+
+GET /ai/models
+The Gateway should never execute agents.
+Only route requests.
+________________
+
+
+AI Gateway Database
+Keep it lightweight.
+Redis
+Stores:
+Rate Limits
+Request Cache
+Streaming Sessions
+________________
+
+
+Request Flow
+User Prompt
+   │
+   ▼
+AI Gateway
+   │
+   ▼
+Context Engine
+   │
+   ▼
+Agent Orchestrator
+________________
+
+
+2. Context Engine
+This may become the most important component in DevVerse.
+Most AI systems retrieve:
+Vector Search
+and stop.
+DevVerse should assemble context from multiple sources.
+________________
+
+
+Context Sources
+Developer Intelligence
+Skills
+Weaknesses
+Goals
+History
+________________
+
+
+Workspace
+Files
+Architecture
+Open Files
+Project Structure
+________________
+
+
+GitHub
+Commits
+PRs
+Issues
+Repositories
+________________
+
+
+Memory
+Past Conversations
+Decisions
+Project Notes
+________________
+
+
+Knowledge Base
+Docs
+Tutorials
+Architecture Guides
+________________
+
+
+Context Assembly Pipeline
+User Query
+    │
+Intent Detection
+    │
+Context Retrieval
+    │
+Context Ranking
+    │
+Compression
+    │
+Prompt Assembly
+Output:
+{
+ "developer_context": {},
+ "workspace_context": {},
+ "memory_context": {},
+ "knowledge_context": {}
+}
+________________
+
+
+3. Agent Orchestrator
+This is the brain.
+Not the LLM.
+The orchestrator decides:
+Which agent?
+Which tools?
+Which model?
+Parallel?
+Sequential?
+________________
+
+
+Agent Lifecycle
+REQUEST_RECEIVED
+       │
+       ▼
+
+
+TASK_PLANNED
+       │
+       ▼
+
+
+TOOLS_SELECTED
+       │
+       ▼
+
+
+EXECUTING
+       │
+       ▼
+
+
+COMPLETED
+________________
+
+
+Agent State Machine
+PENDING
+
+
+PLANNING
+
+
+WAITING_FOR_TOOL
+
+
+EXECUTING
+
+
+COMPLETED
+
+
+FAILED
+
+
+CANCELLED
+________________
+
+
+Task Model
+interface AgentTask {
+ id: string
+
+
+ userId: string
+
+
+ type:
+   | "CODE"
+   | "LEARN"
+   | "RESEARCH"
+   | "DEPLOY"
+
+
+ status: string
+
+
+ contextId: string
+
+
+ plan: Plan
+
+
+ result: Result
+}
+________________
+
+
+Agent Types
+I would start with only four.
+Not ten.
+________________
+
+
+Coding Agent
+Tools:
+Read File
+Write File
+Search Code
+Git Operations
+Terminal
+________________
+
+
+Learning Agent
+Tools:
+Developer Profile
+Skill Graph
+Knowledge Base
+________________
+
+
+Research Agent
+Tools:
+Documentation Search
+Web Search
+Knowledge Graph
+________________
+
+
+Deployment Agent
+Tools:
+Build
+Deploy
+Logs
+Infrastructure
+________________
+
+
+Why Only Four?
+Because many agent architectures become unmaintainable.
+Start simple.
+You can always add:
+Review Agent
+Testing Agent
+Architecture Agent
+later.
+________________
+
+
+4. Tool Registry
+Agents should never call services directly.
+Use a registry.
+________________
+
+
+Tool Definition
+interface Tool {
+ id: string
+
+
+ name: string
+
+
+ description: string
+
+
+ inputSchema: JSONSchema
+
+
+ permissions: string[]
+
+
+ timeout: number
+}
+________________
+
+
+Example:
+{
+ "name": "read_file",
+ "permissions": ["workspace.read"]
+}
+________________
+
+
+Initial Tool Set
+Workspace:
+read_file
+write_file
+search_code
+list_directory
+GitHub:
+get_repo
+create_pr
+list_commits
+Developer Intelligence:
+get_skill_graph
+get_weaknesses
+get_learning_plan
+Deployment:
+deploy_project
+get_logs
+rollback
+________________
+
+
+5. Model Routing Layer
+Not all requests should hit the same model.
+________________
+
+
+Coding
+Claude Sonnet
+GPT
+Qwen Coder
+________________
+
+
+Learning
+GPT
+Claude
+Gemini
+________________
+
+
+Fast Tasks
+Small Model
+Examples:
+Tag generation
+Classification
+Summaries
+________________
+
+
+Personal AI Assistant
+This is the user-facing AI.
+Important distinction:
+Assistant != Agent
+The Assistant coordinates agents.
+________________
+
+
+Architecture:
+User
+ │
+ ▼
+Personal Assistant
+ │
+ ▼
+Agent Orchestrator
+________________
+
+
+Example Query
+Why do my deployments keep failing?
+Assistant performs:
+Step 1
+Get profile
+Weakness:
+Environment Variables
+________________
+
+
+Step 2
+Get deployment history
+6 failures
+________________
+
+
+Step 3
+Analyze logs
+Missing ENV
+________________
+
+
+Step 4
+Generate answer
+You repeatedly forget environment variables.
+Now the response becomes personalized.
+________________
+
+
+Event Architecture
+Every AI interaction should generate events.
+Examples:
+ai.task.created
+
+
+ai.task.completed
+
+
+ai.tool.executed
+
+
+ai.context.retrieved
+
+
+ai.recommendation.generated
+Developer Intelligence consumes these.
+________________
+
+
+Storage Design
+PostgreSQL
+Stores:
+Tasks
+Plans
+Tool Runs
+Metadata
+________________
+
+
+Redis
+Stores:
+Agent State
+
+
+Streaming
+
+
+Short-term Context
+________________
+
+
+pgvector
+Stores:
+Conversation Embeddings
+
+
+Project Summaries
+
+
+Memory Embeddings
+________________
+
+
+Critical Architectural Decision
+I would not store full conversation history as the primary memory system.
+Instead:
+Conversation
+    │
+    ▼
+Fact Extraction
+    │
+    ▼
+Developer Memory
+Example:
+Bad:
+Store 1000 chats
+Good:
+User prefers TypeScript
+
+
+User struggles with Docker networking
+
+
+User wants backend engineering role
+Store facts, not transcripts.
+________________
+
+
+Final AI Platform Architecture
+User
+│
+▼
+Personal AI Assistant
+│
+▼
+AI Gateway
+│
+▼
+Context Engine
+│
+▼
+Agent Orchestrator
+│
+├── Coding Agent
+├── Learning Agent
+├── Research Agent
+└── Deployment Agent
+│
+▼
+Tool Registry
+│
+├── Workspace Tools
+├── GitHub Tools
+├── Intelligence Tools
+└── Deployment Tools
+│
+▼
+Services
+
+
+Knowledge & Memory System
+The system should answer:
+"What information should the AI know right now to help this developer?"
+Not:
+"What are the nearest embeddings?"
+________________
+
+
+High-Level Architecture
+                  Data Sources
+
+
+       IDE        GitHub       AI Chats
+        │            │             │
+        └──────┬─────┴─────┬───────┘
+               ▼
+
+
+         Knowledge Ingestion
+
+
+               ▼
+
+
+       Memory Processing Layer
+
+
+               ▼
+
+
+┌────────────┬─────────────┬─────────────┐
+▼            ▼             ▼             ▼
+
+
+Session    Developer     Project      Knowledge
+Memory      Memory       Memory        Memory
+
+
+└────────────┬─────────────┬─────────────┘
+             ▼
+
+
+         Context Engine
+
+
+             ▼
+
+
+       Agent Orchestrator
+________________
+
+
+Core Design Principle
+Not all information should be stored the same way.
+Most systems make this mistake.
+Example:
+"User prefers TypeScript"
+Should not become an embedding.
+Example:
+"How JWT refresh tokens work"
+Should not become a relational row.
+Different knowledge requires different storage.
+________________
+
+
+Four Memory Types
+1. Session Memory
+Short-term working memory.
+Equivalent to RAM.
+Stores:
+Current conversation
+
+
+Current workspace
+
+
+Current task
+
+
+Current open files
+
+
+Recent AI actions
+Example:
+User is debugging auth service
+TTL:
+24 hours
+Storage:
+Redis
+________________
+
+
+2. Developer Memory
+Long-term personal memory.
+Stores:
+Preferences
+
+
+Goals
+
+
+Skills
+
+
+Weaknesses
+
+
+Learning history
+
+
+Technology interests
+Example:
+{
+ "fact": "Prefers TypeScript",
+ "confidence": 0.91
+}
+Another:
+{
+ "fact": "Interested in Cloud Engineering",
+ "confidence": 0.87
+}
+Storage:
+PostgreSQL
+Not vector DB.
+These are facts.
+________________
+
+
+3. Project Memory
+Most important memory type.
+Stores:
+Architecture
+
+
+Design decisions
+
+
+Tech stack
+
+
+Open issues
+
+
+Service relationships
+
+
+Project conventions
+Example:
+{
+ "project": "devverse",
+ "architecture": "microservices",
+ "database": "postgres"
+}
+Without this, AI loses project understanding.
+________________
+
+
+4. Knowledge Memory
+Stores:
+Documentation
+
+
+Articles
+
+
+Tutorials
+
+
+Code examples
+
+
+Architecture references
+This is classic RAG territory.
+Storage:
+pgvector
+________________
+
+
+Storage Architecture
+Use polyglot persistence.
+________________
+
+
+PostgreSQL
+Source of truth.
+Stores:
+developer_facts
+
+
+project_facts
+
+
+architectural_decisions
+
+
+learning_history
+
+
+memory_metadata
+________________
+
+
+Redis
+Stores:
+session_context
+
+
+recent_activity
+
+
+active_tasks
+________________
+
+
+pgvector
+Stores:
+documentation
+
+
+project_embeddings
+
+
+conversation_embeddings
+
+
+code_embeddings
+________________
+
+
+Neo4j
+Stores relationships.
+Example:
+Project
+│
+USES
+│
+PostgreSQL
+
+
+Project
+│
+DEPENDS_ON
+│
+Auth Service
+
+
+Developer
+│
+LEARNS
+│
+Docker
+________________
+
+
+Memory Processing Pipeline
+Every event enters through a processing layer.
+Event
+ │
+ ▼
+Memory Ingestion
+ │
+ ▼
+Classification
+ │
+ ▼
+Extraction
+ │
+ ▼
+Storage
+________________
+
+
+Example
+User asks:
+How do I configure Docker networking?
+System should not store the entire chat.
+Instead:
+Extract:
+{
+ "type": "knowledge_gap",
+ "topic": "docker networking"
+}
+Update:
+Developer Intelligence
+Store:
+Weakness
+This is much more valuable.
+________________
+
+
+Fact Extraction Engine
+One of the most important components.
+________________
+
+
+Input
+Chat Messages
+
+
+AI Responses
+
+
+GitHub Events
+
+
+Workspace Events
+________________
+
+
+Output
+Structured facts.
+Example:
+Conversation:
+I want to become a cloud engineer.
+Stored fact:
+{
+ "category": "career_goal",
+ "value": "cloud_engineer"
+}
+________________
+
+
+Conversation:
+I prefer TypeScript over Java.
+Stored fact:
+{
+ "category": "language_preference",
+ "value": "typescript"
+}
+________________
+
+
+Project Knowledge Graph
+This becomes the AI's understanding of a repository.
+________________
+
+
+Nodes
+Repository
+
+
+Service
+
+
+API
+
+
+Database
+
+
+Technology
+
+
+File
+
+
+Class
+
+
+Function
+________________
+
+
+Relationships
+Service USES Database
+
+
+Service CALLS Service
+
+
+API BELONGS_TO Service
+
+
+Repository CONTAINS Service
+
+
+Function CALLS Function
+________________
+
+
+Example:
+Auth Service
+     │
+USES
+     │
+PostgreSQL
+
+
+Auth Service
+     │
+CALLS
+     │
+User Service
+Stored in:
+Neo4j
+________________
+
+
+Knowledge Ingestion
+When repository imported:
+GitHub Repo
+     │
+     ▼
+Repository Scanner
+     │
+     ▼
+Code Parser
+     │
+     ▼
+Knowledge Builder
+________________
+
+
+Generated:
+Architecture Summary
+
+
+Dependency Graph
+
+
+API Graph
+
+
+Service Graph
+________________
+
+
+Context Engine
+This is where everything comes together.
+________________
+
+
+Input
+{
+ "query": "Why is my deployment failing?"
+}
+________________
+
+
+Context Sources
+Retrieve:
+Developer
+Weaknesses
+
+
+Preferences
+
+
+Skills
+Project
+Architecture
+
+
+Tech Stack
+
+
+Open Issues
+Workspace
+Current Files
+
+
+Recent Changes
+Knowledge
+Docs
+
+
+Tutorials
+
+
+Past Solutions
+________________
+
+
+Context Assembly Pipeline
+User Query
+     │
+Intent Detection
+     │
+Source Selection
+     │
+Retrieval
+     │
+Ranking
+     │
+Compression
+     │
+Prompt Assembly
+Output:
+{
+ "developer": {},
+ "project": {},
+ "workspace": {},
+ "knowledge": {}
+}
+Passed to agent.
+________________
+
+
+Retrieval Strategy
+Not every query should hit all stores.
+Example:
+Explain Kubernetes
+Retrieve:
+Knowledge Memory
+Developer Memory
+Not project memory.
+________________
+
+
+Example:
+Generate tests for auth service
+Retrieve:
+Workspace Memory
+Project Memory
+Not learning history.
+________________
+
+
+APIs
+Most writes happen through events.
+Read APIs only.
+________________
+
+
+Developer Memory
+GET /memory/developer/{userId}
+________________
+
+
+Project Memory
+GET /memory/project/{projectId}
+________________
+
+
+Context
+POST /context/build
+Returns assembled context.
+________________
+
+
+Search
+POST /knowledge/search
+Hybrid search.
+________________
+
+
+Event Contracts
+Consumes:
+workspace.file.saved
+
+
+workspace.project.created
+
+
+github.commit.pushed
+
+
+github.pr.merged
+
+
+ai.chat.completed
+
+
+deployment.failed
+
+
+deployment.succeeded
+Publishes:
+memory.fact.extracted
+
+
+memory.project.updated
+
+
+memory.context.generated
+________________
+
+
+Database Schema (V1)
+developer_facts
+id
+user_id
+category
+value
+confidence
+source
+created_at
+________________
+
+
+project_facts
+id
+project_id
+fact_type
+fact_value
+confidence
+updated_at
+________________
+
+
+architecture_decisions
+id
+project_id
+decision
+reason
+created_at
+________________
+
+
+Final Architecture
+Knowledge & Memory System
+
+
+├── Session Memory (Redis)
+
+
+├── Developer Memory (Postgres)
+
+
+├── Project Memory (Postgres + Neo4j)
+
+
+├── Knowledge Memory (pgvector)
+
+
+├── Fact Extraction Engine
+
+
+├── Repository Knowledge Builder
+
+
+├── Context Engine
+
+
+├── Hybrid Retrieval Engine
+
+
+└── Context Assembly Pipeline
+
+
+IDE / Workspace Architecture
+Primary Goals
+The Workspace Platform must:
+Development
+* Edit files
+* Run terminal commands
+* Install dependencies
+* Build projects
+* Run tests
+* Debug applications
+AI
+* Allow agents to read/write code
+* Execute commands
+* Analyze repositories
+* Generate files
+GitHub
+* Clone repositories
+* Push commits
+* Create branches
+* Open PRs
+Persistence
+* Save workspaces
+* Recover sessions
+* Restore state
+Scale
+Support:
+100K concurrent workspaces
+without bankrupting the company.
+This requirement immediately changes several design decisions.
+________________
+
+
+Biggest Architectural Decision
+Many people design:
+User
+↓
+Dedicated Container
+for every user.
+This becomes extremely expensive.
+Example:
+10000 active users
+means:
+10000 containers
+running continuously.
+Not feasible for a startup.
+________________
+
+
+Workspace Strategy
+Use:
+Workspace Pool
+with:
+Hot Workspaces
+Warm Workspaces
+Cold Workspaces
+________________
+
+
+Hot Workspace
+Currently active.
+Contains:
+Running Container
+Open Files
+Terminal
+Stored in:
+Kubernetes Pod
+________________
+
+
+Warm Workspace
+Recently used.
+Container stopped.
+Volume preserved.
+Restart:
+5-10 seconds
+________________
+
+
+Cold Workspace
+Inactive.
+Stored in:
+S3 + EFS Snapshot
+Restart:
+30-60 seconds
+Massive cost savings.
+________________
+
+
+High-Level Architecture
+Browser
+
+
+│
+
+
+▼
+
+
+Workspace Gateway
+
+
+│
+
+
+▼
+
+
+Workspace Service
+
+
+│
+
+
+├── Runtime Manager
+├── Session Manager
+├── File Manager
+├── Git Manager
+├── Terminal Manager
+
+
+│
+
+
+▼
+
+
+Kubernetes Cluster
+
+
+│
+
+
+▼
+
+
+Workspace Pods
+________________
+
+
+Workspace Pod
+A workspace pod is the actual development environment.
+Workspace Pod
+
+
+├── Code Server
+├── Terminal Runtime
+├── Language Servers
+├── Git Client
+├── Agent Runtime
+└── File System
+________________
+
+
+Why Code Server?
+I would not build an editor backend from scratch.
+Use:
+code-server
+or
+OpenVSCode Server
+Initially.
+Reason:
+* VS Code protocol already solved
+* Extensions supported
+* Mature ecosystem
+Building editor infrastructure yourself is years of work.
+________________
+
+
+Frontend Architecture
+React
+
+
+├── Monaco Editor
+├── Explorer
+├── Terminal
+├── Git Panel
+├── AI Panel
+├── Deploy Panel
+________________
+
+
+Workspace Lifecycle
+Create
+User Opens Repo
+     │
+     ▼
+Workspace Service
+     │
+     ▼
+Clone Repository
+     │
+     ▼
+Create Pod
+     │
+     ▼
+Mount Volume
+     │
+     ▼
+Ready
+________________
+
+
+Suspend
+After inactivity:
+30 minutes
+Running
+   │
+   ▼
+Snapshot
+   │
+   ▼
+Stopped
+________________
+
+
+Resume
+Restore Volume
+     │
+     ▼
+Start Pod
+     │
+     ▼
+Reconnect Session
+________________
+
+
+File System Architecture
+Important question:
+Should files live in the database?
+No.
+Never.
+Store files on volumes.
+________________
+
+
+Storage
+Workspace Pod
+     │
+     ▼
+Persistent Volume
+     │
+     ▼
+EFS
+Backups:
+S3
+________________
+
+
+File Synchronization
+Challenge:
+How does AI know changes instantly?
+Solution:
+Every save generates events.
+File Saved
+     │
+     ▼
+Workspace Event Bus
+     │
+     ▼
+Knowledge System
+     │
+     ▼
+Developer Intelligence
+Example:
+workspace.file.saved
+________________
+
+
+Terminal Architecture
+Do not expose raw SSH.
+Instead:
+Browser
+  │
+WebSocket
+  │
+Terminal Gateway
+  │
+PTY Process
+Inside workspace container.
+________________
+
+
+Terminal Flow
+User Command
+     │
+     ▼
+WebSocket
+     │
+     ▼
+Terminal Service
+     │
+     ▼
+Workspace Pod
+________________
+
+
+Git Architecture
+GitHub remains source of truth.
+Workspace stores:
+Working Directory
+Only.
+Git operations:
+clone
+fetch
+pull
+commit
+push
+branch
+merge
+through Git Service.
+________________
+
+
+AI Integration
+This is where DevVerse differs from a normal IDE.
+Inside every workspace:
+Workspace
+
+
+├── File Context
+├── Git Context
+├── Project Memory
+├── Developer Memory
+available to agents.
+________________
+
+
+AI File Access Flow
+Agent
+ │
+Tool Call
+ │
+read_file()
+ │
+Workspace Service
+ │
+Workspace Pod
+Never let agents access files directly.
+Everything goes through tools.
+________________
+
+
+Language Intelligence
+Need:
+TypeScript
+Python
+Java
+Go
+Rust
+Support.
+Use Language Server Protocol.
+Monaco
+  │
+LSP Gateway
+  │
+Language Server
+Benefits:
+Autocomplete
+Diagnostics
+Refactoring
+Navigation
+________________
+
+
+Real-Time Collaboration
+Here's a question:
+Should V1 support Google Docs-style collaboration?
+My answer:
+No.
+Not initially.
+Reason:
+* CRDT complexity
+* Conflict resolution
+* Presence tracking
+* Operational overhead
+It does not help validate your core hypothesis.
+Design for future support but don't build it.
+________________
+
+
+Workspace Service APIs
+Workspace
+POST /workspaces
+
+
+GET /workspaces/{id}
+
+
+DELETE /workspaces/{id}
+
+
+POST /workspaces/{id}/start
+
+
+POST /workspaces/{id}/stop
+________________
+
+
+Files
+GET /files
+
+
+GET /file
+
+
+PUT /file
+
+
+DELETE /file
+________________
+
+
+Terminal
+WS /terminal/{workspaceId}
+________________
+
+
+Git
+POST /git/pull
+
+
+POST /git/push
+
+
+POST /git/commit
+
+
+POST /git/branch
+________________
+
+
+Database Design
+Workspace metadata only.
+Not code.
+workspaces
+id
+user_id
+repo_id
+status
+runtime_type
+created_at
+updated_at
+________________
+
+
+workspace_sessions
+id
+workspace_id
+started_at
+ended_at
+last_activity
+________________
+
+
+workspace_snapshots
+id
+workspace_id
+snapshot_path
+created_at
+________________
+
+
+Event Contracts
+Consumes:
+github.repo.connected
+
+
+github.repo.updated
+Publishes:
+workspace.created
+
+
+workspace.started
+
+
+workspace.stopped
+
+
+workspace.file.saved
+
+
+workspace.session.resumed
+
+
+workspace.snapshot.created
+________________
+
+
+Infrastructure
+AWS-first architecture:
+CloudFront
+   │
+ALB
+   │
+Workspace Gateway
+   │
+EKS
+   │
+Workspace Pods
+Storage:
+EFS
+Backups:
+S3
+Images:
+ECR
+________________
+
+
+Self-Critique of This Design
+There are three places I'd challenge myself:
+1. EFS at Scale
+For very large scale:
+100K+ workspaces
+EFS can become expensive.
+Future evolution:
+EFS
++
+S3-backed snapshots
++
+Local SSD cache
+But EFS is appropriate for V1.
+________________
+
+
+2. One Pod Per Active Workspace
+This is expensive.
+However:
+* Cursor
+* GitHub Codespaces
+* Replit
+all eventually need isolated runtimes.
+The solution is aggressive suspend/resume, not shared containers.
+________________
+
+
+3. Real-Time Collaboration
+Tempting feature.
+Wrong feature for V1.
+I would deliberately postpone CRDT/Yjs until the platform has users.
+________________
+
+
+Final IDE / Workspace Architecture
+Browser (React + Monaco)
+         │
+         ▼
+Workspace Gateway
+         │
+         ▼
+Workspace Service
+         │
+┌────────┼────────┐
+▼        ▼        ▼
+
+
+Git     Terminal  Session
+Mgr      Mgr      Mgr
+
+
+         │
+         ▼
+
+
+Workspace Runtime Manager
+         │
+         ▼
+
+
+Kubernetes Workspace Pods
+
+
+         │
+
+
+├── code-server
+├── Git
+├── Language Servers
+├── Agent Runtime
+└── Project Files
+
+
+         │
+         ▼
+
+
+EFS + S3 Snapshots
+
+
+Github Integration Service
+GitHub Integration Service
+And before designing it, I want to challenge a common assumption:
+"GitHub Integration Service is just OAuth + clone repository."
+For DevVerse, that's far too small.
+GitHub is actually the system of record for almost everything:
+Source Code
+Commits
+Branches
+PRs
+Issues
+Releases
+Contributors
+The Workspace Service, Knowledge System, Developer Intelligence Service, AI Agents, and Deployment Service all depend on GitHub data.
+So this service becomes a critical platform service.
+________________
+
+
+Core Responsibilities
+The GitHub Integration Service should own:
+Authentication
+GitHub OAuth
+GitHub App Installation
+Access Tokens
+Permissions
+________________
+
+
+Repository Management
+Import Repo
+List Repos
+Repository Metadata
+Branch Metadata
+________________
+
+
+Synchronization
+Commits
+Branches
+PRs
+Issues
+Releases
+________________
+
+
+Webhook Processing
+Push Events
+PR Events
+Issue Events
+Release Events
+________________
+
+
+Git Operations
+Clone
+Pull
+Push
+Branch
+Merge
+________________
+
+
+Repository Intelligence
+Tech Stack Detection
+Dependency Detection
+Architecture Discovery
+________________
+
+
+Architectural Decision #1
+OAuth vs GitHub App
+Many startups start with OAuth only.
+I would not.
+Use:
+GitHub OAuth
++
+GitHub App
+________________
+
+
+OAuth
+Used for:
+Login
+Basic Identity
+User Repositories
+________________
+
+
+GitHub App
+Used for:
+Webhooks
+PR Access
+Issue Access
+Repository Access
+Fine-grained Permissions
+This is how GitHub wants modern integrations built.
+________________
+
+
+High-Level Architecture
+               GitHub
+
+
+                  │
+
+
+                  ▼
+
+
+         GitHub Webhooks
+
+
+                  │
+
+
+                  ▼
+
+
+       GitHub Integration Service
+
+
+    ┌─────────┬─────────┬─────────┐
+
+
+    ▼         ▼         ▼
+
+
+OAuth     Sync       Metadata
+Manager   Engine     Analyzer
+
+
+    └─────────┬─────────┘
+
+
+              ▼
+
+
+        Event Publisher
+
+
+              ▼
+
+
+       Event Bus (Kafka)
+________________
+
+
+Internal Components
+1. OAuth Manager
+Handles:
+Authorization Code Flow
+Token Exchange
+Refresh Logic
+Database:
+PostgreSQL
+________________
+
+
+2. Repository Manager
+Stores:
+Repository Metadata
+Branch Metadata
+Visibility
+Permissions
+________________
+
+
+Repository Model
+repositories
+
+
+id
+github_repo_id
+owner_id
+name
+default_branch
+language
+visibility
+created_at
+updated_at
+________________
+
+
+3. Sync Engine
+This is where many architectures fail.
+Do NOT fetch GitHub repeatedly.
+Use webhooks.
+________________
+
+
+Bad:
+Every 30 seconds:
+Call GitHub API
+________________
+
+
+Good:
+GitHub Push Event
+     │
+     ▼
+Webhook
+     │
+     ▼
+Sync Engine
+________________
+
+
+Events Consumed
+push
+
+
+pull_request
+
+
+issue
+
+
+release
+
+
+fork
+
+
+star
+________________
+
+
+Sync Pipeline
+Webhook
+  │
+Validation
+  │
+Queue
+  │
+Worker
+  │
+Database
+  │
+Event Bus
+Never process webhooks synchronously.
+________________
+
+
+4. Repository Analyzer
+This component feeds the Knowledge System.
+________________
+
+
+Example Repository
+package.json
+
+
+docker-compose.yml
+
+
+terraform/
+Analyzer detects:
+{
+ "languages": [
+   "typescript"
+ ],
+
+
+ "frameworks": [
+   "nestjs"
+ ],
+
+
+ "databases": [
+   "postgres"
+ ],
+
+
+ "deployment": [
+   "docker"
+ ]
+}
+This is extremely useful.
+________________
+
+
+Tech Detection Engine
+Detect:
+Backend
+Express
+NestJS
+Spring Boot
+Django
+FastAPI
+________________
+
+
+Frontend
+React
+Next.js
+Vue
+Angular
+________________
+
+
+Cloud
+AWS
+Terraform
+Kubernetes
+Docker
+________________
+
+
+Output becomes:
+repository.analyzed
+event.
+________________
+
+
+Git Operations Service
+Question:
+Should DevVerse implement Git itself?
+No.
+Use native Git.
+________________
+
+
+Workspace executes:
+git clone
+git commit
+git push
+The GitHub Service only manages credentials and metadata.
+________________
+
+
+Pull Request Intelligence
+This is where DevVerse gets interesting.
+When PR created:
+pull_request.opened
+Event published.
+________________
+
+
+AI Agent can:
+Review Code
+Generate Summary
+Detect Risks
+Suggest Tests
+without GitHub Service knowing anything about AI.
+Good separation.
+________________
+
+
+Repository Import Flow
+User Connects GitHub
+        │
+        ▼
+OAuth
+        │
+        ▼
+Repository List
+        │
+        ▼
+Import Repository
+        │
+        ▼
+Repository Analyzer
+        │
+        ▼
+Knowledge Builder
+        │
+        ▼
+Workspace Creation
+________________
+
+
+Event Contracts
+Consumes:
+user.github.connected
+Publishes:
+github.repository.imported
+
+
+github.repository.updated
+
+
+github.commit.pushed
+
+
+github.pull_request.created
+
+
+github.pull_request.merged
+
+
+github.issue.created
+
+
+github.repository.analyzed
+These events power almost every other service.
+________________
+
+
+APIs
+OAuth
+GET /github/auth
+
+
+GET /github/callback
+________________
+
+
+Repositories
+GET /github/repos
+
+
+POST /github/repos/import
+
+
+GET /github/repos/{id}
+________________
+
+
+Branches
+GET /github/repos/{id}/branches
+________________
+
+
+Pull Requests
+GET /github/repos/{id}/prs
+________________
+
+
+Issues
+GET /github/repos/{id}/issues
+________________
+
+
+Database Design
+github_accounts
+id
+user_id
+github_user_id
+access_token
+installation_id
+created_at
+________________
+
+
+repositories
+id
+github_repo_id
+owner_id
+name
+default_branch
+visibility
+________________
+
+
+repository_metadata
+id
+repository_id
+languages
+frameworks
+dependencies
+________________
+
+
+Self-Critique
+What I Like
+* GitHub remains source of truth.
+* Event-driven synchronization.
+* GitHub App architecture.
+* Repository intelligence built-in.
+What I Would Avoid
+I would not store:
+Entire Git history
+Entire repository contents
+inside the GitHub service.
+That belongs to:
+Workspace Service
+Knowledge System
+GitHub Integration should remain lightweight.
+________________
+
+
+Final GitHub Integration Service
+GitHub Integration Service
+
+
+├── OAuth Manager
+├── GitHub App Manager
+├── Repository Manager
+├── Sync Engine
+├── Webhook Processor
+├── Repository Analyzer
+├── Event Publisher
+└── Credential Manager
+
+
+Deployment Platform
+What Project Service Would Own
+Potentially:
+Project Metadata
+Environment Variables
+Domains
+Deployment Config
+Team Members
+Settings
+But let's see where these can live today.
+Repository Metadata
+Already belongs to:
+GitHub Integration Service
+________________
+
+
+Workspace Configuration
+Already belongs to:
+Workspace Service
+________________
+
+
+Architecture Knowledge
+Already belongs to:
+Knowledge & Memory System
+________________
+
+
+Deployment Configuration
+Could belong to:
+Deployment Service
+________________
+
+
+Team Membership
+You don't even have teams yet.
+________________
+
+
+The Real Test
+Let's design a deployment flow.
+Example:
+Deploy my NestJS application
+Deployment Service needs:
+Repository
+Framework
+Environment Variables
+Build Commands
+Target Environment
+Can it get all of these without a Project Service?
+Yes.
+From:
+GitHub Service
+Workspace Service
+Knowledge Service
+________________
+
+
+When Would Project Service Become Necessary?
+The moment DevVerse evolves from:
+Developer OS
+to:
+Team Collaboration Platform
+Examples:
+Multi-Repository Projects
+frontend repo
+
+
+backend repo
+
+
+infra repo
+under one project.
+________________
+
+
+Teams
+Owner
+Admin
+Developer
+Reviewer
+________________
+
+
+Shared Environments
+dev
+
+
+staging
+
+
+production
+________________
+
+
+Shared Secrets
+DATABASE_URL
+
+
+JWT_SECRET
+________________
+
+
+Billing
+Project-level usage
+________________
+
+
+At that point, Project becomes a first-class domain object.
+________________
+
+
+What I Would Do
+For V1:
+Add a table inside Deployment Service:
+deployment_targets
+
+
+id
+repository_id
+environment
+framework
+domain
+settings
+and a table:
+environment_variables
+
+
+id
+repository_id
+key
+encrypted_value
+environment
+That's enough.
+________________
+
+
+Architectural Principle
+I would follow:
+"Don't introduce a service until two existing services are fighting over ownership."
+Right now:
+Workspace
+GitHub
+Deployment
+are not fighting over Project ownership.
+So Project Service would mostly become a metadata wrapper.
+________________
+
+
+My Recommendation
+Proceed directly to:
+Deployment Platform
+and defer Project Service.
+If, during deployment design, we discover repeated entities like:
+Project
+Environment
+Secret
+Member
+Domain
+appearing everywhere and creating awkward ownership boundaries, then we promote them into a dedicated Project Service.
+Until then, adding it would be premature abstraction.
+ok design deployment platform
+Excellent. Before designing, let's challenge the biggest assumption:
+"Deployment Platform = Vercel clone"
+I don't think that's the right vision for DevVerse.
+If we build:
+GitHub
+  ↓
+Build
+  ↓
+Deploy
+we've built a commodity feature.
+Users already have:
+* Vercel
+* Railway
+* Render
+* Fly.io
+* AWS Amplify
+* Netlify
+DevVerse should build:
+GitHub
+  ↓
+AI understands project
+  ↓
+AI generates infra
+  ↓
+AI deploys
+  ↓
+AI monitors
+  ↓
+AI fixes issues
+That is much harder to copy.
+________________
+
+
+Deployment Platform Goals
+For a developer:
+Connect Repo
+Click Deploy
+Get URL
+For AI:
+Understand project
+Generate infrastructure
+Deploy safely
+Monitor continuously
+Suggest fixes
+________________
+
+
+Scope for V1
+I would intentionally limit scope.
+Support:
+Frontend
+React
+Next.js
+Vite
+Angular
+Vue
+________________
+
+
+Backend
+Node
+NestJS
+Express
+FastAPI
+Django
+Spring Boot
+________________
+
+
+Database
+Postgres
+Redis
+________________
+
+
+Runtime
+Docker Containers
+Everything eventually becomes Docker.
+This simplifies deployment enormously.
+________________
+
+
+High-Level Architecture
+               User
+
+
+                 │
+
+
+                 ▼
+
+
+       Deployment Service API
+
+
+                 │
+
+
+                 ▼
+
+
+        Deployment Orchestrator
+
+
+                 │
+
+
+     ┌───────────┼────────────┐
+
+
+     ▼           ▼            ▼
+
+
+Build Engine   Infra Engine  Runtime Engine
+
+
+     ▼           ▼            ▼
+
+
+   ECR         Terraform      EKS
+
+
+     └───────────┼────────────┘
+
+
+                 ▼
+
+
+            Running App
+________________
+
+
+Core Components
+1. Deployment Service
+Owns:
+Deployments
+Environments
+Domains
+Deployment History
+Logs Metadata
+________________
+
+
+Database
+PostgreSQL
+Tables:
+deployments
+
+
+deployment_id
+repository_id
+environment
+status
+version
+url
+created_at
+________________
+
+
+deployment_logs
+
+
+id
+deployment_id
+log_pointer
+timestamp
+________________
+
+
+2. Deployment Orchestrator
+This is the brain.
+Not Terraform.
+Not Kubernetes.
+The orchestrator.
+Responsibilities:
+Deployment Planning
+Build Pipeline
+Rollback
+Failure Recovery
+________________
+
+
+Deployment State Machine
+PENDING
+
+
+BUILDING
+
+
+PACKAGING
+
+
+DEPLOYING
+
+
+HEALTH_CHECKING
+
+
+ACTIVE
+
+
+FAILED
+
+
+ROLLED_BACK
+________________
+
+
+Deployment Flow
+Deploy Request
+     │
+     ▼
+Repository Analysis
+     │
+     ▼
+Build Plan
+     │
+     ▼
+Container Build
+     │
+     ▼
+Push Image
+     │
+     ▼
+Deploy
+     │
+     ▼
+Health Check
+     │
+     ▼
+Success
+________________
+
+
+3. Repository Analysis
+Uses Knowledge System.
+Input:
+Repository
+Output:
+{
+ "framework": "nestjs",
+ "language": "typescript",
+ "database": "postgres"
+}
+________________
+
+
+AI Deployment Planner
+This is where DevVerse becomes interesting.
+Instead of:
+User creates deployment config
+AI creates it.
+________________
+
+
+Example:
+Repository contains:
+NestJS
+
+
+Prisma
+
+
+Postgres
+AI generates:
+Dockerfile
+
+
+Health Checks
+
+
+Environment Variables
+
+
+Deployment Strategy
+________________
+
+
+Event:
+deployment.plan.generated
+________________
+
+
+Build Engine
+I would use Kubernetes Jobs.
+Not dedicated build servers.
+________________
+
+
+Flow
+Deploy Request
+     │
+     ▼
+Build Job
+     │
+     ▼
+Docker Build
+     │
+     ▼
+Push To ECR
+________________
+
+
+Build Worker
+Docker
+BuildKit
+Git
+________________
+
+
+Output:
+Container Image
+Stored in:
+AWS ECR
+________________
+
+
+Runtime Engine
+Question:
+ECS or EKS?
+For DevVerse:
+EKS
+________________
+
+
+Reason
+Future requirements:
+AI Agents
+Workspace Pods
+Deployments
+Background Jobs
+already justify Kubernetes.
+Running ECS + EKS creates unnecessary operational complexity.
+________________
+
+
+Deployment Strategy
+Every deployment becomes:
+Container
+running on:
+Kubernetes
+________________
+
+
+Environment Model
+Support:
+Development
+Staging
+Production
+Only.
+Not more.
+V1 simplicity.
+________________
+
+
+Table
+environments
+
+
+id
+repository_id
+type
+domain
+status
+________________
+
+
+Secrets Management
+Never store secrets directly.
+Use:
+AWS Secrets Manager
+________________
+
+
+Store reference only.
+secret_references
+
+
+id
+repository_id
+secret_arn
+environment
+________________
+
+
+Domains
+User wants:
+api.myapp.com
+Deployment Service manages:
+Route53
+
+
+Certificates
+
+
+DNS
+through automation.
+________________
+
+
+Logging Architecture
+Application logs:
+Pods
+  │
+Fluent Bit
+  │
+CloudWatch
+________________
+
+
+User sees:
+Deployment Dashboard
+________________
+
+
+Metrics Architecture
+Collect:
+CPU
+
+
+Memory
+
+
+Requests
+
+
+Latency
+
+
+Errors
+Using:
+Prometheus
+Store:
+Amazon Managed Prometheus
+Visualize:
+Grafana
+________________
+
+
+AI Monitoring Layer
+This is the differentiator.
+Traditional platforms show:
+500 Error
+DevVerse should explain:
+Deployment failed because
+DATABASE_URL is missing.
+________________
+
+
+Flow
+Logs
+ │
+ ▼
+AI Analyzer
+ │
+ ▼
+Root Cause
+________________
+
+
+Example
+Log:
+Prisma cannot connect
+AI outputs:
+Database credentials not configured.
+________________
+
+
+Rollback System
+Every deployment immutable.
+v1
+
+
+v2
+
+
+v3
+Rollback:
+Traffic Shift
+     │
+     ▼
+Previous Version
+No rebuild required.
+________________
+
+
+Event Architecture
+Consumes:
+github.commit.pushed
+
+
+github.pr.merged
+
+
+deployment.requested
+Publishes:
+deployment.started
+
+
+deployment.completed
+
+
+deployment.failed
+
+
+deployment.rollback
+
+
+deployment.healthcheck.failed
+________________
+
+
+APIs
+Deploy
+POST /deployments
+________________
+
+
+Status
+GET /deployments/{id}
+________________
+
+
+Logs
+GET /deployments/{id}/logs
+________________
+
+
+Rollback
+POST /deployments/{id}/rollback
+________________
+
+
+Environments
+GET /environments
+
+
+POST /environments
+________________
+
+
+AWS Architecture
+API Gateway
+     │
+     ▼
+Deployment Service
+
+
+     ▼
+
+
+EKS
+
+
+├── Build Jobs
+├── Runtime Pods
+├── Health Checks
+
+
+     ▼
+
+
+ECR
+
+
+     ▼
+
+
+CloudWatch
+
+
+     ▼
+
+
+Secrets Manager
+
+
+     ▼
+
+
+Route53
+________________
+
+
+Self-Critique
+What I Like
+Everything Becomes Containers
+Huge simplification.
+________________
+
+
+Kubernetes Everywhere
+Avoids:
+ECS
+Lambda
+EKS
+fragmentation.
+________________
+
+
+AI-Assisted Operations
+Actual differentiator.
+________________
+
+
+What I Would Not Build Yet
+Terraform Generation
+Tempting.
+But too much complexity.
+Avoid:
+AI generates arbitrary AWS infra
+for V1.
+Use predefined deployment blueprints instead.
+________________
+
+
+Multi-Cloud
+Don't touch.
+AWS only
+for at least the first few years.
+________________
+
+
+Final Deployment Platform
+Deployment Service
+
+
+├── Deployment API
+├── Deployment Orchestrator
+├── Repository Analyzer
+├── AI Deployment Planner
+├── Build Engine
+├── Runtime Engine
+├── Log Aggregator
+├── Metrics Collector
+├── Rollback Manager
+└── Environment Manager
+
+
+Community platform
+Use a Unified Content Platform.
+Think:
+Reddit
++
+Twitter
++
+Stack Overflow
++
+GitHub Discussions
+instead of:
+Medium + StackOverflow
+________________
+
+
+Core Philosophy
+Everything is content.
+A question is content.
+An article is content.
+A project showcase is content.
+A discussion is content.
+An achievement is content.
+________________
+
+
+One Content Model
+Instead of:
+Question
+
+
+Article
+
+
+Discussion
+
+
+Showcase
+Create:
+Content
+with different types.
+________________
+
+
+Example:
+{
+ "id": "123",
+ "type": "QUESTION"
+}
+________________
+
+
+{
+ "id": "456",
+ "type": "ARTICLE"
+}
+________________
+
+
+{
+ "id": "789",
+ "type": "SHOWCASE"
+}
+________________
+
+
+Why This Matters
+Search becomes easier.
+Recommendations become easier.
+Moderation becomes easier.
+Analytics becomes easier.
+AI becomes easier.
+________________
+
+
+Community Goals
+Allow developers to:
+Ask
+How do I fix this Docker issue?
+________________
+
+
+Share
+I built an AI code review tool.
+________________
+
+
+Learn
+Understanding Kubernetes networking.
+________________
+
+
+Discuss
+Best approach for event sourcing?
+________________
+
+
+Showcase
+My new side project.
+________________
+
+
+High-Level Architecture
+User
+
+
+│
+
+
+▼
+
+
+Community API
+
+
+│
+
+
+▼
+
+
+Content Service
+
+
+│
+
+
+├── Feed Engine
+├── Reputation Engine
+├── Search Engine
+├── Moderation Engine
+└── Recommendation Engine
+
+
+│
+
+
+▼
+
+
+Databases
+________________
+
+
+Core Components
+1. Content Service
+Owns:
+Posts
+Questions
+Articles
+Showcases
+Comments
+________________
+
+
+Schema:
+content
+
+
+id
+author_id
+type
+title
+body
+status
+created_at
+updated_at
+________________
+
+
+Types:
+QUESTION
+
+
+ARTICLE
+
+
+DISCUSSION
+
+
+SHOWCASE
+________________
+
+
+2. Comment Service
+Keep separate.
+Reason:
+Comments scale differently.
+________________
+
+
+Schema:
+comments
+
+
+id
+content_id
+author_id
+parent_comment_id
+body
+created_at
+________________
+
+
+Supports:
+Nested Threads
+________________
+
+
+3. Reputation Engine
+This is where DevVerse can be smarter than Stack Overflow.
+Traditional reputation:
+Upvote = +10
+Too simplistic.
+________________
+
+
+DevVerse reputation should consider:
+Community Contributions
+
+
+Projects
+
+
+Learning Progress
+
+
+Mentorship
+
+
+Open Source Activity
+________________
+
+
+Example:
+GitHub PR merged
+could contribute.
+________________
+
+
+Reputation Events
+Consumes:
+content.upvoted
+
+
+answer.accepted
+
+
+project.showcased
+
+
+github.pr.merged
+________________
+
+
+4. Feed Engine
+Most important component.
+________________
+
+
+Bad Feed
+Newest Posts
+________________
+
+
+Good Feed
+Uses:
+Developer Intelligence
+
+
+Skills
+
+
+Interests
+
+
+Projects
+________________
+
+
+Example
+User struggles with:
+Docker
+Feed promotes:
+Docker tutorials
+
+
+Deployment discussions
+
+
+Container debugging
+________________
+
+
+This creates a strong moat.
+________________
+
+
+5. Recommendation Engine
+Uses:
+Developer Intelligence
+
+
+Content Embeddings
+
+
+Knowledge Graph
+________________
+
+
+Suggests:
+Articles
+
+
+Discussions
+
+
+People
+
+
+Projects
+________________
+
+
+6. Search Engine
+This should not be SQL search.
+Use:
+OpenSearch
+________________
+
+
+Index:
+Content
+
+
+Comments
+
+
+Profiles
+
+
+Projects
+________________
+
+
+Support:
+Keyword Search
+nestjs auth
+________________
+
+
+Semantic Search
+how to scale websocket service
+________________
+
+
+Hybrid Search
+Best option.
+________________
+
+
+AI Community Layer
+This is where DevVerse gets unique.
+________________
+
+
+AI Answer Drafting
+User asks:
+How do I deploy FastAPI on AWS?
+AI can:
+Suggest draft answer
+before community answers.
+________________
+
+
+Duplicate Detection
+Before publishing:
+Search similar discussions
+________________
+
+
+Content Summarization
+Long thread:
+120 comments
+AI generates:
+Summary
+________________
+
+
+Knowledge Extraction
+Community becomes knowledge.
+________________
+
+
+Flow:
+High Quality Discussion
+        │
+        ▼
+Knowledge Extraction
+        │
+        ▼
+Knowledge System
+This is extremely valuable.
+________________
+
+
+Moderation Engine
+Use layered moderation.
+________________
+
+
+Rule-Based
+Spam
+
+
+Profanity
+
+
+Links
+________________
+
+
+AI-Based
+Toxicity
+
+
+Abuse
+
+
+Low-quality content
+________________
+
+
+Human
+Community reporting.
+________________
+
+
+Event Architecture
+Consumes:
+developer.skill.updated
+
+
+github.pr.merged
+
+
+content.created
+________________
+
+
+Publishes:
+content.published
+
+
+content.upvoted
+
+
+content.commented
+
+
+reputation.updated
+________________
+
+
+Database Design
+PostgreSQL
+Source of truth.
+content
+id
+author_id
+type
+title
+body
+status
+score
+created_at
+________________
+
+
+comments
+id
+content_id
+author_id
+parent_id
+body
+________________
+
+
+votes
+id
+user_id
+content_id
+vote_type
+________________
+
+
+reputation
+id
+user_id
+score
+level
+________________
+
+
+OpenSearch
+Stores:
+Content Index
+
+
+Comment Index
+
+
+Project Index
+________________
+
+
+Self-Critique
+What I Like
+Unified Content Model
+Avoids:
+Blog Service
+
+
+Q&A Service
+
+
+Forum Service
+explosion.
+________________
+
+
+Personalized Feed
+Leverages Developer Intelligence.
+________________
+
+
+Community → Knowledge Loop
+Very powerful.
+Community content improves AI.
+AI improves community.
+________________
+
+
+What I Would NOT Build
+Real-Time Chat
+This is where many communities die.
+Discord-style chat creates:
+Moderation burden
+
+
+Noise
+
+
+Fragmentation
+without improving learning.
+________________
+
+
+Separate Blogging Platform
+Not needed.
+An article is just:
+Content Type = ARTICLE
+________________
+
+
+Final Community Platform
+Community Platform
+
+
+├── Content Service
+├── Comment Service
+├── Feed Engine
+├── Reputation Engine
+├── Recommendation Engine
+├── Moderation Engine
+├── Search Engine
+└── AI Community Layer
