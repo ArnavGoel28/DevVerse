@@ -223,7 +223,7 @@ To create the world's first truly unified developer operating system where every
 - Generate code that passes linting and formatting checks
 
 **Technical Implementation:**
-- Use Amazon Bedrock with Claude 3.5 Sonnet for complex generation
+- Use Amazon Bedrock with Bedrock LLM for complex generation
 - Use Amazon Titan for simple code completion
 - Implement prompt templates for each language/framework
 - Cache common code patterns to reduce API calls
@@ -245,7 +245,7 @@ Response: {
   "code": "import React, { useState } from 'react'...",
   "language": "typescript",
   "framework": "react",
-  "model": "claude-3-5-sonnet",
+  "model": "bedrock-llm",
   "tokensUsed": 450,
   "suggestions": ["Add form validation", "Implement password strength meter"]
 }
@@ -280,7 +280,7 @@ Search OpenSearch (k=5 most relevant files)
     ↓
 Construct Prompt with Context
     ↓
-Generate Code (Claude)
+Generate Code (LLM)
     ↓
 Return Code + Sources
 ```

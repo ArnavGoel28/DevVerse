@@ -1372,7 +1372,7 @@ ________________
 
 
 Coding
-Claude Sonnet
+Gemini Pro
 GPT
 Qwen Coder
 ________________
@@ -1380,7 +1380,7 @@ ________________
 
 Learning
 GPT
-Claude
+Gemini Flash
 Gemini
 ________________
 

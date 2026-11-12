@@ -119,7 +119,7 @@ DevVerse follows a **Serverless Microservices** architecture pattern to ensure i
 │                │  │                 │  │                │
 │ ┌────────────┐ │  │ ┌─────────────┐│  │ ┌────────────┐ │
 │ │  Bedrock   │ │  │ │  DynamoDB   ││  │ │  Fargate   │ │
-│ │  (Claude)  │ │  │ │  (NoSQL)    ││  │ │  (Containers)│
+│ │  (LLM)     │ │  │ │  (NoSQL)    ││  │ │  (Containers)│
 │ └────────────┘ │  │ └─────────────┘│  │ └────────────┘ │
 │ ┌────────────┐ │  │ ┌─────────────┐│  │ ┌────────────┐ │
 │ │  Bedrock   │ │  │ │  S3         ││  │ │ CodeBuild  │ │
@@ -458,7 +458,7 @@ Security is paramount in DevVerse. We implement a zero-trust architecture where 
         "bedrock:InvokeModelWithResponseStream"
       ],
       "Resource": [
-        "arn:aws:bedrock:*::foundation-model/anthropic.claude-3-5-sonnet-*",
+        "arn:aws:bedrock:*::foundation-model/*",
         "arn:aws:bedrock:*::foundation-model/amazon.titan-*"
       ]
     },
@@ -772,9 +772,9 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
     // Call Amazon Bedrock
     const bedrockClient = new BedrockRuntimeClient({ region: 'us-east-1' });
     const response = await bedrockClient.send(new InvokeModelCommand({
-      modelId: 'anthropic.claude-3-5-sonnet-20241022-v2:0',
+      modelId: 'bedrock-llm-primary',
       body: JSON.stringify({
-        anthropic_version: 'bedrock-2023-05-31',
+        api_version: 'bedrock-2023-05-31',
         max_tokens: 4096,
         messages: [{
           role: 'user',
@@ -800,7 +800,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
         code: result.content[0].text,
         language,
         tokensUsed: result.usage.output_tokens,
-        model: 'claude-3-5-sonnet'
+        model: 'bedrock-llm'
       })
     };
     
@@ -1030,8 +1030,8 @@ This is the brain of DevVerse - the AI intelligence layer that powers context-aw
 ```typescript
 interface BedrockModels {
   codeGeneration: {
-    primary: 'anthropic.claude-3-5-sonnet-20241022-v2:0',
-    fallback: 'anthropic.claude-3-haiku-20240307-v1:0',
+    primary: 'bedrock-llm-primary',
+    fallback: 'bedrock-llm-fast',
     use_case: 'Complex code generation, refactoring, architecture'
   },
   codeCompletion: {
@@ -1039,7 +1039,7 @@ interface BedrockModels {
     use_case: 'Fast autocomplete, inline suggestions'
   },
   codeExplanation: {
-    primary: 'anthropic.claude-3-5-sonnet-20241022-v2:0',
+    primary: 'bedrock-llm-primary',
     use_case: 'Detailed code explanations, documentation'
   },
   embeddings: {
@@ -1048,7 +1048,7 @@ interface BedrockModels {
     use_case: 'Semantic search, RAG, code similarity'
   },
   chat: {
-    primary: 'anthropic.claude-3-5-sonnet-20241022-v2:0',
+    primary: 'bedrock-llm-primary',
     streaming: true,
     use_case: 'Interactive AI assistant, mentorship'
   }
@@ -1068,19 +1068,19 @@ class AIModelRouter {
     }
     
     if (type === 'code_generation' && complexity === 'high') {
-      return 'anthropic.claude-3-5-sonnet-20241022-v2:0';  // High quality
+      return 'bedrock-llm-primary';  // High quality
     }
     
     if (type === 'code_generation' && complexity === 'low') {
-      return 'anthropic.claude-3-haiku-20240307-v1:0';  // Cost-effective
+      return 'bedrock-llm-fast';  // Cost-effective
     }
     
     if (contextSize > 100000) {  // Large context
-      return 'anthropic.claude-3-5-sonnet-20241022-v2:0';  // 200K context window
+      return 'bedrock-llm-primary';  // 200K context window
     }
     
     // Default to balanced option
-    return 'anthropic.claude-3-5-sonnet-20241022-v2:0';
+    return 'bedrock-llm-primary';
   }
 }
 ```
@@ -1112,11 +1112,11 @@ Generate production-ready code that follows these standards.`;
 
   // Call Bedrock with streaming
   const response = await bedrockClient.send(new InvokeModelWithResponseStreamCommand({
-    modelId: 'anthropic.claude-3-5-sonnet-20241022-v2:0',
+    modelId: 'bedrock-llm-primary',
     contentType: 'application/json',
     accept: 'application/json',
     body: JSON.stringify({
-      anthropic_version: 'bedrock-2023-05-31',
+      api_version: 'bedrock-2023-05-31',
       max_tokens: 4096,
       temperature: 0.7,
       system: systemPrompt,
@@ -1143,7 +1143,7 @@ Generate production-ready code that follows these standards.`;
   return {
     code: generatedCode,
     language: context.language,
-    model: 'claude-3-5-sonnet',
+    model: 'bedrock-llm',
     tokensUsed: calculateTokens(generatedCode)
   };
 }
@@ -1164,7 +1164,7 @@ User Query
     ↓
 4. Construct Context-Rich Prompt
     ↓
-5. Generate Response (Claude)
+5. Generate Response (LLM)
     ↓
 User Response
 ```
@@ -1218,11 +1218,11 @@ User Question: ${query}
 
 Please provide a detailed answer that references the specific code above.`;
 
-    // Step 5: Generate response with Claude
+    // Step 5: Generate response with the LLM
     const response = await this.bedrockClient.send(new InvokeModelCommand({
-      modelId: 'anthropic.claude-3-5-sonnet-20241022-v2:0',
+      modelId: 'bedrock-llm-primary',
       body: JSON.stringify({
-        anthropic_version: 'bedrock-2023-05-31',
+        api_version: 'bedrock-2023-05-31',
         max_tokens: 2048,
         messages: [{
           role: 'user',
@@ -1346,12 +1346,12 @@ async function indexFile(event: FileUpdatedEvent): Promise<void> {
 
 | Feature | Model | Latency | Cost per 1K tokens | Use Case |
 |---------|-------|---------|-------------------|----------|
-| Code Generation | Claude 3.5 Sonnet | 2-5s | $0.003 input / $0.015 output | Complex code, architecture |
+| Code Generation | Bedrock LLM | 2-5s | $0.003 input / $0.015 output | Complex code, architecture |
 | Code Completion | Titan Text Premier | <500ms | $0.0005 input / $0.0016 output | Autocomplete, inline suggestions |
-| Code Explanation | Claude 3.5 Sonnet | 2-4s | $0.003 input / $0.015 output | Documentation, learning |
-| Code Refactoring | Claude 3.5 Sonnet | 3-6s | $0.003 input / $0.015 output | Code improvements |
-| Bug Detection | Claude 3.5 Sonnet | 2-5s | $0.003 input / $0.015 output | Error analysis, fixes |
-| Chat Assistant | Claude 3.5 Sonnet | 1-3s | $0.003 input / $0.015 output | Interactive help |
+| Code Explanation | Bedrock LLM | 2-4s | $0.003 input / $0.015 output | Documentation, learning |
+| Code Refactoring | Bedrock LLM | 3-6s | $0.003 input / $0.015 output | Code improvements |
+| Bug Detection | Bedrock LLM | 2-5s | $0.003 input / $0.015 output | Error analysis, fixes |
+| Chat Assistant | Bedrock LLM | 1-3s | $0.003 input / $0.015 output | Interactive help |
 | Embeddings | Titan Embeddings v2 | <200ms | $0.0001 per 1K tokens | Semantic search, RAG |
 
 #### Cost Optimization Strategies
@@ -1393,9 +1393,9 @@ class AIResponseCache {
 - Use few-shot examples efficiently
 
 **3. Model Selection**
-- Use Titan for simple tasks (5x cheaper than Claude)
-- Use Claude Haiku for medium complexity (3x cheaper than Sonnet)
-- Reserve Claude Sonnet for complex tasks only
+- Use Titan for simple tasks (5x cheaper than larger LLMs)
+- Use a smaller LLM for medium complexity (3x cheaper than Sonnet)
+- Reserve the larger LLM for complex tasks only
 
 **4. Batch Processing**
 - Batch multiple small requests into single API call
@@ -1514,7 +1514,7 @@ interface DynamoDBItem {
   "Role": "user",
   "Content": "How do I implement authentication?",
   "AIResponse": "To implement authentication in your React app...",
-  "Model": "claude-3-5-sonnet",
+  "Model": "bedrock-llm",
   "TokensUsed": 450,
   "CreatedAt": "2026-01-25T14:30:00Z",
   "TTL": 1738339800  // Expires in 30 days
@@ -2001,7 +2001,7 @@ Request: POST /api/ai/generate
 | S3 | 100GB storage, 1M requests | $0.023/GB + $0.0004/1K | $2.70 |
 | DynamoDB | 10M reads, 5M writes | On-Demand pricing | $3.75 |
 | **AI** | | | |
-| Bedrock (Claude) | 50M input tokens, 10M output | $0.003 in, $0.015 out | $300.00 |
+| Bedrock (LLM) | 50M input tokens, 10M output | $0.003 in, $0.015 out | $300.00 |
 | Bedrock (Titan) | 100M tokens | $0.0005 per 1K | $50.00 |
 | OpenSearch | 2 OCUs | $0.24 per OCU-hour | $345.60 |
 | **Networking** | | | |

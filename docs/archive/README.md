@@ -45,7 +45,7 @@ DevVerse is 100% AWS-native and uses:
 
 - **Frontend:** React, TypeScript, Monaco Editor
 - **Backend:** FastAPI, AWS Lambda, DynamoDB
-- **AI Layer:** Bedrock (Claude, Titan), OpenSearch
+- **AI Layer:** Bedrock (LLMs, Titan), OpenSearch
 - **DevOps:** CodeCatalyst, Amplify, Fargate
 - **Security:** IAM, Cognito, Secrets Manager
 
