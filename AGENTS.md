@@ -50,7 +50,7 @@ and later enterprises and educational institutions.
 
 ## 5. Current state of the repo
 
-**About to build — no application code yet.** The project was redesigned from scratch, needs first (D-09).
+**Building — block B0 done.** The project was redesigned from scratch, needs first (D-09).
 Current target: a **24-hour Google hackathon build** by 2 people coding with AI help (D-13).
 Every module ships at Real / Lean / Later depth (`03` → *Hackathon build*), in the block order of `05 §2`.
 Stack is Google-first: Next.js + Firebase + Gemini (`07-tech-stack.md`).
@@ -67,6 +67,16 @@ Build priority: GitHub history → Developer Profile → personal AI mentor. Tho
 | `docs/04-non-functional-requirements.md` | Quality targets with IDs (e.g. `NFR-SE-01`) | Canonical |
 | `docs/05-scope-and-roadmap.md` | **24 h build plan**, V1 milestones, **decision log (D-xx)**, open questions (Q-xx) | Canonical |
 | `docs/07-tech-stack.md` | Hackathon tech stack, env vars, GitHub scopes, cost guardrails | Canonical |
+| `docs/08-data-model.md` | Firestore collections and TypeScript shapes — change here first | Canonical |
+
+### Code layout (block B0 done)
+
+- `app/page.tsx` landing + GitHub sign-in · `app/(app)/layout.tsx` signed-in shell with sidebar
+- `app/(app)/[module]/page.tsx` "coming soon" placeholder for every module. **To build a module, create
+  `app/(app)/<slug>/page.tsx`** — it overrides the placeholder. Modules are listed in `lib/modules.ts`.
+- `components/auth-provider.tsx` (`useAuth()`), `components/ui/*` (shadcn-style), `lib/firebase/client.ts`
+- Next.js 16 App Router: route `params` are a Promise (`await params`). Tailwind v4 (theme in `app/globals.css`).
+- Secrets are server-only (`.env.local`, App Hosting secrets). Never import them in `"use client"` files.
 | `docs/archive/` | Earlier drafts (Jan 2026 AWS docs, architecture brainstorm, master prompt) | **Superseded** — source material only |
 
 Rules: the `docs/0x` files win over anything in `docs/archive/`. Reference requirement and decision IDs in
@@ -82,3 +92,13 @@ Never scrape or copy other sites' code/designs — reuse open-source components 
 - Keep scope lean; the design notes repeatedly favor starting simple and deferring abstractions.
 - If you add code, a new doc, or change direction, update §5 (state + document map) of this file.
 - Keep agent-specific instruction files as thin pointers to this file.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

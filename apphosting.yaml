@@ -1,0 +1,20 @@
+# Firebase App Hosting settings: https://firebase.google.com/docs/app-hosting/configure
+runConfig:
+  minInstances: 0   # scale to zero when idle (NFR-CO-02)
+  maxInstances: 2   # keep cost inside the hackathon credits
+
+env:
+  # Public Firebase web config — fill in from Firebase console -> Project settings.
+  - variable: NEXT_PUBLIC_FIREBASE_API_KEY
+    value: REPLACE_ME
+    availability: [BUILD, RUNTIME]
+  - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+    value: REPLACE_ME
+    availability: [BUILD, RUNTIME]
+  - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+    value: REPLACE_ME
+    availability: [BUILD, RUNTIME]
+  - variable: NEXT_PUBLIC_FIREBASE_APP_ID
+    value: REPLACE_ME
+    availability: [BUILD, RUNTIME]
+  # Secrets are added in later blocks with: firebase apphosting:secrets:set GEMINI_API_KEY

@@ -6,7 +6,17 @@ DevVerse brings a browser workspace, a personal AI assistant, coding practice, o
 community together around one idea: a **Developer Profile** that learns your skills, struggles and growth from
 what you actually do — and uses it to help you everywhere.
 
-> **Status:** requirements & design phase. No application code yet.
+> **Status:** hackathon build in progress — block B0 (app shell + GitHub sign-in) done.
+
+## Run it locally
+
+```bash
+npm install
+cp .env.example .env.local   # then fill in the Firebase values
+npm run dev                  # http://localhost:3000
+```
+
+Without Firebase values the app runs in **preview mode** (no sign-in) so the UI can still be built.
 
 ## Documentation
 
@@ -18,6 +28,7 @@ what you actually do — and uses it to help you everywhere.
 | [04 — Non-Functional Requirements](docs/04-non-functional-requirements.md) | Performance, security, privacy, AI quality, cost targets |
 | [05 — Scope, Roadmap & Decisions](docs/05-scope-and-roadmap.md) | V1 milestones, later phases, decision log, open questions |
 | [07 — Tech Stack](docs/07-tech-stack.md) | Google-first stack for the hackathon build |
+| [08 — Data Model](docs/08-data-model.md) | Firestore collections and shapes |
 | [docs/archive/](docs/archive/) | Earlier drafts — superseded, kept for history |
 
 For AI coding agents: start with [AGENTS.md](AGENTS.md).
