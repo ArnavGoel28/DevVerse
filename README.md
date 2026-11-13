@@ -6,7 +6,7 @@ DevVerse brings a browser workspace, a personal AI assistant, coding practice, o
 community together around one idea: a **Developer Profile** that learns your skills, struggles and growth from
 what you actually do — and uses it to help you everywhere.
 
-> **Status:** hackathon build in progress — block B0 (app shell + GitHub sign-in) done.
+> **Status:** hackathon build in progress — blocks B0 (app shell + GitHub sign-in) and B1 (GitHub history → Developer Profile) done.
 
 ## Run it locally
 
@@ -16,7 +16,12 @@ cp .env.example .env.local   # then fill in the Firebase values
 npm run dev                  # http://localhost:3000
 ```
 
-Without Firebase values the app runs in **preview mode** (no sign-in) so the UI can still be built.
+Without Firebase values the app runs in **preview mode**: no sign-in, but you can build a demo profile from any public GitHub username.
+
+```bash
+npm run check   # typecheck + lint + unit tests
+npm run build   # production build
+```
 
 ## Documentation
 

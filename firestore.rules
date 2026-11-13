@@ -1,0 +1,13 @@
+rules_version = '2';
+
+// B1: the browser never talks to Firestore directly — every read/write goes through
+// Next.js server routes (Firebase Admin SDK, which bypasses these rules) after verifying the user.
+// So the safest rule is "deny everything" for clients. Open specific paths later
+// (e.g. community content, docs/08-data-model.md "Access rules") only when a block needs it.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

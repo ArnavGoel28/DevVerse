@@ -50,7 +50,7 @@ and later enterprises and educational institutions.
 
 ## 5. Current state of the repo
 
-**Building — block B0 done.** The project was redesigned from scratch, needs first (D-09).
+**Building — blocks B0 and B1 done.** The project was redesigned from scratch, needs first (D-09).
 Current target: a **24-hour Google hackathon build** by 2 people coding with AI help (D-13).
 Every module ships at Real / Lean / Later depth (`03` → *Hackathon build*), in the block order of `05 §2`.
 Stack is Google-first: Next.js + Firebase + Gemini (`07-tech-stack.md`).
@@ -69,14 +69,21 @@ Build priority: GitHub history → Developer Profile → personal AI mentor. Tho
 | `docs/07-tech-stack.md` | Hackathon tech stack, env vars, GitHub scopes, cost guardrails | Canonical |
 | `docs/08-data-model.md` | Firestore collections and TypeScript shapes — change here first | Canonical |
 
-### Code layout (block B0 done)
+### Code layout (blocks B0–B1 done)
 
 - `app/page.tsx` landing + GitHub sign-in · `app/(app)/layout.tsx` signed-in shell with sidebar
+- B1 (GH-08/09, DI-*): `lib/github/history.ts` (GitHub import) → `lib/profile/evidence.ts` → `lib/profile/rules.ts`
+  (skills, struggles, growth, insights) → `lib/profile/enrich.ts` (Gemini rewrites text only, D-19).
+  Server: `lib/server/*` (Firebase Admin, token encryption, `profile-service.ts`), routes in `app/api/`.
+  UI: `app/(app)/profile`, `app/(app)/github`, `components/profile/*` (`useProfile()` handles signed-in and demo mode, D-18).
+- **Testing (required for every block):** `npm run check` (typecheck + lint + Vitest unit tests in `tests/`),
+  `npm run build`, then run the app and click through the feature (dynamic test).
 - `app/(app)/[module]/page.tsx` "coming soon" placeholder for every module. **To build a module, create
   `app/(app)/<slug>/page.tsx`** — it overrides the placeholder. Modules are listed in `lib/modules.ts`.
 - `components/auth-provider.tsx` (`useAuth()`), `components/ui/*` (shadcn-style), `lib/firebase/client.ts`
 - Next.js 16 App Router: route `params` are a Promise (`await params`). Tailwind v4 (theme in `app/globals.css`).
 - Secrets are server-only (`.env.local`, App Hosting secrets). Never import them in `"use client"` files.
+
 | `docs/archive/` | Earlier drafts (Jan 2026 AWS docs, architecture brainstorm, master prompt) | **Superseded** — source material only |
 
 Rules: the `docs/0x` files win over anything in `docs/archive/`. Reference requirement and decision IDs in

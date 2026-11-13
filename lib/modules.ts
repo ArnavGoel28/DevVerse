@@ -21,6 +21,8 @@ export type AppModule = {
   icon: LucideIcon;
   block: string;
   depth: "Real" | "Lean" | "Later";
+  /** true once app/(app)/<slug>/page.tsx exists (the placeholder is then skipped). */
+  built?: boolean;
   features: { id: string; text: string }[];
 };
 
@@ -32,6 +34,7 @@ export const MODULES: AppModule[] = [
     icon: UserRound,
     block: "B1",
     depth: "Real",
+    built: true,
     features: [
       { id: "DI-01", text: "Skills with confidence and evidence" },
       { id: "DI-03", text: "Recurring struggles and their trend" },
@@ -46,6 +49,7 @@ export const MODULES: AppModule[] = [
     icon: GitBranch,
     block: "B1–B2",
     depth: "Real",
+    built: true,
     features: [
       { id: "GH-08", text: "Import your entire GitHub history" },
       { id: "GH-09", text: "Insights: contributions, languages, open-source work, gaps" },

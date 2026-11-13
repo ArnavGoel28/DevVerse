@@ -14,7 +14,7 @@ export function AppSidebar() {
   const { user, signOut } = useAuth();
 
   return (
-    <aside className="flex w-full flex-col border-b bg-sidebar text-sidebar-foreground md:h-screen md:w-60 md:shrink-0 md:border-r md:border-b-0">
+    <aside className="flex w-full flex-col border-b bg-sidebar text-sidebar-foreground md:sticky md:top-0 md:h-screen md:w-60 md:shrink-0 md:border-r md:border-b-0">
       <Link href="/profile" className="px-5 py-4 text-lg font-bold tracking-tight">
         Dev<span className="text-primary">Verse</span>
       </Link>

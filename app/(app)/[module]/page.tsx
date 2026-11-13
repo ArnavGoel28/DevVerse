@@ -10,7 +10,7 @@ import { MODULES, getModule } from "@/lib/modules";
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return MODULES.map((m) => ({ module: m.slug }));
+  return MODULES.filter((m) => !m.built).map((m) => ({ module: m.slug }));
 }
 
 export default async function ModulePage({ params }: { params: Promise<{ module: string }> }) {

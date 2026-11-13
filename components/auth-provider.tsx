@@ -45,11 +45,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     provider.addScope("read:user");
     try {
       const result = await signInWithPopup(auth, provider);
-      // Firebase only returns the GitHub token at sign-in time.
-      // TODO(B1, GH-08): send this token to a server route that stores it encrypted.
-      // Never store it in the browser (NFR-SE-03).
+      // Firebase only returns the GitHub token at sign-in time. Hand it straight to the server,
+      // which stores it encrypted (GH-01, NFR-SE-03). It is never kept in the browser.
       const githubToken = GithubAuthProvider.credentialFromResult(result)?.accessToken;
-      void githubToken;
+      if (githubToken) {
+        const res = await fetch("/api/github/token", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${await result.user.getIdToken()}` },
+          body: JSON.stringify({ token: githubToken }),
+        });
+        if (!res.ok) {
+          const body = (await res.json().catch(() => ({}))) as { error?: string };
+          setError(body.error ?? "Couldn't connect your GitHub account. Please sign in again.");
+        }
+      }
     } catch (e) {
       const code = (e as { code?: string }).code;
       if (code === "auth/popup-closed-by-user" || code === "auth/cancelled-popup-request") return;

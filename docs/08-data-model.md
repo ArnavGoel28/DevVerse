@@ -2,7 +2,8 @@
 
 > Status: **v1 for the hackathon** · Store: Cloud Firestore (`07-tech-stack.md`).
 > Both builders code against these shapes. Change them here first, then in `lib/types.ts`.
-> Every timestamp is a Firestore `Timestamp`. IDs are Firestore document IDs unless noted.
+> Every timestamp is an **ISO-8601 string** (simple to send to the browser and to test). IDs are Firestore document IDs unless noted.
+> The code mirror is `lib/types.ts` — where it adds fields (B1), they are listed under each shape below.
 
 ## Collections at a glance
 
@@ -71,6 +72,9 @@ type GitHubSnapshot = {
 };
 ```
 
+B1 additions: `source: "graphql" | "public"` (public = no token, used by the demo — D-18); `account.name`, `account.avatarUrl`;
+per repo `createdAt` (dates evidence for the growth back-fill); `hasReadme` is optional (unknown in public mode).
+
 ## users/{uid}/evidence/{evidenceId} — DI-02
 
 The profile is computed from evidence. **Evidence is a fact, not a chat transcript** (NFR-PR-01).
@@ -128,6 +132,10 @@ type DeveloperProfile = {
   updatedAt: Timestamp;
 };
 ```
+
+B1 additions: `growth: { period: string; skills: Record<skillId, number> }[]` (confidence per year, back-filled from GitHub — DI-04);
+`githubStats` (chart-ready numbers for GH-09: totals, contributions by year, top languages, top repos, open-source PRs);
+`generatedBy: "gemini" | "rules"` (D-19: skills always come from rules; Gemini only rewrites the text).
 
 `profile/current/history/{YYYY-MM-DD}` stores `{ skills: { id: string; confidence: number }[] }` for the growth chart (DI-04).
 
