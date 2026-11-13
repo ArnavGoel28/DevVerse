@@ -1,33 +1,18 @@
-import {
-  BookOpen,
-  Briefcase,
-  Code2,
-  LayoutDashboard,
-  Users,
-  GitBranch,
-  MessageSquare,
-  Rocket,
-  Sparkles,
-  Swords,
-  UserRound,
-  type LucideIcon,
-} from "lucide-react";
+import { Bot, BookOpen, Briefcase, Code, GitBranch, Home, MessageSquare, Practice, Rocket, User, Users, type AppIcon } from "@/components/icons";
 
 /**
- * Single list of DevVerse modules. Drives the sidebar and the placeholder pages.
+ * Single list of DevVerse modules. Drives the sidebar, page titles and the landing tool list.
  * Requirement IDs refer to docs/03-functional-requirements.md; blocks to docs/05-scope-and-roadmap.md §2.
  */
 export type AppModule = {
   slug: string;
   name: string;
   tagline: string;
-  icon: LucideIcon;
+  icon: AppIcon;
   block: string;
   /** Sidebar section (Hick's law: fewer, labelled groups — docs/12-todo.md §1). */
   group: "you" | "grow" | "build" | "connect";
   depth: "Real" | "Lean" | "Later";
-  /** true once app/(app)/<slug>/page.tsx exists (the placeholder is then skipped). */
-  built?: boolean;
   features: { id: string; text: string }[];
 };
 
@@ -37,10 +22,9 @@ export const MODULES: AppModule[] = [
     group: "you",
     name: "Home",
     tagline: "Your next best move in every tool, picked from your Developer Profile.",
-    icon: LayoutDashboard,
+    icon: Home,
     block: "B6",
     depth: "Real",
-    built: true,
     features: [
       { id: "DI-09", text: "Next actions across all tools" },
       { id: "AG-01", text: "Your AI agent team at a glance" },
@@ -51,10 +35,9 @@ export const MODULES: AppModule[] = [
     group: "you",
     name: "Profile",
     tagline: "Your Developer Profile: skills, struggles and growth, built from what you actually do.",
-    icon: UserRound,
+    icon: User,
     block: "B1",
     depth: "Real",
-    built: true,
     features: [
       { id: "DI-01", text: "Skills with confidence and evidence" },
       { id: "DI-03", text: "Recurring struggles and their trend" },
@@ -65,12 +48,11 @@ export const MODULES: AppModule[] = [
   {
     slug: "github",
     group: "grow",
-    name: "Grow your GitHub",
+    name: "Grow Your GitHub",
     tagline: "Your whole GitHub history, seen the way a recruiter sees it.",
     icon: GitBranch,
     block: "B1–B2",
     depth: "Real",
-    built: true,
     features: [
       { id: "GH-08", text: "Import your entire GitHub history" },
       { id: "GH-09", text: "Insights: contributions, languages, open-source work, gaps" },
@@ -83,10 +65,9 @@ export const MODULES: AppModule[] = [
     group: "you",
     name: "AI Mentor",
     tagline: "A Gemini-powered mentor that knows your history.",
-    icon: Sparkles,
+    icon: Bot,
     block: "B2",
     depth: "Real",
-    built: true,
     features: [
       { id: "AI-01", text: "Ask anything about your projects" },
       { id: "AI-03", text: "Explanations at your level" },
@@ -101,7 +82,6 @@ export const MODULES: AppModule[] = [
     icon: BookOpen,
     block: "B2",
     depth: "Real",
-    built: true,
     features: [
       { id: "LN-01", text: "Personal roadmap with linked resources" },
       { id: "LN-02", text: "Steps complete automatically from your activity" },
@@ -113,10 +93,9 @@ export const MODULES: AppModule[] = [
     group: "grow",
     name: "Practice",
     tagline: "Coding problems picked for you, with hints that don't spoil the answer.",
-    icon: Swords,
+    icon: Practice,
     block: "B3",
     depth: "Lean",
-    built: true,
     features: [
       { id: "PR-01", text: "Problems by topic and difficulty" },
       { id: "PR-03", text: "Run and submit, judged automatically" },
@@ -127,7 +106,6 @@ export const MODULES: AppModule[] = [
   {
     slug: "community",
     group: "connect",
-    built: true,
     name: "Community",
     tagline: "Questions, articles, showcases and discussions in one feed made for you.",
     icon: MessageSquare,
@@ -143,10 +121,9 @@ export const MODULES: AppModule[] = [
   {
     slug: "workspace",
     group: "build",
-    built: true,
     name: "Code",
     tagline: "Open your repo's code in a VS Code-style editor and have it explained.",
-    icon: Code2,
+    icon: Code,
     block: "B5",
     depth: "Lean",
     features: [
@@ -157,7 +134,6 @@ export const MODULES: AppModule[] = [
   {
     slug: "deploy",
     group: "build",
-    built: true,
     name: "Ship",
     tagline: "Understand why your builds and deploys fail.",
     icon: Rocket,
@@ -171,7 +147,6 @@ export const MODULES: AppModule[] = [
   {
     slug: "jobs",
     group: "connect",
-    built: true,
     name: "Jobs",
     tagline: "Roles matched to the skills you've actually proven.",
     icon: Briefcase,
@@ -185,7 +160,6 @@ export const MODULES: AppModule[] = [
   {
     slug: "teams",
     group: "connect",
-    built: true,
     name: "Teams",
     tagline: "Team skill graphs, onboarding paths and a mentor that knows your codebase.",
     icon: Users,
@@ -208,4 +182,10 @@ export const GROUPS: { id: AppModule["group"]; label: string }[] = [
 
 export function getModule(slug: string) {
   return MODULES.find((m) => m.slug === slug);
+}
+
+/** S5/S6: page title and meta description for a tool, from its name and tagline. */
+export function moduleMetadata(slug: string): { title: string; description: string } {
+  const mod = getModule(slug);
+  return mod ? { title: mod.name, description: mod.tagline } : { title: "DevVerse", description: "" };
 }

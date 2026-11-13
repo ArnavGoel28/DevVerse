@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Check, EyeOff, Minus, TrendingDown, TrendingUp, Undo2, X } from "lucide-react";
+import { ArrowRight, Check, EyeOff, Minus, TrendingDown, TrendingUp, Undo2, X } from "@/components/icons";
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { githubAvatar } from "@/lib/avatar";
 import { parentName } from "@/lib/profile/skills";
 import type { DeveloperProfile, ProfileSkill, SkillFeedback } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -44,7 +45,7 @@ function SummaryCard({ profile }: { profile: DeveloperProfile }) {
       <CardContent className="flex flex-col gap-4 sm:flex-row sm:items-start">
         {s.avatarUrl && (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={s.avatarUrl} alt="" className="size-16 shrink-0 rounded-full border" />
+          <img src={githubAvatar(s.avatarUrl, 128)} alt="" width={64} height={64} fetchPriority="high" className="size-16 shrink-0 rounded-full border" />
         )}
         <div className="flex min-w-0 flex-col gap-2">
           <div className="flex flex-wrap items-center gap-2">
@@ -73,7 +74,7 @@ function SummaryCard({ profile }: { profile: DeveloperProfile }) {
 function Stat({ label, value, hint }: { label: string; value: number; hint?: string }) {
   return (
     <span>
-      <span className="font-semibold text-foreground">{value.toLocaleString()}</span> {label}
+      <span className="font-semibold text-foreground tabular-nums">{new Intl.NumberFormat().format(value)}</span> {label}
       {hint && <span className="ml-1 opacity-70">({hint})</span>}
     </span>
   );
@@ -98,7 +99,7 @@ function SkillsCard({ skills, onFeedback }: { skills: ProfileSkill[]; onFeedback
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-5">
-        {!skills.length && <p className="text-sm text-muted-foreground">No skills found yet — push some code to GitHub.</p>}
+        {!skills.length && <p className="text-sm text-muted-foreground">No skills found yet. Push some code to GitHub and import again.</p>}
         {[...groups.entries()].map(([group, list]) => (
           <div key={group} className="flex flex-col gap-2">
             <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{group}</h3>
@@ -124,8 +125,8 @@ function SkillRow({ skill, onFeedback }: { skill: ProfileSkill; onFeedback: Prop
     <details className={cn("group rounded-md border px-3 py-2", fb === "wrong" && "opacity-60", fb === "hidden" && "opacity-40")}>
       <summary className="flex cursor-pointer list-none items-center gap-3">
         <span className={cn("w-32 shrink-0 truncate text-sm font-medium", fb === "wrong" && "line-through")}>{skill.name}</span>
-        <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted" aria-hidden>
-          <div className="h-full rounded-full bg-primary" style={{ width: `${pct}%` }} />
+        <div className="h-2 flex-1 overflow-hidden rounded-sm bg-muted" aria-hidden>
+          <div className="h-full bg-primary" style={{ width: `${pct}%` }} />
         </div>
         <span className="w-10 text-right text-xs tabular-nums text-muted-foreground" aria-label={`confidence ${pct} percent`}>
           {pct}%
@@ -145,10 +146,10 @@ function SkillRow({ skill, onFeedback }: { skill: ProfileSkill; onFeedback: Prop
           ) : (
             <>
               <Button size="sm" variant="outline" onClick={() => onFeedback(skill.id, "confirmed")}>
-                <Check /> That&apos;s right
+                <Check /> That&apos;s Right
               </Button>
               <Button size="sm" variant="outline" onClick={() => onFeedback(skill.id, "wrong")}>
-                <X /> I don&apos;t know this
+                <X /> I Don&apos;t Know This
               </Button>
               <Button size="sm" variant="outline" onClick={() => onFeedback(skill.id, "hidden")}>
                 <EyeOff /> Hide
@@ -175,7 +176,7 @@ function StrugglesCard({ profile }: { profile: DeveloperProfile }) {
         <CardDescription>Recurring gaps spotted in your history.</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
-        {!profile.struggles.length && <p className="text-sm text-muted-foreground">Nothing stands out — nice work.</p>}
+        {!profile.struggles.length && <p className="text-sm text-muted-foreground">Nothing stands out right now.</p>}
         {profile.struggles.map((s) => {
           const T = TREND[s.trend];
           return (
@@ -186,8 +187,8 @@ function StrugglesCard({ profile }: { profile: DeveloperProfile }) {
                   <T.icon className="size-3.5" /> {T.label}
                 </span>
               </div>
-              <div className="h-1.5 overflow-hidden rounded-full bg-muted" aria-label={`severity ${Math.round(s.severity * 100)} percent`}>
-                <div className="h-full rounded-full bg-destructive/70" style={{ width: `${Math.round(s.severity * 100)}%` }} />
+              <div className="h-1.5 overflow-hidden rounded-sm bg-muted" aria-label={`severity ${Math.round(s.severity * 100)} percent`}>
+                <div className="h-full bg-destructive/70" style={{ width: `${Math.round(s.severity * 100)}%` }} />
               </div>
               <p className="text-xs text-muted-foreground">{s.why}</p>
             </div>
@@ -202,7 +203,7 @@ function RecommendationsCard({ profile }: { profile: DeveloperProfile }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Next steps</CardTitle>
+        <CardTitle>Next Steps</CardTitle>
         <CardDescription>Based on your goals and struggles.</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
@@ -251,7 +252,7 @@ function GrowthCard({ profile }: { profile: DeveloperProfile }) {
       </CardHeader>
       <CardContent>
         {data.length < 2 ? (
-          <p className="text-sm text-muted-foreground">Not enough history yet — this chart fills in as you keep building.</p>
+          <p className="text-sm text-muted-foreground">Not enough history yet. This chart fills in as you keep building.</p>
         ) : (
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">

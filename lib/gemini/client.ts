@@ -34,6 +34,10 @@ function ai(): GoogleGenAI {
   return (client = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY }));
 }
 
+// Shared writing style for every agent (docs/12 §2, V7/V9): plain words, no em dashes, no emojis.
+const STYLE = "Write in plain, direct English. Do not use em dashes or emojis.";
+const withStyle = (system?: string) => (system ? `${system}\n\n${STYLE}` : STYLE);
+
 export type ChatTurn = { role: "user" | "model"; text: string };
 
 /** Asks Gemini for JSON matching `schema`. Returns the raw text, or throws. */
@@ -54,7 +58,7 @@ export async function generateText(opts: { system?: string; prompt: string; sear
     model: GEMINI_MODEL,
     contents: opts.prompt,
     config: {
-      systemInstruction: opts.system,
+      systemInstruction: withStyle(opts.system),
       temperature: 0.4,
       ...(opts.search ? { tools: [{ googleSearch: {} }] } : {}),
     },
@@ -69,7 +73,7 @@ export async function* streamChat(system: string, turns: ChatTurn[]): AsyncGener
   const stream = await ai().models.generateContentStream({
     model: GEMINI_MODEL,
     contents: turns.map((t) => ({ role: t.role, parts: [{ text: t.text }] })),
-    config: { systemInstruction: system, temperature: 0.5 },
+    config: { systemInstruction: withStyle(system), temperature: 0.5 },
   });
   for await (const chunk of stream) {
     if (chunk.text) yield chunk.text;

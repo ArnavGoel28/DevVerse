@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CheckCircle2, CircleDashed, ExternalLink, GitBranch, Loader2, Rocket, Sparkles, XCircle } from "lucide-react";
+import { CheckCircle2, CircleDashed, ExternalLink, GitBranch, Loader2, XCircle } from "@/components/icons";
 
 import { type ApiAuth, apiJson } from "@/components/api";
 import { timeAgoShort } from "@/components/ship/time";
@@ -13,9 +13,9 @@ import type { DeveloperProfile } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 function StatusIcon({ status, conclusion, className }: { status: string; conclusion: string | null; className?: string }) {
-  if (status !== "completed") return <CircleDashed className={cn("size-4 animate-spin text-amber-500", className)} aria-label="In progress" />;
-  if (conclusion === "success") return <CheckCircle2 className={cn("size-4 text-emerald-600", className)} aria-label="Succeeded" />;
-  if (conclusion === "failure" || conclusion === "timed_out") return <XCircle className={cn("size-4 text-rose-600", className)} aria-label="Failed" />;
+  if (status !== "completed") return <CircleDashed className={cn("size-4 animate-spin text-highlight", className)} aria-label="In progress" />;
+  if (conclusion === "success") return <CheckCircle2 className={cn("size-4 text-success", className)} aria-label="Succeeded" />;
+  if (conclusion === "failure" || conclusion === "timed_out") return <XCircle className={cn("size-4 text-destructive", className)} aria-label="Failed" />;
   return <CircleDashed className={cn("size-4 text-muted-foreground", className)} aria-label={conclusion ?? "Unknown"} />;
 }
 
@@ -79,30 +79,25 @@ export function ShipView({ auth, profile }: { auth: ApiAuth; profile: DeveloperP
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="grid gap-4 md:grid-cols-[1fr_320px]">
-        <form onSubmit={(e) => { e.preventDefault(); void load(); }} className="flex flex-col gap-2 rounded-xl border bg-card p-4">
+      <div>
+        <form onSubmit={(e) => { e.preventDefault(); void load(); }} className="flex flex-col gap-2 rounded-md border bg-card p-4">
           <label className="text-sm font-semibold" htmlFor="ship-repo">Repository</label>
           <div className="flex gap-2">
-            <input id="ship-repo" value={input} onChange={(e) => setInput(e.target.value)} placeholder="owner/repo" className="flex-1 rounded-md border bg-background px-3 py-2 text-sm" />
-            <Button type="submit" disabled={loading === "runs"}>{loading === "runs" && <Loader2 className="animate-spin" />} Load runs</Button>
+            <input id="ship-repo" value={input} onChange={(e) => setInput(e.target.value)} name="repo" autoComplete="off" spellCheck={false} placeholder="owner/repo, e.g. vercel/next.js…" className="flex-1 rounded-md border bg-background px-3 py-2 text-sm" />
+            <Button type="submit" disabled={loading === "runs"}>{loading === "runs" && <Loader2 className="animate-spin" />} Load Runs</Button>
           </div>
           {suggestions.length > 0 && (
             <div className="flex flex-wrap gap-1.5 text-xs">
               {suggestions.map((s) => <button type="button" key={s} onClick={() => { setInput(s); void load(s); }} className="rounded-md border px-2 py-0.5 hover:bg-muted">{s}</button>)}
             </div>
           )}
-          {error && <p className="text-sm text-rose-600">{error}</p>}
+          {error && <p className="text-sm text-destructive">{error}</p>}
         </form>
-        <div className="rounded-xl border border-dashed p-4">
-          <h2 className="mb-1 flex items-center gap-2 text-sm font-semibold"><Rocket className="size-4" /> One-click deploy</h2>
-          <p className="mb-3 text-xs text-muted-foreground">Deploy to Google Cloud Run with detected settings, live logs and rollback (DP-01). Coming after the MVP.</p>
-          <Button variant="outline" size="sm" disabled>Deploy to Cloud Run</Button>
-        </div>
       </div>
 
       {runs && (
         <div className="grid gap-4 lg:grid-cols-[1fr_380px]">
-          <section className="overflow-hidden rounded-xl border bg-card">
+          <section className="overflow-hidden rounded-md border bg-card">
             <div className="flex items-center justify-between border-b px-4 py-2 text-sm">
               <span className="font-semibold">Workflow runs</span>
               <span className="text-xs text-muted-foreground">{runs.length} recent · {failed} failed</span>
@@ -127,7 +122,7 @@ export function ShipView({ auth, profile }: { auth: ApiAuth; profile: DeveloperP
             )}
           </section>
 
-          <aside className="rounded-xl border bg-card p-4">
+          <aside className="rounded-md border bg-card p-4">
             {!selected ? (
               <p className="text-sm text-muted-foreground">Select a run to see its jobs and steps.</p>
             ) : (
@@ -145,7 +140,7 @@ export function ShipView({ auth, profile }: { auth: ApiAuth; profile: DeveloperP
                     <p className="flex items-center gap-2 border-b px-3 py-1.5 text-sm font-medium"><StatusIcon status={j.status} conclusion={j.conclusion} /> {j.name}</p>
                     <ol className="px-3 py-1.5 text-xs">
                       {j.steps.map((s) => (
-                        <li key={s.number} className={cn("flex items-center gap-2 py-0.5", s.conclusion === "failure" && "font-medium text-rose-600")}>
+                        <li key={s.number} className={cn("flex items-center gap-2 py-0.5", s.conclusion === "failure" && "font-medium text-destructive")}>
                           <StatusIcon status={s.status} conclusion={s.conclusion} className="size-3.5" /> {s.name}
                         </li>
                       ))}
@@ -154,13 +149,13 @@ export function ShipView({ auth, profile }: { auth: ApiAuth; profile: DeveloperP
                 ))}
                 {jobs && selected.conclusion === "failure" && (
                   <Button onClick={runExplain} disabled={loading === "explain"}>
-                    {loading === "explain" ? <Loader2 className="animate-spin" /> : <Sparkles />} Explain this failure
+                    {loading === "explain" ? <Loader2 className="animate-spin" /> : null} Explain This Failure
                   </Button>
                 )}
-                {jobs && selected.conclusion === "success" && <p className="text-sm text-emerald-700 dark:text-emerald-400">All green. Nothing to fix here.</p>}
+                {jobs && selected.conclusion === "success" && <p className="text-sm text-success">All green. Nothing to fix here.</p>}
                 {explain && (
                   <div className="rounded-md bg-muted/50 p-3 text-sm">
-                    <p className="mb-1 flex items-center gap-1 text-xs font-semibold text-muted-foreground"><Sparkles className="size-3" /> DevOps & Debug agent</p>
+                    <p className="mb-1 flex items-center gap-1 text-xs font-semibold text-muted-foreground">DevOps & Debug agent</p>
                     <Markdown>{explain.text}</Markdown>
                     {explain.mode !== "gemini" && explain.mode !== "error" && <p className="mt-2 text-xs text-muted-foreground">(offline rules; AI explanations need the Gemini key)</p>}
                   </div>

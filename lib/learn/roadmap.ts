@@ -99,7 +99,7 @@ export function buildRoadmapPrompt(goal: string, profile: DeveloperProfile, base
     `GOAL: ${goal}`,
     "PROFILE:",
     profileContext(profile),
-    "A generic starting roadmap (adapt it — skip what they clearly know, add what their goal and struggles need):",
+    "A generic starting roadmap (adapt it: skip what they clearly know, add what their goal and struggles need):",
     JSON.stringify(base.steps.map((s) => ({ title: s.title, skillIds: s.skillIds }))),
     "",
     "Use Google Search to find 1-3 real, free, current resources per step (official docs, MDN, freeCodeCamp, YouTube courses).",

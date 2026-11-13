@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { BookOpen, CheckCircle2, Circle, ExternalLink, Loader2, Sparkles, Swords } from "lucide-react";
+import { toast } from "sonner";
+import { BookOpen, CheckCircle2, Circle, ExternalLink, Loader2, Practice } from "@/components/icons";
 
 import { apiJson, readSession, writeSession, type ApiAuth } from "@/components/api";
 import { Badge } from "@/components/ui/badge";
@@ -59,8 +60,10 @@ export function LearnView({ auth, profile }: { auth: ApiAuth; profile: Developer
       setRoadmap(r.roadmap);
       setMode(r.mode);
       if (auth.mode === "demo") writeSession(KEY, r.roadmap);
+      toast.success("Roadmap ready", { description: `${r.roadmap.steps.length} steps toward ${goal}.` });
     } catch (e) {
       setError((e as Error).message);
+      toast.error("Couldn't build the roadmap", { description: (e as Error).message });
     } finally {
       setBusy(false);
     }
@@ -71,12 +74,18 @@ export function LearnView({ auth, profile }: { auth: ApiAuth; profile: Developer
     const before = roadmap;
     const next = setStepManual(roadmap, stepId, done, profile);
     setRoadmap(next);
-    if (auth.mode === "demo") return writeSession(KEY, next);
+    const saved = () => toast.success(done === null ? "Step reset to automatic tracking" : done ? "Step marked done" : "Step marked not done");
+    if (auth.mode === "demo") {
+      writeSession(KEY, next);
+      return saved();
+    }
     try {
       await apiJson("/api/learn/step", auth, { method: "PATCH", body: { stepId, done } });
+      saved();
     } catch (e) {
       setRoadmap(before);
       setError((e as Error).message);
+      toast.error("Couldn't save that step", { description: (e as Error).message });
     }
   }
 
@@ -88,7 +97,7 @@ export function LearnView({ auth, profile }: { auth: ApiAuth; profile: Developer
     <div className="flex flex-col gap-4">
       <Card>
         <CardHeader>
-          <CardTitle>Your goal</CardTitle>
+          <CardTitle>Your Goal</CardTitle>
           <CardDescription>
             Gemini plans the steps for your profile and finds free resources on the web. Steps tick themselves off when
             your work shows the skill.
@@ -108,11 +117,11 @@ export function LearnView({ auth, profile }: { auth: ApiAuth; profile: Developer
               value={goal}
               maxLength={100}
               onChange={(e) => setGoal(e.target.value)}
-              placeholder="e.g. Backend developer internship"
+              name="goal" autoComplete="off" placeholder="e.g. Backend developer internship…"
             />
             <Button type="submit" disabled={busy || goal.trim().length < 3}>
-              {busy ? <Loader2 className="animate-spin" /> : <Sparkles />}
-              {busy ? "Planning…" : roadmap ? "Rebuild roadmap" : "Build my roadmap"}
+              {busy ? <Loader2 className="animate-spin" /> : null}
+              {busy ? "Planning…" : roadmap ? "Rebuild Roadmap" : "Build My Roadmap"}
             </Button>
           </form>
           {error && <p role="alert" className="mt-2 text-sm text-destructive">{error}</p>}
@@ -137,8 +146,8 @@ export function LearnView({ auth, profile }: { auth: ApiAuth; profile: Developer
               {mode && mode !== "gemini" && roadmap.source !== "ai" && (
                 <CardDescription>Showing the curated roadmap ({mode.replace("curated", "").replace(/[()]/g, "").trim() || "AI not configured"}).</CardDescription>
               )}
-              <div className="mt-2 h-2 overflow-hidden rounded-full bg-muted" aria-hidden>
-                <div className="h-full rounded-full bg-primary" style={{ width: `${(doneCount / roadmap.steps.length) * 100}%` }} />
+              <div className="mt-2 h-2 overflow-hidden rounded-sm bg-muted" aria-hidden>
+                <div className="h-full bg-primary" style={{ width: `${(doneCount / roadmap.steps.length) * 100}%` }} />
               </div>
             </CardHeader>
             <CardContent>
@@ -194,8 +203,8 @@ export function LearnView({ auth, profile }: { auth: ApiAuth; profile: Developer
       )}
 
       <div className="flex flex-col gap-2">
-        <h2 className="text-lg font-semibold">Learning packs for your struggles</h2>
-        {!packs.length && <p className="text-sm text-muted-foreground">No struggles detected — nothing to fix right now.</p>}
+        <h2 className="text-lg font-semibold">Learning Packs for Your Struggles</h2>
+        {!packs.length && <p className="text-sm text-muted-foreground">No struggles detected, so there is nothing to fix right now.</p>}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {packs.map((p) => (
             <Card key={p.topic}>
@@ -212,10 +221,10 @@ export function LearnView({ auth, profile }: { auth: ApiAuth; profile: Developer
                     </a>
                   ))}
                   <Link href={p.practiceHref} className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline">
-                    <Swords className="size-3.5" /> Practice problems
+                    <Practice className="size-3.5" /> Practice problems
                   </Link>
                   <Link href={`/mentor`} className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline">
-                    <Sparkles className="size-3.5" /> Ask the mentor to explain it
+                    Ask the mentor to explain it
                   </Link>
                 </div>
               </CardContent>

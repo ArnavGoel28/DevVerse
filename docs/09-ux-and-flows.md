@@ -4,17 +4,19 @@
 > Community, Jobs and Teams is planned in `10-backend-plan.md` and decided together before it is built.
 > Diagrams are Mermaid (render on GitHub / VS Code).
 
-## 1. Design principle: familiar, not copied (D-15)
+## 1. Design principle: familiar, not copied (D-15, amended by D-33)
 
-Every DevVerse tool replaces an app developers already know, so each screen uses that app's **layout pattern**
-(where things are, how you act) so switching costs nothing — but with DevVerse's own visual style, no copied
-assets, code or wording. Everything also gains one thing the original can't do: **it knows your profile**.
+Every DevVerse tool replaces an app developers already know. Each screen uses that app's **layout pattern**
+(where things are, how you act) and, since D-33, may also echo its **look and conventions** (density, terminology,
+reading typography, difficulty colours), so people switching over feel at home. Limits: no logos, names, trademarks,
+exact brand palettes or proprietary fonts, and no copied code, CSS, images or text. The shell, tokens and the
+anti-vibecode rules (`12` §2) stay DevVerse's own. Everything also gains one thing the original can't do: **it knows your profile**.
 
 | DevVerse tool | Familiar pattern borrowed from | What we keep | What we add / change |
 |---------------|-------------------------------|--------------|----------------------|
 | Home | GitHub home, LinkedIn feed | Left identity card, centre activity, right suggestions | Every suggestion comes from your profile, one per tool |
-| Practice | LeetCode | Problem list with difficulty, split statement / editor, Run vs Submit | Coach hints instead of solutions; "why this problem" |
-| Community | Stack Overflow + Medium + dev.to | Vote column, accepted answer, tags, Q&A thread; long-form reading view; tabs Newest/Top/Unanswered | "For you" tab ranked by your struggles; one feed for 4 post types; similar-question check while writing |
+| Practice | LeetCode | Problem table (status, number, title, topics, easy / medium / hard colours), workspace with Description / Hints / Submissions tabs, editor with Testcase / Test Result console, Run vs Submit, prev / next; state in the URL (`?problem=`) | Coach hints instead of solutions; "why this problem" |
+| Community | Stack Overflow + Medium / Substack + dev.to | Vote column, accepted answer, tags, Q&A thread; articles in a 680 px serif reading column (Source Serif 4) with byline, read time and a clap / responses / copy-link bar; tabs and type filter in the URL | "For you" tab ranked by your struggles; one feed for 4 post types; similar-question check while writing |
 | Code | VS Code / github.dev | Activity bar, file tree, tabs, editor, side panel | "Explain this" panel by the Code Reviewer agent, at your level |
 | Ship | GitHub Actions + Vercel | Runs list with status dots, run detail with steps | DevOps agent explains why a run failed in plain words |
 | Jobs | LinkedIn Jobs + Wellfound | Filters, job list, job detail side by side, save | Match % from proven skills + your gap per job |

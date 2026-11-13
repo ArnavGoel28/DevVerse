@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { PenSquare, Search } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { PenSquare, Search } from "@/components/icons";
 
 import { PostRow, Tag } from "@/components/community/parts";
 import { useCommunity } from "@/components/community/use-community";
@@ -13,13 +13,13 @@ import type { DeveloperProfile } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 const TABS: { id: FeedTab; label: string }[] = [
-  { id: "for-you", label: "For you" },
+  { id: "for-you", label: "For You" },
   { id: "newest", label: "Newest" },
   { id: "top", label: "Top" },
   { id: "unanswered", label: "Unanswered" },
 ];
 const TYPES: { id?: PostType; label: string }[] = [
-  { label: "All posts" },
+  { label: "All Posts" },
   { id: "question", label: "Questions" },
   { id: "article", label: "Articles" },
   { id: "showcase", label: "Showcases" },
@@ -31,9 +31,19 @@ export function CommunityFeed({ profile }: { profile: DeveloperProfile }) {
   const me = profile.githubStats.login;
   const { posts, saved } = useCommunity(me);
   const params = useSearchParams();
+  const router = useRouter();
   const tag = params.get("tag") ?? undefined;
-  const [tab, setTab] = useState<FeedTab>("for-you");
-  const [type, setType] = useState<PostType | undefined>();
+  // Tab and type live in the URL so a filtered feed can be shared and survives back / forward.
+  const tab = TABS.find((t) => t.id === params.get("tab"))?.id ?? "for-you";
+  const type = TYPES.find((t) => t.id && t.id === params.get("type"))?.id;
+  const setParam = (key: string, value?: string) => {
+    const next = new URLSearchParams(params);
+    if (value) next.set(key, value);
+    else next.delete(key);
+    router.replace(`/community${next.size ? `?${next}` : ""}`, { scroll: false });
+  };
+  const setTab = (t: FeedTab) => setParam("tab", t === "for-you" ? undefined : t);
+  const setType = (t?: PostType) => setParam("type", t);
   const [query, setQuery] = useState("");
   const [now] = useState(() => Date.now());
 
@@ -59,10 +69,10 @@ export function CommunityFeed({ profile }: { profile: DeveloperProfile }) {
         <div className="mb-3 flex flex-wrap items-center gap-2">
           <div className="relative min-w-48 flex-1">
             <Search className="absolute top-2.5 left-2.5 size-4 text-muted-foreground" />
-            <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search posts…" aria-label="Search posts" className="w-full rounded-md border bg-background py-2 pr-3 pl-8 text-sm" />
+            <input value={query} onChange={(e) => setQuery(e.target.value)} type="search" name="q" autoComplete="off" placeholder="Search posts, e.g. env vars…" aria-label="Search posts" className="w-full rounded-md border bg-background py-2 pr-3 pl-8 text-sm" />
           </div>
           <Button asChild>
-            <Link href="/community/new"><PenSquare /> Ask or write</Link>
+            <Link href="/community/new"><PenSquare /> Ask or Write</Link>
           </Button>
         </div>
         <div className="mb-2 flex items-center gap-1 border-b" role="tablist">
@@ -77,20 +87,20 @@ export function CommunityFeed({ profile }: { profile: DeveloperProfile }) {
             </Link>
           )}
         </div>
-        {!saved && <p className="mb-2 text-xs text-amber-600">Your browser blocked storage, so changes last only for this visit.</p>}
+        {!saved && <p className="mb-2 text-xs text-highlight">Your browser blocked storage, so changes last only for this visit.</p>}
         {list.length === 0 ? (
-          <div className="rounded-xl border p-8 text-center text-sm text-muted-foreground">
+          <div className="rounded-md border p-8 text-center text-sm text-muted-foreground">
             Nothing here yet. {tab === "unanswered" ? "Every question has an answer. " : ""}
             <Link href="/community/new" className="text-primary hover:underline">Start the first post</Link>.
           </div>
         ) : (
-          <ul className="rounded-xl border bg-card">{list.map((p) => <PostRow key={p.id} post={p} now={now} />)}</ul>
+          <ul className="rounded-md border bg-card">{list.map((p) => <PostRow key={p.id} post={p} now={now} />)}</ul>
         )}
       </section>
 
       <aside className="grid gap-4 sm:grid-cols-2 lg:col-span-2 xl:col-span-1 xl:flex xl:flex-col">
-        <div className="rounded-xl border bg-card p-4">
-          <h2 className="mb-2 text-sm font-semibold">Questions you can answer</h2>
+        <div className="rounded-md border bg-card p-4">
+          <h2 className="mb-2 text-sm font-semibold">Questions You Can Answer</h2>
           {unansweredForYou.length ? (
             <ul className="flex flex-col gap-2 text-sm">
               {unansweredForYou.map((p) => (
@@ -102,8 +112,8 @@ export function CommunityFeed({ profile }: { profile: DeveloperProfile }) {
           )}
         </div>
         {profile.struggles.length > 0 && (
-          <div className="rounded-xl border bg-card p-4">
-            <h2 className="mb-2 text-sm font-semibold">Your struggles</h2>
+          <div className="rounded-md border bg-card p-4">
+            <h2 className="mb-2 text-sm font-semibold">Your Struggles</h2>
             <p className="mb-2 text-xs text-muted-foreground">The &quot;For you&quot; tab boosts posts about these.</p>
             <ul className="flex flex-col gap-1 text-sm">{profile.struggles.slice(0, 4).map((s) => <li key={s.topic}>• {s.topic}</li>)}</ul>
           </div>

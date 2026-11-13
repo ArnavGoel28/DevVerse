@@ -49,3 +49,4 @@ next-env.d.ts
 /*.jpeg
 /*.jpg
 /*.png
+/docs/builder-playbook.md

@@ -94,8 +94,14 @@ Build priority: GitHub history → Developer Profile → personal AI mentor. Tho
   (Code Reviewer); Ship `lib/ship/*` + `/api/ship/explain` (DevOps & Debug); Community `lib/community/*`; Jobs `lib/jobs/*`;
   Teams `lib/teams/*`; Home `components/home/*`. Shared: `components/module-page.tsx`, `components/use-local.ts` (browser store
   until the backend exists), `lib/server/agent-call.ts` (caps + offline fallback for every agent).
-- `app/(app)/[module]/page.tsx` "coming soon" placeholder for every module. **To build a module, create
-  `app/(app)/<slug>/page.tsx`** — it overrides the placeholder. Modules are listed in `lib/modules.ts`.
+- UI rules (`docs/12` §2): icons only from `components/icons.tsx` (Phosphor), never an icon package directly; colours only
+  from theme tokens (`primary`, `success`, `destructive`, `highlight`), no gradients, shadows, glass, emojis or em dashes;
+  every action shows a toast on success and a clear message on error; follow Vercel's Web Interface Guidelines
+  (`web-design-guidelines` skill: Title Case labels, labelled fields with `name`/`autocomplete`, URL-synced state, undo for
+  destructive actions, `Intl` for dates and numbers); every page has a title via its `layout.tsx`
+  (`moduleMetadata`). Public pages: landing with live demo, `/terms`, `/privacy`, 404 (`app/not-found.tsx`), `SiteFooter`.
+- Every tool has its own `app/(app)/<slug>/page.tsx` plus a `layout.tsx` for its title. Modules are listed in `lib/modules.ts`;
+  a new tool needs an entry there, a page and a layout.
 - `components/auth-provider.tsx` (`useAuth()`), `components/ui/*` (shadcn-style), `lib/firebase/client.ts`
 - Next.js 16 App Router: route `params` are a Promise (`await params`). Tailwind v4 (theme in `app/globals.css`).
 - Secrets are server-only (`.env.local`, App Hosting secrets). Never import them in `"use client"` files.
@@ -105,7 +111,8 @@ Build priority: GitHub history → Developer Profile → personal AI mentor. Tho
 Rules: the `docs/0x` files win over anything in `docs/archive/`. Reference requirement and decision IDs in
 code, commits and PRs. Don't renumber IDs. If you change direction, add a decision to `05 §4`.
 Docs 01–05 are deliberately technology-free; technology lives in `07` and later docs.
-Never scrape or copy other sites' code/designs — reuse open-source components and familiar layouts instead (D-15).
+Never scrape or copy other sites' code, assets or text. Each tool may borrow the layout, look and conventions of the
+platform it replaces (D-15, amended by D-33), but never logos, trademarks, exact brand palettes or proprietary fonts.
 
 ## 6. Guidance for agents working here
 

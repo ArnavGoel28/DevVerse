@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { GraduationCap, Loader2, SendHorizontal, ThumbsDown, ThumbsUp, Trash2 } from "lucide-react";
+import { toast } from "sonner";
+import { GraduationCap, Loader2, SendHorizontal, ThumbsDown, ThumbsUp, Trash2 } from "@/components/icons";
 
 import { apiRequest, readSession, writeSession, type ApiAuth } from "@/components/api";
 import { Markdown } from "@/components/markdown";
@@ -76,7 +77,12 @@ export function MentorChat({ auth }: { auth: ApiAuth }) {
 
   function rate(index: number, rating: "up" | "down") {
     setMessages((m) => m.map((x, i) => (i === index ? { ...x, rating } : x)));
-    void apiRequest("/api/mentor/rating", auth, { body: { rating, mode: messages[index]?.mode } }).catch(() => {});
+    apiRequest("/api/mentor/rating", auth, { body: { rating, mode: messages[index]?.mode } })
+      .then((res) => {
+        if (!res.ok) throw new Error();
+        toast.success(rating === "up" ? "Thanks. Marked as helpful." : "Thanks. We'll use this to improve answers.");
+      })
+      .catch(() => toast.error("Couldn't save your rating. Try again."));
   }
 
   return (
@@ -156,6 +162,8 @@ export function MentorChat({ auth }: { auth: ApiAuth }) {
           <div className="flex gap-2">
             <textarea
               aria-label="Your question"
+              name="question"
+              autoComplete="off"
               className="min-h-10 flex-1 resize-none rounded-md border bg-background px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
               rows={2}
               maxLength={4000}
@@ -180,8 +188,12 @@ export function MentorChat({ auth }: { auth: ApiAuth }) {
             </label>
             {remaining !== null && <span>{remaining} AI answers left today</span>}
             {messages.length > 0 && (
-              <button type="button" className="ml-auto flex items-center gap-1 hover:text-foreground" onClick={() => setMessages([])} disabled={busy}>
-                <Trash2 className="size-3.5" /> New chat
+              <button type="button" className="ml-auto flex items-center gap-1 hover:text-foreground" onClick={() => {
+                  const before = messages;
+                  setMessages([]);
+                  toast("Chat cleared", { action: { label: "Undo", onClick: () => setMessages(before) } });
+                }} disabled={busy}>
+                <Trash2 className="size-3.5" /> New Chat
               </button>
             )}
           </div>

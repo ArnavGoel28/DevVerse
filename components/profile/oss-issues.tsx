@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, CircleDot, ExternalLink, Loader2, MessageSquare, RefreshCw } from "lucide-react";
+import { ArrowRight, CircleDot, ExternalLink, Loader2, MessageSquare, RefreshCw } from "@/components/icons";
 
 import { apiJson, type ApiAuth } from "@/components/api";
 import { Badge } from "@/components/ui/badge";
@@ -38,7 +38,7 @@ export function OssIssues({ auth }: { auth: ApiAuth }) {
     <Card>
       <CardHeader>
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <CardTitle>Open-source issues for you</CardTitle>
+          <CardTitle>Open-Source Issues for You</CardTitle>
           <Button size="sm" variant="outline" onClick={() => void load()} disabled={busy}>
             <RefreshCw className={busy ? "animate-spin" : ""} /> Refresh
           </Button>
@@ -55,7 +55,7 @@ export function OssIssues({ auth }: { auth: ApiAuth }) {
             <Loader2 className="size-4 animate-spin" /> Searching GitHub…
           </p>
         )}
-        {issues && !issues.length && <p className="text-sm text-muted-foreground">No matching issues right now — try again later.</p>}
+        {issues && !issues.length && <p className="text-sm text-muted-foreground">No matching issues right now. Try again later.</p>}
         {issues?.map((i) => (
           <a
             key={i.url}
@@ -96,7 +96,7 @@ export function GitHubTips({ profile }: { profile: DeveloperProfile }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Tips to grow your GitHub</CardTitle>
+        <CardTitle>Tips to Grow Your GitHub</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
         {tips.map((t) => {

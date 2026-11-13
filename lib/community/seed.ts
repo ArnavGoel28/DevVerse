@@ -25,7 +25,7 @@ export function seedPosts(now = Date.now()): Post[] {
     },
     {
       id: "s-async-loop", type: "question", sample: true, author: "sara.builds", score: 9, views: 154, createdAt: ago(now, 50),
-      title: "await inside forEach doesn't wait — how do I run requests in order?",
+      title: "await inside forEach doesn't wait. How do I run requests in order?",
       tags: ["javascript", "typescript"],
       body: "```js\nitems.forEach(async (i) => { await save(i); });\nconsole.log('done');\n```\n`done` prints before anything is saved. Why?",
       answers: [

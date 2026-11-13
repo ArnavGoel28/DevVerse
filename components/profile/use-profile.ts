@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 import { useAuth } from "@/components/auth-provider";
 import { applySkillFeedback } from "@/lib/profile/build";
@@ -47,6 +48,13 @@ async function call<T>(path: string, init: RequestInit & { idToken?: string } = 
   return body;
 }
 
+const FEEDBACK_MESSAGE: Record<SkillFeedback | "undo", string> = {
+  confirmed: "Skill confirmed",
+  wrong: "Marked as wrong. It no longer counts toward your profile.",
+  hidden: "Skill hidden from your profile",
+  undo: "Change undone",
+};
+
 export function useProfile() {
   const { user, configured } = useAuth();
   const mode: "account" | "demo" = configured && user ? "account" : "demo";
@@ -66,9 +74,11 @@ export function useProfile() {
       });
       setProfile(r.profile);
       setStatus("ready");
+      toast.success("Profile updated from your GitHub history");
     } catch (e) {
       setError((e as Error).message);
       setStatus(profile ? "ready" : "error");
+      toast.error("Import failed", { description: (e as Error).message });
     }
   }, [user, profile]);
 
@@ -134,8 +144,10 @@ export function useProfile() {
       writeDemo(r.profile);
       setProfile(r.profile);
       setStatus("ready");
+      toast.success(`Demo profile built for ${login}`);
     } catch (e) {
       setError((e as Error).message);
+      toast.error("Couldn't build the demo profile", { description: (e as Error).message });
       setStatus(readDemo() ? "ready" : "empty");
     }
   }, []);
@@ -153,8 +165,10 @@ export function useProfile() {
       const before = profile;
       const next = applySkillFeedback(profile, skillId, feedback);
       setProfile(next);
+      const done = () => toast.success(FEEDBACK_MESSAGE[feedback ?? "undo"]);
       if (mode === "demo") {
         writeDemo(next);
+        done();
         return;
       }
       try {
@@ -163,9 +177,11 @@ export function useProfile() {
           idToken: await user!.getIdToken(),
           body: JSON.stringify({ skillId, feedback }),
         });
+        done();
       } catch (e) {
         setProfile(before);
         setError((e as Error).message);
+        toast.error("Couldn't save that change", { description: (e as Error).message });
       }
     },
     [profile, mode, user],

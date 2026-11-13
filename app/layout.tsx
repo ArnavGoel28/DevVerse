@@ -1,26 +1,45 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { IBM_Plex_Mono, IBM_Plex_Sans, Source_Serif_4 } from "next/font/google";
 
 import { Toaster } from "sonner";
 
 import { AuthProvider } from "@/components/auth-provider";
 import "./globals.css";
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+const plexSans = IBM_Plex_Sans({ variable: "--font-plex-sans", subsets: ["latin"], weight: ["400", "500", "600", "700"] });
+const plexMono = IBM_Plex_Mono({ variable: "--font-plex-mono", subsets: ["latin"], weight: ["400", "500"] });
+// Long-form reading (Community articles, D-33): an open-licence serif in the Medium / Substack tradition.
+const reading = Source_Serif_4({ variable: "--font-source-serif", subsets: ["latin"], style: ["normal", "italic"] });
 
 export const metadata: Metadata = {
-  title: "DevVerse",
+  title: { default: "DevVerse: learn, build and ship with an AI mentor that knows your GitHub", template: "%s · DevVerse" },
   description:
-    "Learn, build, get help, share and ship — guided by an AI mentor that knows your GitHub.",
+    "DevVerse turns your GitHub history into a Developer Profile, then uses it to guide you across ten tools: mentor, learning, practice, code, CI, community, jobs and teams.",
+  applicationName: "DevVerse",
 };
+
+export const viewport: Viewport = { themeColor: "#f8f5f0", width: "device-width", initialScale: 1 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
-      <body className="min-h-full font-sans">
+    <html lang="en" className={`${plexSans.variable} ${plexMono.variable} ${reading.variable} h-full antialiased`}>
+      <body className="min-h-full overflow-x-clip font-sans">
+        <a href="#main" className="sr-only z-50 rounded-md bg-primary px-3 py-2 text-sm text-primary-foreground focus:not-sr-only focus:fixed focus:top-2 focus:left-2">
+          Skip to Content
+        </a>
         <AuthProvider>{children}</AuthProvider>
-        <Toaster position="bottom-right" richColors closeButton />
+        <Toaster
+          position="top-right"
+          closeButton
+          toastOptions={{
+            classNames: {
+              toast: "!rounded-md !border !border-border !bg-card !text-foreground !shadow-none !font-sans",
+              description: "!text-muted-foreground",
+              success: "[&_[data-icon]]:!text-success",
+              error: "!border-destructive/50 [&_[data-icon]]:!text-destructive",
+            },
+          }}
+        />
       </body>
     </html>
   );

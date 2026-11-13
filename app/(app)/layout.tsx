@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { AppSidebar } from "@/components/app-sidebar";
 import { useAuth } from "@/components/auth-provider";
+import { PageSkeleton, Skeleton } from "@/components/ui/skeleton";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { user, loading, configured } = useAuth();
@@ -17,21 +18,37 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     if (blocked) router.replace("/");
   }, [blocked, router]);
 
-  if (configured && (loading || !user)) {
-    return <div className="p-8 text-sm text-muted-foreground">Loading…</div>;
-  }
+  if (configured && (loading || !user)) return <ShellSkeleton />;
 
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
       <AppSidebar />
-      <main className="bg-app min-h-screen flex-1 overflow-y-auto">
+      <main id="main" tabIndex={-1} className="min-h-screen min-w-0 flex-1 outline-none">
         {!configured && (
           <div className="border-b bg-muted px-4 py-2 text-center text-xs text-muted-foreground">
-            Preview mode — sign-in is not configured yet.
+            Demo mode. Sign-in is turned off on this server, so nothing you do is saved.
           </div>
         )}
         {children}
       </main>
+    </div>
+  );
+}
+
+/** V21: the app's shape while sign-in is checked, instead of a blank "Loading" line. */
+function ShellSkeleton() {
+  return (
+    <div className="flex min-h-screen flex-col md:flex-row" aria-busy="true" aria-label="Loading DevVerse">
+      <div className="flex flex-col gap-3 border-b bg-sidebar p-4 md:h-screen md:w-60 md:border-r md:border-b-0">
+        <Skeleton className="h-7 w-32" />
+        <div className="hidden flex-col gap-2 pt-4 md:flex">
+          {Array.from({ length: 9 }, (_, i) => <Skeleton key={i} className="h-6 w-full" />)}
+        </div>
+      </div>
+      <div className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
+        <Skeleton className="mb-6 h-12 w-72" />
+        <PageSkeleton />
+      </div>
     </div>
   );
 }

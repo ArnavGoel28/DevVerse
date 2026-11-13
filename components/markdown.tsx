@@ -5,9 +5,15 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 // Renders AI answers. No raw HTML is allowed (react-markdown escapes it by default).
-export function Markdown({ children }: { children: string }) {
+export function Markdown({ children, reading = false }: { children: string; reading?: boolean }) {
   return (
-    <div className="flex flex-col gap-2 text-sm leading-relaxed">
+    <div
+      className={
+        reading
+          ? "flex flex-col gap-6 font-reading text-[18px] leading-[1.65] text-pretty sm:text-[20px] [&_h3]:mt-4 [&_h3]:font-sans [&_h3]:text-2xl [&_h3]:tracking-tight [&_h4]:font-sans [&_h4]:text-xl [&_li]:pl-1 [&_pre]:text-[13px]"
+          : "flex flex-col gap-2 text-sm leading-relaxed"
+      }
+    >
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
