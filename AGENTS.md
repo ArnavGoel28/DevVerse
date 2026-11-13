@@ -74,6 +74,8 @@ Build priority: GitHub history → Developer Profile → personal AI mentor. Tho
 | `docs/07-tech-stack.md` | **Final** tech stack by phase (hackathon / V1 / V2), env vars, GitHub scopes, cost guardrails | Canonical |
 | `docs/08-data-model.md` | Firestore collections and TypeScript shapes — change here first | Canonical |
 | `docs/09-ux-and-flows.md` | UI patterns per tool, screen states, flowcharts and swimlanes with exception paths | Canonical |
+| `docs/11-agentic-architecture.md` | Multi-agent system design: orchestration, MCP tools, latency/cost/reliability strategies, build phases A1–A10 | Canonical |
+| `docs/12-todo.md` | Ordered to-do list + UI psychology principles | Living |
 | `docs/10-backend-plan.md` | Backend plan for Community, Jobs, Teams, private repos; cloud setup checklist | **Proposal** |
 ### Code layout (blocks B0–B2 done)
 
