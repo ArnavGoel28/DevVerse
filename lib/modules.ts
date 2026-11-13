@@ -2,6 +2,7 @@ import {
   BookOpen,
   Briefcase,
   Code2,
+  LayoutDashboard,
   Users,
   GitBranch,
   MessageSquare,
@@ -29,6 +30,19 @@ export type AppModule = {
 };
 
 export const MODULES: AppModule[] = [
+  {
+    slug: "home",
+    name: "Home",
+    tagline: "Your next best move in every tool, picked from your Developer Profile.",
+    icon: LayoutDashboard,
+    block: "B6",
+    depth: "Real",
+    built: true,
+    features: [
+      { id: "DI-09", text: "Next actions across all tools" },
+      { id: "AG-01", text: "Your AI agent team at a glance" },
+    ],
+  },
   {
     slug: "profile",
     name: "Profile",
@@ -104,6 +118,7 @@ export const MODULES: AppModule[] = [
   },
   {
     slug: "community",
+    built: true,
     name: "Community",
     tagline: "Questions, articles, showcases and discussions in one feed made for you.",
     icon: MessageSquare,
@@ -118,6 +133,7 @@ export const MODULES: AppModule[] = [
   },
   {
     slug: "workspace",
+    built: true,
     name: "Code",
     tagline: "Open your repo's code in a VS Code-style editor and have it explained.",
     icon: Code2,
@@ -130,6 +146,7 @@ export const MODULES: AppModule[] = [
   },
   {
     slug: "deploy",
+    built: true,
     name: "Ship",
     tagline: "Understand why your builds and deploys fail.",
     icon: Rocket,
@@ -142,6 +159,7 @@ export const MODULES: AppModule[] = [
   },
   {
     slug: "jobs",
+    built: true,
     name: "Jobs",
     tagline: "Roles matched to the skills you've actually proven.",
     icon: Briefcase,
@@ -154,6 +172,7 @@ export const MODULES: AppModule[] = [
   },
   {
     slug: "teams",
+    built: true,
     name: "Teams",
     tagline: "Team skill graphs, onboarding paths and a mentor that knows your codebase.",
     icon: Users,

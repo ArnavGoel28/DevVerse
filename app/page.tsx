@@ -32,7 +32,7 @@ export default function LandingPage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (user) router.replace("/profile");
+    if (user) router.replace("/home");
   }, [user, router]);
 
   return (
@@ -60,7 +60,7 @@ export default function LandingPage() {
               Sign-in isn&apos;t set up yet. Add the Firebase settings to <code>.env.local</code>{" "}
               (see <code>.env.example</code>) and restart the app.
             </p>
-            <Button variant="outline" onClick={() => router.push("/profile")}>
+            <Button variant="outline" onClick={() => router.push("/home")}>
               Preview the app without signing in
             </Button>
           </div>
