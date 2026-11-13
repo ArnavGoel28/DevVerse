@@ -1,6 +1,8 @@
 import {
   BookOpen,
+  Briefcase,
   Code2,
+  Users,
   GitBranch,
   MessageSquare,
   Rocket,
@@ -92,6 +94,7 @@ export const MODULES: AppModule[] = [
     icon: Swords,
     block: "B3",
     depth: "Lean",
+    built: true,
     features: [
       { id: "PR-01", text: "Problems by topic and difficulty" },
       { id: "PR-03", text: "Run and submit, judged automatically" },
@@ -115,7 +118,7 @@ export const MODULES: AppModule[] = [
   },
   {
     slug: "workspace",
-    name: "Workspace",
+    name: "Code",
     tagline: "Open your repo's code in a VS Code-style editor and have it explained.",
     icon: Code2,
     block: "B5",
@@ -127,7 +130,7 @@ export const MODULES: AppModule[] = [
   },
   {
     slug: "deploy",
-    name: "Deploy",
+    name: "Ship",
     tagline: "Understand why your builds and deploys fail.",
     icon: Rocket,
     block: "B5",
@@ -135,6 +138,31 @@ export const MODULES: AppModule[] = [
     features: [
       { id: "DP-05", text: "AI explains failed GitHub workflow runs" },
       { id: "DP-01", text: "One-click deploy (coming after the hackathon)" },
+    ],
+  },
+  {
+    slug: "jobs",
+    name: "Jobs",
+    tagline: "Roles matched to the skills you've actually proven.",
+    icon: Briefcase,
+    block: "Later",
+    depth: "Later",
+    features: [
+      { id: "JB-01", text: "Jobs matched to your verified skills, with your gap per role" },
+      { id: "JB-02", text: "Share a verified profile with employers" },
+    ],
+  },
+  {
+    slug: "teams",
+    name: "Teams",
+    tagline: "Team skill graphs, onboarding paths and a mentor that knows your codebase.",
+    icon: Users,
+    block: "Later",
+    depth: "Later",
+    features: [
+      { id: "TM-01", text: "Team skill graph" },
+      { id: "TM-02", text: "Onboarding paths for new members" },
+      { id: "TM-03", text: "Private codebase agent (Enterprise)" },
     ],
   },
 ];
