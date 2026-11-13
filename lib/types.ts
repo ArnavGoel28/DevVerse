@@ -116,3 +116,39 @@ export type DeveloperProfile = {
   generatedBy: "gemini" | "rules";
   updatedAt: string;
 };
+
+// ---------- B2: learning (LN-01…LN-03) and open-source matching (GH-10) ----------
+
+export type LearningResource = { title: string; url: string; kind: "article" | "video" | "docs" | "problem" | "course" };
+
+/** users/{uid}/roadmaps/current */
+export type Roadmap = {
+  goal: string;
+  trackId: string;
+  source: "ai" | "curated";
+  steps: {
+    id: string;
+    title: string;
+    why?: string;
+    skillIds: string[];
+    status: "todo" | "done";
+    doneBy?: "evidence" | "user"; // LN-02 (computed)
+    manual?: "done" | "todo"; // the user's own override, wins over evidence
+    resources: LearningResource[];
+  }[];
+  createdAt: string;
+};
+
+export type LearningPack = { topic: string; why: string; explainer: string; resources: LearningResource[]; practiceHref: string };
+
+export type OssIssue = {
+  title: string;
+  url: string;
+  repo: string;
+  repoStars?: number;
+  labels: string[];
+  comments: number;
+  createdAt: string;
+  language: string;
+  reason: string;
+};

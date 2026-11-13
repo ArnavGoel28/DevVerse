@@ -56,8 +56,15 @@ Any single feature (editor, AI chat, deploy button, Q&A) is a commodity. **The c
 | **Kabir — the builder** | Individual dev, side projects, freelancer | Go from idea to live URL fast | Tool sprawl; deployment friction |
 | **Meera — the mentor/contributor** | Experienced dev | Share knowledge, build reputation | Answers vanish in noise; little recognition |
 | **Small team** *(later)* | 2–5 people, hackathon/startup | Build together | Coordination across many tools |
+| **Campus** *(paying)* | College, university or bootcamp placement cell | See every student's real skills; improve placement readiness | No reliable view of what students can actually do |
+| **Company** *(paying)* | Startup or enterprise engineering team | Onboard engineers faster; see team skills | New engineers take months to become productive |
+| **Recruiter** *(paying, later)* | Hiring teams | Find developers by proven skills | CVs and profiles are self-reported |
 
-**V1 designs for Riya first.** If it works for Riya, it works for Kabir.
+**V1 designs for Riya first.** If it works for Riya, it works for Kabir. Campus, Company and Recruiter needs are served
+through the same Developer Profile (D-30).
+
+**DevVerse = 10 tools on one profile** (D-31): AI Mentor, Developer Profile, Learn, Practice, Code, Community,
+GitHub Growth, Jobs, Ship, Teams — powered by a team of AI agents (D-28).
 
 ## 7. Product principles
 
@@ -92,5 +99,5 @@ Any single feature (editor, AI chat, deploy button, Q&A) is a commodity. **The c
 - Replacing a full desktop IDE for professional teams.
 - Real-time chat (Discord-style).
 - Multi-cloud deployment or arbitrary infrastructure generation.
-- Paid plans, billing and marketplace (business model is deferred — see `05-scope-and-roadmap.md`).
-- Enterprise features (SSO, compliance certifications, org management).
+- Billing in the MVP. The business model is decided (D-29: Free, Pro, Campus, Teams, Enterprise, Hiring) but payments come after the MVP.
+- Compliance certifications (SOC 2 etc.) in V1. Enterprise SSO and org management are planned for the Enterprise tier, not the MVP.

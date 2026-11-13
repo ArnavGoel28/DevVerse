@@ -21,7 +21,8 @@ export async function requireUser(request: Request): Promise<{ uid: string }> {
   try {
     const decoded = await adminAuth().verifyIdToken(token);
     return { uid: decoded.uid };
-  } catch {
+  } catch (err) {
+    console.error("[requireUser] verifyIdToken failed:", err);
     throw new HttpError(401, "Your session expired. Please sign in again.");
   }
 }

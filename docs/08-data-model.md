@@ -156,7 +156,17 @@ type Roadmap = {
 };
 ```
 
-## users/{uid}/mentorThreads/{threadId}/messages/{messageId} — AI-01
+## users/{uid}/roadmaps/current — B2 shape (supersedes the sketch above)
+
+`{ goal, trackId, source: "ai" | "curated", steps: { id, title, why?, skillIds, status: "todo" | "done",
+doneBy?: "evidence" | "user", manual?: "done" | "todo", resources: { title, url, kind: "article" | "video" | "docs" | "problem" | "course" }[] }[], createdAt }`.
+`doneBy` is recomputed from the profile on every read (LN-02); `manual` is the user's override and always wins.
+
+## users/{uid}/aiRatings/{id} — AI-10
+
+`{ rating: "up" | "down", mode: "gemini" | "offline" | "limit", createdAt }`. `users/{uid}.aiUsage` counts AI calls per day (AI-11).
+
+## users/{uid}/mentorThreads/{threadId}/messages/{messageId} — AI-01 *(not used yet — D-20: chats stay in the browser)*
 
 Chats are kept only so the user can scroll back; they are **not** used to build the profile — only the
 `ai_help` evidence events are.

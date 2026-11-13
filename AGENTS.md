@@ -45,12 +45,16 @@ Community content in turn improves the AI's knowledge — a reinforcing loop.
 
 ## 4. Who it's for
 
-Students and self-taught learners, individual developers / side-project builders, small teams & startups,
-and later enterprises and educational institutions.
+Students, developers worldwide, colleges (Campus), companies & teams (Teams/Enterprise) and recruiters (Hiring) — D-30.
+Students and individual developers are the build priority.
+
+**Pitch-deck alignment (submitted to Startup Buildathon India 2026):** DevVerse is presented as **10 tools on one
+Developer Profile** (D-31) powered by **an orchestrator + 9 specialist AI agents** (D-28), with tiers Free · Pro ·
+Campus · Teams · Enterprise · Hiring (D-29). Keep names and claims in code, UI and docs consistent with that.
 
 ## 5. Current state of the repo
 
-**Building — blocks B0 and B1 done.** The project was redesigned from scratch, needs first (D-09).
+**Building — blocks B0–B5 done (front end for all 10 tools); backend for Community, Jobs and Teams planned in `docs/10-backend-plan.md`, to be reviewed before building.** The project was redesigned from scratch, needs first (D-09).
 Current target: a **24-hour Google hackathon build** by 2 people coding with AI help (D-13).
 Every module ships at Real / Lean / Later depth (`03` → *Hackathon build*), in the block order of `05 §2`.
 Stack is Google-first: Next.js + Firebase + Gemini (`07-tech-stack.md`).
@@ -66,18 +70,30 @@ Build priority: GitHub history → Developer Profile → personal AI mentor. Tho
 | `docs/03-functional-requirements.md` | Requirements by module with IDs (e.g. `WS-03`) and priorities | Canonical |
 | `docs/04-non-functional-requirements.md` | Quality targets with IDs (e.g. `NFR-SE-01`) | Canonical |
 | `docs/05-scope-and-roadmap.md` | **24 h build plan**, V1 milestones, **decision log (D-xx)**, open questions (Q-xx) | Canonical |
-| `docs/07-tech-stack.md` | Hackathon tech stack, env vars, GitHub scopes, cost guardrails | Canonical |
+| `docs/06-system-design.md` | System design: architecture, per-module feature gap audit, key flows, security, scaling | Canonical |
+| `docs/07-tech-stack.md` | **Final** tech stack by phase (hackathon / V1 / V2), env vars, GitHub scopes, cost guardrails | Canonical |
 | `docs/08-data-model.md` | Firestore collections and TypeScript shapes — change here first | Canonical |
-
-### Code layout (blocks B0–B1 done)
+| `docs/09-ux-and-flows.md` | UI patterns per tool, screen states, flowcharts and swimlanes with exception paths | Canonical |
+| `docs/11-agentic-architecture.md` | Multi-agent system design: orchestration, MCP tools, latency/cost/reliability strategies, build phases A1–A10 | Canonical |
+| `docs/12-todo.md` | Ordered to-do list + UI psychology principles | Living |
+| `docs/10-backend-plan.md` | Backend plan for Community, Jobs, Teams, private repos; cloud setup checklist | **Proposal** |
+### Code layout (blocks B0–B2 done)
 
 - `app/page.tsx` landing + GitHub sign-in · `app/(app)/layout.tsx` signed-in shell with sidebar
 - B1 (GH-08/09, DI-*): `lib/github/history.ts` (GitHub import) → `lib/profile/evidence.ts` → `lib/profile/rules.ts`
   (skills, struggles, growth, insights) → `lib/profile/enrich.ts` (Gemini rewrites text only, D-19).
   Server: `lib/server/*` (Firebase Admin, token encryption, `profile-service.ts`), routes in `app/api/`.
   UI: `app/(app)/profile`, `app/(app)/github`, `components/profile/*` (`useProfile()` handles signed-in and demo mode, D-18).
+- B2: mentor `lib/mentor/mentor.ts` + `app/api/mentor` (streams; offline answer from the profile when Gemini is
+  off — NFR-AV-03); learning `lib/learn/*` + `app/api/learn/*` (curated tracks, Gemini + Google Search personalises);
+  open-source issues `lib/github/issues.ts` + `app/api/github/issues`. `lib/server/context.ts` = who is asking +
+  daily AI caps. Client calls go through `components/api.ts` (adds the ID token, or the demo profile).
 - **Testing (required for every block):** `npm run check` (typecheck + lint + Vitest unit tests in `tests/`),
   `npm run build`, then run the app and click through the feature (dynamic test).
+- B3–B6 (front end): Practice `lib/practice/*` (browser judge, Practice Coach); Code `lib/code/*` + `/api/code/explain`
+  (Code Reviewer); Ship `lib/ship/*` + `/api/ship/explain` (DevOps & Debug); Community `lib/community/*`; Jobs `lib/jobs/*`;
+  Teams `lib/teams/*`; Home `components/home/*`. Shared: `components/module-page.tsx`, `components/use-local.ts` (browser store
+  until the backend exists), `lib/server/agent-call.ts` (caps + offline fallback for every agent).
 - `app/(app)/[module]/page.tsx` "coming soon" placeholder for every module. **To build a module, create
   `app/(app)/<slug>/page.tsx`** — it overrides the placeholder. Modules are listed in `lib/modules.ts`.
 - `components/auth-provider.tsx` (`useAuth()`), `components/ui/*` (shadcn-style), `lib/firebase/client.ts`

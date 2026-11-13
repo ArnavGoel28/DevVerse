@@ -40,3 +40,12 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 !.env.example
+
+# private submission material (kept local, never committed)
+/docs/pitch-deck-content.md
+/docs/submission-form-answers.md
+/*.pdf
+/*.pptx
+/*.jpeg
+/*.jpg
+/*.png

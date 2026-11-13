@@ -24,7 +24,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
       <AppSidebar />
-      <main className="flex-1 overflow-y-auto">
+      <main className="bg-app min-h-screen flex-1 overflow-y-auto">
         {!configured && (
           <div className="border-b bg-muted px-4 py-2 text-center text-xs text-muted-foreground">
             Preview mode — sign-in is not configured yet.

@@ -1,4 +1,6 @@
-import type { GitHubSnapshot } from "@/lib/types";
+import { snapshotToEvidence } from "@/lib/profile/evidence";
+import { buildRulesProfile } from "@/lib/profile/rules";
+import type { DeveloperProfile, GitHubSnapshot } from "@/lib/types";
 
 export const NOW = new Date("2026-11-13T00:00:00Z");
 
@@ -87,4 +89,10 @@ export function jsonResponse(body: unknown, status = 200): Response {
 
 export function mockFetch(handler: (url: string, init?: RequestInit) => Response | Promise<Response>): typeof fetch {
   return (async (url: string | URL | Request, init?: RequestInit) => handler(String(url), init)) as typeof fetch;
+}
+
+/** A realistic rules-built profile for "riya" (TypeScript, React, Express, Python…). */
+export function makeProfile(over: Partial<DeveloperProfile> = {}): DeveloperProfile {
+  const snap = makeSnapshot();
+  return { ...buildRulesProfile(snap, snapshotToEvidence(snap), NOW), ...over };
 }

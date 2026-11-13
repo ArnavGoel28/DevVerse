@@ -24,6 +24,11 @@
 | CM | Community | Unified content: questions, articles, showcases, discussions |
 | NT | Notifications | Tell users what matters |
 | AD | Administration & Moderation | Keep the platform safe and operable |
+| JB | Jobs | Roles and recruiters matched to proven skills (D-31) |
+| TM | Teams | Team and campus skill views, onboarding, codebase agent (D-31) |
+| AG | AI agents | One named agent per AI job, shared profile memory (D-28) |
+
+Pitch-deck names (D-31): WS = **Code**, DP = **Ship**, GH = **GitHub Growth**, DI = **Developer Profile**, AI = **AI Mentor**.
 
 ---
 
@@ -186,6 +191,32 @@ One **unified content model**: every post is *content* with a type. No separate 
 | AD-02 | Admins manage roadmaps and practice problems. | M |
 | AD-03 | Admins can disable a user's deployments or AI access. | M |
 | AD-04 | Basic product analytics: sign-ups, journey completion (J1), feature usage. | S |
+
+## JB — Jobs (D-31)
+
+| ID | Requirement | Pri | Profile signal |
+|----|-------------|-----|----------------|
+| JB-01 | Show job and internship openings matched to the user's evidence-verified skills, with the skill gap for each role. | L | ←DI |
+| JB-02 | Users can share a verified profile with employers (opt-in). | L | ←DI |
+| JB-03 | Recruiters can search opt-in profiles by proven skills (hiring marketplace, D-29). | L | ←DI |
+
+## TM — Teams (D-31)
+
+| ID | Requirement | Pri | Profile signal |
+|----|-------------|-----|----------------|
+| TM-01 | A team view shows the combined skill graph of its members (each member opts in). | L | ←DI |
+| TM-02 | Onboarding paths: a new member gets a roadmap built from the team's stack and their own gaps. | L | ←DI |
+| TM-03 | A private codebase agent answers questions about the team's repositories (Enterprise). | L | ←DI, →DI |
+| TM-04 | Campus view: placement cells see cohort skill gaps and readiness (opt-in by students). | L | ←DI |
+
+## AG — AI agents (D-28)
+
+| ID | Requirement | Pri | Profile signal |
+|----|-------------|-----|----------------|
+| AG-01 | Each AI feature is owned by one named agent (Profile Analyst, Mentor, Learning Path, Practice Coach, Code Reviewer, DevOps & Debug, Career, Interview, Codebase). | M | — |
+| AG-02 | All agents read the same profile summary as context and write evidence, never chat transcripts. | M | ←DI, →DI |
+| AG-03 | An orchestrator routes a free-form request to the right agent(s) and merges the answer. | S | ←DI |
+| AG-04 | No agent changes code, pushes or deploys without the user's explicit approval (rule 1). | M | — |
 
 ---
 
