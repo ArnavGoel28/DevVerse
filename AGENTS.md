@@ -45,12 +45,16 @@ Community content in turn improves the AI's knowledge — a reinforcing loop.
 
 ## 4. Who it's for
 
-Students and self-taught learners, individual developers / side-project builders, small teams & startups,
-and later enterprises and educational institutions.
+Students, developers worldwide, colleges (Campus), companies & teams (Teams/Enterprise) and recruiters (Hiring) — D-30.
+Students and individual developers are the build priority.
+
+**Pitch-deck alignment (submitted to Startup Buildathon India 2026):** DevVerse is presented as **10 tools on one
+Developer Profile** (D-31) powered by **an orchestrator + 9 specialist AI agents** (D-28), with tiers Free · Pro ·
+Campus · Teams · Enterprise · Hiring (D-29). Keep names and claims in code, UI and docs consistent with that.
 
 ## 5. Current state of the repo
 
-**Building — blocks B0, B1 and B2 done.** The project was redesigned from scratch, needs first (D-09).
+**Building — blocks B0, B1 and B2 done; B3 (Practice + Practice Coach agent) in progress.** The project was redesigned from scratch, needs first (D-09).
 Current target: a **24-hour Google hackathon build** by 2 people coding with AI help (D-13).
 Every module ships at Real / Lean / Later depth (`03` → *Hackathon build*), in the block order of `05 §2`.
 Stack is Google-first: Next.js + Firebase + Gemini (`07-tech-stack.md`).

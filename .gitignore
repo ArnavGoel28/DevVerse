@@ -45,3 +45,7 @@ next-env.d.ts
 /docs/pitch-deck-content.md
 /docs/submission-form-answers.md
 /*.pdf
+/*.pptx
+/*.jpeg
+/*.jpg
+/*.png

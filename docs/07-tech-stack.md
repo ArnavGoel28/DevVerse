@@ -66,12 +66,21 @@
 
 | Model | Phase | Used for |
 |-------|-------|----------|
-| **Gemini Flash** (`GEMINI_MODEL`, currently `gemini-3.8-flash`) | ✅ | Mentor (streamed), profile wording, roadmap, issue-match reasons, explain code, hints, CI-failure explanation, problem generation (JSON) |
-| **Gemini Flash + Google Search grounding** | ✅ | Live resource links for roadmap steps (D-16) |
-| **Gemini Embedding** (latest, 768-dim output) | H (B4) | Community search / similar questions; V1: code retrieval for AI-02 |
-| **Gemini Pro** (latest) | V1 | Whole-history deep analysis, AI PR review (AI-13), hard failure explanations — routed by the gateway only where quality beats speed |
+Models are assigned **per agent** (D-28), matching the pitch deck. Line-up checked Nov 2026 (Google Cloud model versions page).
 
-Check exact model names in Google AI Studio before each block; change only `lib/gemini/client.ts` and env vars.
+| Agent | Model | Phase |
+|-------|-------|-------|
+| Profile Analyst, Mentor, Learning Path | **Gemini 3.8 Flash** (`GEMINI_MODEL`), + **Google Search grounding** for Learning Path | ✅ |
+| Practice Coach (hints, problem generation) | Gemini 3.8 Flash now → **Gemini 4 Hydrogen** | ✅ / next |
+| Orchestrator | **Gemini 4 Hydrogen** (fast, cheap routing) | next |
+| Code Reviewer, DevOps & Debug | **Gemini 4 Argon** | next |
+| Career (job & issue matching) | **Gemini Embedding 2** + Flash | roadmap |
+| Interview (voice mock interviews) | **Gemini 3.8 Live** | roadmap |
+| Codebase (Enterprise) | **Gemini 4 Carbon**; **Gemma 4** for private / on-prem | roadmap |
+| Extras | **Nano Banana 2.1** (profile cards), **Gemini Omni 1.2 Flash** (video explainers), Flash-Lite (bulk) | roadmap |
+
+Each agent's model is one env var / constant in `lib/gemini/client.ts`; feature code never names a model.
+Production moves to **Vertex AI** (same SDK) with agents built on **ADK** and run on **Managed Agents** (D-25, D-28).
 
 ## 4. How the pieces fit
 

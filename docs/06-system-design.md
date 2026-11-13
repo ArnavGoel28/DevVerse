@@ -260,3 +260,20 @@ retried by Cloud Tasks; AI failure falls back to rules/offline answers; daily Fi
 | `devverse` GCP/Firebase project | App Hosting backend from `main`, Firestore, Secret Manager | H |
 | `devverse-apps` GCP project | Users' deployed apps only (Cloud Build, Cloud Run, Artifact Registry) | V1, own budget alert |
 | CI | GitHub Actions: `npm run check`, `npm run build`, `npm audit` | V1 |
+
+## 10. Agent layer (D-28, matches the pitch deck)
+
+The AI tier is organised as **agents**, one per AI job, all behind the AI gateway (`lib/gemini/client.ts`):
+
+| Agent | Module | Model (doc 07 §3) | Status |
+|-------|--------|-------------------|--------|
+| Profile Analyst | Developer Profile | rules + Gemini 3.8 Flash | ✅ built (`lib/profile/*`) |
+| Mentor | AI Mentor | Gemini 3.8 Flash | ✅ built (`lib/mentor/*`) |
+| Learning Path | Learn | Flash + Search grounding | ✅ built (`lib/learn/*`) |
+| Practice Coach | Practice | Flash → Gemini 4 Hydrogen | B3 (`lib/practice/*`) |
+| Code Reviewer, DevOps & Debug | Code, Ship | Gemini 4 Argon | next |
+| Orchestrator | all | Gemini 4 Hydrogen | next |
+| Career, Interview, Codebase | Jobs, Teams | Embedding 2, 3.8 Live, 4 Carbon / Gemma 4 | roadmap |
+
+Shared rules for every agent: profile summary as context, evidence out (never transcripts), per-user caps,
+an offline fallback, and no code change without user approval (AG-01…AG-04). In production they move to ADK on Managed Agents.
