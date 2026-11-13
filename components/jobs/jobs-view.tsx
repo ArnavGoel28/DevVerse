@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Bookmark, BookmarkCheck, Briefcase, MapPin, Search } from "lucide-react";
+import { toast } from "sonner";
 
 import { SampleBadge } from "@/components/community/parts";
 import { Button } from "@/components/ui/button";
@@ -35,7 +36,11 @@ export function JobsView({ profile }: { profile: DeveloperProfile }) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const current = results.find((r) => r.job.id === selectedId) ?? results[0];
 
-  const toggleSave = (id: string) => setSaved((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
+  const toggleSave = (id: string) => {
+    const was = saved.includes(id);
+    setSaved((s) => (was ? s.filter((x) => x !== id) : [...s, id]));
+    toast(was ? "Removed from saved jobs" : "Job saved", { description: was ? undefined : "Find it under Saved." });
+  };
 
   return (
     <div className="flex flex-col gap-4">

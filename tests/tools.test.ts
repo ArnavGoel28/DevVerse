@@ -138,3 +138,20 @@ describe("Ship CI diagnosis (DP-05)", () => {
     expect(buildCiPrompt("a/b", "CI", [{ job: "j", step: "s" }])).toContain('step "s"');
   });
 });
+
+describe("Home profile strength (docs/12 §1)", () => {
+  it("counts only real progress and shows the next steps", async () => {
+    const { profileStrength, greeting } = await import("@/lib/home/strength");
+    const p = { ...profile, githubInsights: { strengths: [], gaps: ["No READMEs"], recruiterView: "" }, githubStats: { login: "riya", totals: { mergedExternalPRs: 0 } } } as unknown as DeveloperProfile;
+    const fresh = profileStrength(p, { solved: 0, posts: 0 });
+    expect(fresh.score).toBe(30); // import only (endowed progress) — 2 strong skills is below the 3 needed
+    expect(fresh.level).toBe("Starter");
+    expect(fresh.next).toHaveLength(3);
+    const busy = profileStrength(p, { solved: 5, posts: 1 });
+    expect(busy.score).toBe(65);
+    expect(busy.level).toBe("Rising");
+    expect(busy.nextLevelAt).toBe(70);
+    expect(greeting(9)).toBe("Good morning");
+    expect(greeting(20)).toBe("Good evening");
+  });
+});

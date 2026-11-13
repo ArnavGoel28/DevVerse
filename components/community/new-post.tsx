@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
+import { toast } from "sonner";
 
 import { useCommunity } from "@/components/community/use-community";
 import { Markdown } from "@/components/markdown";
@@ -41,6 +42,7 @@ export function NewPost({ profile }: { profile: DeveloperProfile }) {
     setTried(true);
     if (Object.keys(errors).length) return;
     const id = c.create(draft);
+    toast.success(`${TYPE_LABEL[type]} published`, { description: "It's live in the Community feed." });
     router.push(`/community/${id}`);
   };
 

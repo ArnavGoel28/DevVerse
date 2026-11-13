@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
+import { motion } from "motion/react";
 
 import type { ApiAuth } from "@/components/api";
 import { useAuth } from "@/components/auth-provider";
@@ -28,7 +29,13 @@ export function ModulePage({
     <div className={cn("mx-auto flex flex-col gap-6 px-4 py-8", wide ? "max-w-7xl" : "max-w-6xl")}>
       {header && <PageHeader slug={slug} />}
       <ProfileGate state={state}>
-        {(profile) => <Suspense fallback={null}>{children(profile, { mode: state.mode, user, profile })}</Suspense>}
+        {(profile) => (
+          <Suspense fallback={null}>
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, ease: "easeOut" }}>
+              {children(profile, { mode: state.mode, user, profile })}
+            </motion.div>
+          </Suspense>
+        )}
       </ProfileGate>
     </div>
   );

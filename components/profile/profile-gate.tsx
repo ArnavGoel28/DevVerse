@@ -7,6 +7,7 @@ import { GitHubIcon } from "@/components/github-icon";
 import type { useProfile } from "@/components/profile/use-profile";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageSkeleton } from "@/components/ui/skeleton";
 import type { DeveloperProfile } from "@/lib/types";
 
 type ProfileState = ReturnType<typeof useProfile>;
@@ -21,7 +22,7 @@ export function ProfileGate({
 }) {
   const { mode, profile, status, error } = state;
 
-  if (status === "loading") return <Centered><Loader2 className="size-5 animate-spin" /> Loading your profile…</Centered>;
+  if (status === "loading") return <PageSkeleton />;
 
   if (status === "importing" && !profile)
     return (

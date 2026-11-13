@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, CheckCircle2, ExternalLink, Heart } from "lucide-react";
+import { toast } from "sonner";
 
 import { Avatar, SampleBadge, Tag, TypeBadge, VoteColumn } from "@/components/community/parts";
 import { useCommunity } from "@/components/community/use-community";
@@ -119,6 +120,7 @@ function AnswerForm({ onSubmit, label }: { onSubmit: (body: string) => void; lab
   const submit = () => {
     if (body.trim().length < 15) return setError("Write at least 15 characters.");
     onSubmit(body);
+    toast.success("Posted", { description: "Thanks for helping the community." });
     setBody("");
     setError(null);
     setPreview(false);

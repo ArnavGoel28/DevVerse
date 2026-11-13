@@ -23,6 +23,8 @@ export type AppModule = {
   tagline: string;
   icon: LucideIcon;
   block: string;
+  /** Sidebar section (Hick's law: fewer, labelled groups — docs/12-todo.md §1). */
+  group: "you" | "grow" | "build" | "connect";
   depth: "Real" | "Lean" | "Later";
   /** true once app/(app)/<slug>/page.tsx exists (the placeholder is then skipped). */
   built?: boolean;
@@ -32,6 +34,7 @@ export type AppModule = {
 export const MODULES: AppModule[] = [
   {
     slug: "home",
+    group: "you",
     name: "Home",
     tagline: "Your next best move in every tool, picked from your Developer Profile.",
     icon: LayoutDashboard,
@@ -45,6 +48,7 @@ export const MODULES: AppModule[] = [
   },
   {
     slug: "profile",
+    group: "you",
     name: "Profile",
     tagline: "Your Developer Profile: skills, struggles and growth, built from what you actually do.",
     icon: UserRound,
@@ -60,6 +64,7 @@ export const MODULES: AppModule[] = [
   },
   {
     slug: "github",
+    group: "grow",
     name: "Grow your GitHub",
     tagline: "Your whole GitHub history, seen the way a recruiter sees it.",
     icon: GitBranch,
@@ -75,6 +80,7 @@ export const MODULES: AppModule[] = [
   },
   {
     slug: "mentor",
+    group: "you",
     name: "AI Mentor",
     tagline: "A Gemini-powered mentor that knows your history.",
     icon: Sparkles,
@@ -89,6 +95,7 @@ export const MODULES: AppModule[] = [
   },
   {
     slug: "learn",
+    group: "grow",
     name: "Learn",
     tagline: "A roadmap built for your goal, with real resources.",
     icon: BookOpen,
@@ -103,6 +110,7 @@ export const MODULES: AppModule[] = [
   },
   {
     slug: "practice",
+    group: "grow",
     name: "Practice",
     tagline: "Coding problems picked for you, with hints that don't spoil the answer.",
     icon: Swords,
@@ -118,6 +126,7 @@ export const MODULES: AppModule[] = [
   },
   {
     slug: "community",
+    group: "connect",
     built: true,
     name: "Community",
     tagline: "Questions, articles, showcases and discussions in one feed made for you.",
@@ -133,6 +142,7 @@ export const MODULES: AppModule[] = [
   },
   {
     slug: "workspace",
+    group: "build",
     built: true,
     name: "Code",
     tagline: "Open your repo's code in a VS Code-style editor and have it explained.",
@@ -146,6 +156,7 @@ export const MODULES: AppModule[] = [
   },
   {
     slug: "deploy",
+    group: "build",
     built: true,
     name: "Ship",
     tagline: "Understand why your builds and deploys fail.",
@@ -159,6 +170,7 @@ export const MODULES: AppModule[] = [
   },
   {
     slug: "jobs",
+    group: "connect",
     built: true,
     name: "Jobs",
     tagline: "Roles matched to the skills you've actually proven.",
@@ -172,6 +184,7 @@ export const MODULES: AppModule[] = [
   },
   {
     slug: "teams",
+    group: "connect",
     built: true,
     name: "Teams",
     tagline: "Team skill graphs, onboarding paths and a mentor that knows your codebase.",
@@ -184,6 +197,13 @@ export const MODULES: AppModule[] = [
       { id: "TM-03", text: "Private codebase agent (Enterprise)" },
     ],
   },
+];
+
+export const GROUPS: { id: AppModule["group"]; label: string }[] = [
+  { id: "you", label: "You" },
+  { id: "grow", label: "Grow" },
+  { id: "build", label: "Build" },
+  { id: "connect", label: "Connect" },
 ];
 
 export function getModule(slug: string) {

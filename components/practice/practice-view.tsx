@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Editor from "@monaco-editor/react";
 import { CheckCircle2, Circle, Lightbulb, Loader2, Play, Send, Sparkles, XCircle } from "lucide-react";
+import { toast } from "sonner";
 
 import { type ApiAuth, apiJson, apiRequest } from "@/components/api";
 import { Markdown } from "@/components/markdown";
@@ -150,7 +151,10 @@ function ProblemPanel({ auth, problem, solved, onSolved }: { auth: ApiAuth; prob
     const r = await runInWorker(code, problem.fn, kind === "run" ? problem.samples : problem.tests);
     setResult({ ...r, kind });
     if (kind === "submit") {
-      if (r.verdict === "accepted") onSolved();
+      if (r.verdict === "accepted") {
+        onSolved();
+        toast.success(`Accepted! ${problem.title} solved 🎉`, { description: "Added to your progress. Your profile strength just went up." });
+      }
       try {
         const res = await apiRequest("/api/practice/submit", auth, {
           body: { problemId: problem.id, code, verdict: r.verdict, passed: r.passed, total: r.total, hintsUsed: hints.length },
@@ -254,7 +258,7 @@ function ProblemPanel({ auth, problem, solved, onSolved }: { auth: ApiAuth; prob
 function ResultPanel({ result }: { result: JudgeResult & { kind: "run" | "submit" } }) {
   const ok = result.verdict === "accepted";
   return (
-    <div className={`rounded-xl border p-4 ${ok ? "border-emerald-300 bg-emerald-50 dark:bg-emerald-950/30" : "border-rose-300 bg-rose-50 dark:bg-rose-950/30"}`}>
+    <div className={`${ok ? "animate-pop " : ""}rounded-xl border p-4 ${ok ? "border-emerald-300 bg-emerald-50 dark:bg-emerald-950/30" : "border-rose-300 bg-rose-50 dark:bg-rose-950/30"}`}>
       <div className="mb-2 flex items-center gap-2 font-semibold">
         {ok ? <CheckCircle2 className="size-5 text-emerald-600" /> : <XCircle className="size-5 text-rose-600" />}
         {VERDICT_LABEL[result.verdict]}
