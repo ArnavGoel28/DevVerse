@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { GraduationCap, Loader2, SendHorizontal, ThumbsDown, ThumbsUp, Trash2 } from "lucide-react";
+import { toast } from "sonner";
+import { GraduationCap, Loader2, SendHorizontal, ThumbsDown, ThumbsUp, Trash2 } from "@/components/icons";
 
 import { apiRequest, readSession, writeSession, type ApiAuth } from "@/components/api";
 import { Markdown } from "@/components/markdown";
@@ -76,7 +77,12 @@ export function MentorChat({ auth }: { auth: ApiAuth }) {
 
   function rate(index: number, rating: "up" | "down") {
     setMessages((m) => m.map((x, i) => (i === index ? { ...x, rating } : x)));
-    void apiRequest("/api/mentor/rating", auth, { body: { rating, mode: messages[index]?.mode } }).catch(() => {});
+    apiRequest("/api/mentor/rating", auth, { body: { rating, mode: messages[index]?.mode } })
+      .then((res) => {
+        if (!res.ok) throw new Error();
+        toast.success(rating === "up" ? "Thanks. Marked as helpful." : "Thanks. We'll use this to improve answers.");
+      })
+      .catch(() => toast.error("Couldn't save your rating. Try again."));
   }
 
   return (

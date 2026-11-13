@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, CheckCircle2, ExternalLink, Heart } from "lucide-react";
+import { ArrowLeft, CheckCircle2, ExternalLink, Heart } from "@/components/icons";
 import { toast } from "sonner";
 
 import { Avatar, SampleBadge, Tag, TypeBadge, VoteColumn } from "@/components/community/parts";
@@ -29,9 +29,13 @@ export function PostView({ id, profile }: { id: string; profile: DeveloperProfil
     }
   }, [post, c]);
 
+  useEffect(() => {
+    if (post) document.title = `${post.title} · DevVerse`;
+  }, [post]);
+
   if (!post)
     return (
-      <div className="rounded-xl border p-8 text-center">
+      <div className="rounded-md border p-8 text-center">
         <p className="mb-3 font-medium">This post doesn&apos;t exist or was removed.</p>
         <Link href="/community" className="text-primary hover:underline">Back to Community</Link>
       </div>
@@ -51,7 +55,7 @@ export function PostView({ id, profile }: { id: string; profile: DeveloperProfil
           <div className="mb-6 flex items-center gap-3 border-y py-3 text-sm text-muted-foreground">
             <Avatar name={post.author} size={8} />
             <span className="font-medium text-foreground">{post.author}</span>· {readingMinutes(post.body)} min read · {timeAgo(post.createdAt, now)}
-            <button onClick={() => c.vote(post.id)} disabled={post.author === me} aria-pressed={!!c.votes[post.id]} className={cn("ml-auto flex items-center gap-1 rounded-full px-2 py-1 disabled:opacity-40", c.votes[post.id] ? "text-rose-600" : "hover:text-foreground")}>
+            <button onClick={() => c.vote(post.id)} disabled={post.author === me} aria-pressed={!!c.votes[post.id]} className={cn("ml-auto flex items-center gap-1 rounded-md px-2 py-1 disabled:opacity-40", c.votes[post.id] ? "text-destructive" : "hover:text-foreground")}>
               <Heart className={cn("size-4", c.votes[post.id] && "fill-current")} /> {post.score}
             </button>
           </div>
@@ -90,14 +94,14 @@ export function PostView({ id, profile }: { id: string; profile: DeveloperProfil
             const accepted = a.id === post.acceptedAnswerId;
             const key = `${post.id}:${a.id}`;
             return (
-              <li key={a.id} className={cn("flex gap-4 border-b py-4", accepted && "rounded-lg border border-emerald-300 bg-emerald-50/50 px-3 dark:bg-emerald-950/20")}>
+              <li key={a.id} className={cn("flex gap-4 border-b py-4", accepted && "rounded-lg border border-success/40 bg-success/10 px-3")}>
                 <div className="flex flex-col items-center gap-2">
                   <VoteColumn score={a.score} voted={!!c.votes[key]} onVote={() => c.vote(post.id, a.id)} disabled={a.author === me} label="answer" />
                   {post.type === "question" && (post.author === me ? (
-                    <button onClick={() => c.accept(post.id, a.id)} aria-label={accepted ? "Unaccept this answer" : "Accept this answer"} title={accepted ? "Unaccept" : "Accept as the solution"} className={accepted ? "text-emerald-600" : "text-muted-foreground hover:text-emerald-600"}>
+                    <button onClick={() => c.accept(post.id, a.id)} aria-label={accepted ? "Unaccept this answer" : "Accept this answer"} title={accepted ? "Unaccept" : "Accept as the solution"} className={accepted ? "text-success" : "text-muted-foreground hover:text-success"}>
                       <CheckCircle2 className="size-7" />
                     </button>
-                  ) : accepted && <CheckCircle2 className="size-7 text-emerald-600" aria-label="Accepted answer" />)}
+                  ) : accepted && <CheckCircle2 className="size-7 text-success" aria-label="Accepted answer" />)}
                 </div>
                 <div className="min-w-0 flex-1">
                   <Markdown>{a.body}</Markdown>
@@ -137,7 +141,7 @@ function AnswerForm({ onSubmit, label }: { onSubmit: (body: string) => void; lab
       ) : (
         <textarea value={body} onChange={(e) => setBody(e.target.value)} rows={6} aria-label={label} placeholder="Markdown supported. Use ``` for code." className="w-full rounded-md border bg-background p-3 font-mono text-sm" />
       )}
-      {error && <p className="mt-1 text-sm text-rose-600">{error}</p>}
+      {error && <p className="mt-1 text-sm text-destructive">{error}</p>}
       <Button className="mt-2" onClick={submit}>Post {label.toLowerCase().replace("your ", "")}</Button>
     </div>
   );

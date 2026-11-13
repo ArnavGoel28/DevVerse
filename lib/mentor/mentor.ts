@@ -36,7 +36,7 @@ export function profileContext(p: DeveloperProfile): string {
     `Summary: ${p.summary}`,
     `Skills (confidence from evidence): ${skills.join(", ") || "none yet"}.`,
     wrong.length ? `The user says they do NOT know: ${wrong.join(", ")}.` : "",
-    `Struggles: ${p.struggles.map((s) => `${s.topic} (severity ${Math.round(s.severity * 100)}%, ${s.trend}) — ${s.why}`).join(" | ") || "none detected"}`,
+    `Struggles: ${p.struggles.map((s) => `${s.topic} (severity ${Math.round(s.severity * 100)}%, ${s.trend}): ${s.why}`).join(" | ") || "none detected"}`,
     `GitHub: ${t.repos} repos, ${t.stars} stars, ${t.pullRequests} PRs, ${t.mergedExternalPRs} merged open-source PRs.`,
     `Gaps a recruiter would notice: ${p.githubInsights.gaps.join(" | ") || "none"}`,
   ]
@@ -83,8 +83,8 @@ export function detectSkills(question: string, p: DeveloperProfile): string[] {
  */
 export function offlineAnswer(p: DeveloperProfile, question: string): string {
   const q = question.toLowerCase();
-  const note = "\n\n_Offline answer from your profile — the AI mentor is not available right now._";
-  const recs = p.recommendations.map((r) => `- **${r.title}** — ${r.reason}`).join("\n");
+  const note = "\n\n_Offline answer from your profile. The AI mentor is not available right now._";
+  const recs = p.recommendations.map((r) => `- **${r.title}**: ${r.reason}`).join("\n");
   const top = p.struggles[0];
 
   if (/fail|error|broken|ci\b|build|deploy|crash/.test(q)) {
@@ -108,14 +108,14 @@ export function offlineAnswer(p: DeveloperProfile, question: string): string {
   if (/struggl|weak|improve|bad at|problem/.test(q)) {
     return (
       (p.struggles.length
-        ? `### Your recurring struggles\n${p.struggles.map((s) => `- **${s.topic}** (${s.trend}) — ${s.why}`).join("\n")}`
+        ? `### Your recurring struggles\n${p.struggles.map((s) => `- **${s.topic}** (${s.trend}): ${s.why}`).join("\n")}`
         : "No recurring struggles stand out in your history right now.") + note
     );
   }
   if (/learn|next|roadmap|study|should i/.test(q)) {
     return (
       `### What to do next\n${recs || "- Keep building and pushing projects to GitHub."}` +
-      (top ? `\n\nYour biggest gap is **${top.topic.toLowerCase()}** — there's a learning pack for it on [Learn](/learn).` : "") +
+      (top ? `\n\nYour biggest gap is **${top.topic.toLowerCase()}**. There's a learning pack for it on [Learn](/learn).` : "") +
       note
     );
   }

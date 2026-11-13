@@ -1,6 +1,6 @@
 "use client";
 
-import { ExternalLink, GitPullRequest, Star } from "lucide-react";
+import { ExternalLink, GitPullRequest, Star } from "@/components/icons";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import { CHART_COLORS } from "@/components/profile/profile-view";
@@ -78,8 +78,8 @@ export function GitHubInsights({ profile }: { profile: DeveloperProfile }) {
                   <span className="truncate">{l.name}</span>
                   <span className="text-xs tabular-nums text-muted-foreground">{(l.share * 100).toFixed(1)}%</span>
                 </div>
-                <div className="h-2 overflow-hidden rounded-full bg-muted" aria-hidden>
-                  <div className="h-full rounded-full" style={{ width: `${Math.max(2, l.share * 100)}%`, background: CHART_COLORS[idx % 5] }} />
+                <div className="h-2 overflow-hidden rounded-sm bg-muted" aria-hidden>
+                  <div className="h-full" style={{ width: `${Math.max(2, l.share * 100)}%`, background: CHART_COLORS[idx % 5] }} />
                 </div>
               </div>
             ))}

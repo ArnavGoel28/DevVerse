@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2, RefreshCw } from "lucide-react";
+import { Loader2, RefreshCw } from "@/components/icons";
 
 import { GitHubIcon } from "@/components/github-icon";
 import type { useProfile } from "@/components/profile/use-profile";
@@ -26,10 +26,10 @@ export function ProfileGate({
 
   if (status === "importing" && !profile)
     return (
-      <Centered>
-        <Loader2 className="size-5 animate-spin" />
-        Reading your GitHub history and building your profile. This takes up to a minute…
-      </Centered>
+      <div className="flex flex-col gap-3" aria-live="polite">
+        <p className="text-sm text-muted-foreground">Reading your GitHub history and building your profile. This takes up to a minute…</p>
+        <PageSkeleton />
+      </div>
     );
 
   if (profile) {
@@ -56,7 +56,7 @@ function ImportCard({ state }: { state: ProfileState }) {
       <CardHeader>
         <CardTitle>Build your Developer Profile</CardTitle>
         <CardDescription>
-          We read your whole GitHub history — repositories, languages, commits, pull requests and open-source work —
+          We read your whole GitHub history: repositories, languages, commits, pull requests and open-source work,
           and turn it into skills, struggles and growth you can check and correct.
         </CardDescription>
       </CardHeader>
@@ -134,10 +134,6 @@ function SourceBar({ state, profile }: { state: ProfileState; profile: Developer
       )}
     </div>
   );
-}
-
-function Centered({ children }: { children: React.ReactNode }) {
-  return <div className="flex items-center justify-center gap-2 py-24 text-sm text-muted-foreground">{children}</div>;
 }
 
 function ErrorNote({ children }: { children: React.ReactNode }) {

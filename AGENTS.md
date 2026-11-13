@@ -94,8 +94,12 @@ Build priority: GitHub history → Developer Profile → personal AI mentor. Tho
   (Code Reviewer); Ship `lib/ship/*` + `/api/ship/explain` (DevOps & Debug); Community `lib/community/*`; Jobs `lib/jobs/*`;
   Teams `lib/teams/*`; Home `components/home/*`. Shared: `components/module-page.tsx`, `components/use-local.ts` (browser store
   until the backend exists), `lib/server/agent-call.ts` (caps + offline fallback for every agent).
-- `app/(app)/[module]/page.tsx` "coming soon" placeholder for every module. **To build a module, create
-  `app/(app)/<slug>/page.tsx`** — it overrides the placeholder. Modules are listed in `lib/modules.ts`.
+- UI rules (`docs/12` §2): icons only from `components/icons.tsx` (Phosphor), never an icon package directly; colours only
+  from theme tokens (`primary`, `success`, `destructive`, `highlight`), no gradients, shadows, glass, emojis or em dashes;
+  every action shows a toast on success and a clear message on error; every page has a title via its `layout.tsx`
+  (`moduleMetadata`). Public pages: landing with live demo, `/terms`, `/privacy`, 404 (`app/not-found.tsx`), `SiteFooter`.
+- Every tool has its own `app/(app)/<slug>/page.tsx` plus a `layout.tsx` for its title. Modules are listed in `lib/modules.ts`;
+  a new tool needs an entry there, a page and a layout.
 - `components/auth-provider.tsx` (`useAuth()`), `components/ui/*` (shadcn-style), `lib/firebase/client.ts`
 - Next.js 16 App Router: route `params` are a Promise (`await params`). Tailwind v4 (theme in `app/globals.css`).
 - Secrets are server-only (`.env.local`, App Hosting secrets). Never import them in `"use client"` files.

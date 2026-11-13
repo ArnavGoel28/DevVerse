@@ -50,7 +50,7 @@ export function buildSkills(evidence: Evidence[], names: Map<string, string> = n
         parent: meta.parent,
         confidence: confidenceFromScore(s.score),
         evidenceCount: s.count,
-        why: `${s.count} piece${s.count === 1 ? "" : "s"} of evidence across ${s.refs.size} project${s.refs.size === 1 ? "" : "s"} — e.g. ${examples}.`,
+        why: `${s.count} piece${s.count === 1 ? "" : "s"} of evidence across ${s.refs.size} project${s.refs.size === 1 ? "" : "s"}, for example ${examples}.`,
       };
     })
     .sort((a, b) => b.confidence - a.confidence || b.evidenceCount - a.evidenceCount)
@@ -170,7 +170,7 @@ export function buildStruggles(s: GitHubSnapshot, now: Date): ProfileStruggle[] 
       severity: 0.5,
       trend: "steady",
       occurrences: 0,
-      why: "No pull requests to other people's repositories yet — recruiters look for open-source work.",
+      why: "No pull requests to other people's repositories yet. Recruiters look for open-source work.",
     });
   }
 
@@ -220,7 +220,7 @@ function buildRecommendations(skills: ProfileSkill[], struggles: ProfileStruggle
     out.push({
       type: "github",
       title: r ? `Add a README to ${r.name}` : "Add READMEs to your repositories",
-      reason: "A README explains what the project does and how to run it — the first thing a visitor reads.",
+      reason: "A README explains what the project does and how to run it. It is the first thing a visitor reads.",
       href: r ? `https://github.com/${r.owner}/${r.name}` : undefined,
     });
   }
@@ -231,7 +231,7 @@ function buildRecommendations(skills: ProfileSkill[], struggles: ProfileStruggle
     out.push({
       type: "practice",
       title: `Practise problems in ${top.name}`,
-      reason: `${top.name} is your strongest skill — sharpen it with interview-style problems.`,
+      reason: `${top.name} is your strongest skill. Sharpen it with interview-style problems.`,
       href: "/practice",
     });
   out.push({
@@ -273,7 +273,7 @@ export function buildRulesProfile(s: GitHubSnapshot, evidence: Evidence[], now =
   if (stats.totals.stars >= 10) strengths.push(`${fmt(stats.totals.stars)} stars across your repositories`);
   const activeYears = s.contributionsByYear.filter((y) => y.commits + y.pullRequests > 0).length;
   if (activeYears >= 3) strengths.push(`Active on GitHub for ${activeYears} years`);
-  if (!strengths.length) strengths.push("Getting started — every project you push builds your profile");
+  if (!strengths.length) strengths.push("Getting started: every project you push builds your profile");
 
   return {
     summary,
@@ -292,7 +292,7 @@ export function buildRulesProfile(s: GitHubSnapshot, evidence: Evidence[], now =
         `, ${fmt(stats.totals.stars)} stars and ${fmt(stats.totals.mergedExternalPRs)} merged contributions to other projects. ` +
         (struggles.length
           ? `The first thing to fix: ${struggles[0].topic.toLowerCase()}.`
-          : "The profile looks well kept — keep shipping and contributing."),
+          : "The profile looks well kept. Keep shipping and contributing."),
     },
     githubStats: stats,
     recommendations: buildRecommendations(skills, struggles, s),

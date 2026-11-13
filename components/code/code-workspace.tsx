@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import Editor, { type OnMount } from "@monaco-editor/react";
-import { ChevronDown, ChevronRight, File, FolderGit2, GitBranch, Loader2, Sparkles, X } from "lucide-react";
+import { ChevronDown, ChevronRight, File, FolderGit2, GitBranch, Loader2, X } from "@/components/icons";
 
 import { type ApiAuth, apiJson } from "@/components/api";
 import { Markdown } from "@/components/markdown";
@@ -97,14 +97,14 @@ export function CodeWorkspace({ auth, profile }: { auth: ApiAuth; profile: Devel
 
   if (!ref)
     return (
-      <div className="mx-auto w-full max-w-xl rounded-xl border bg-card p-6">
+      <div className="mx-auto w-full max-w-xl rounded-md border bg-card p-6">
         <h2 className="mb-1 flex items-center gap-2 font-semibold"><FolderGit2 className="size-5" /> Open a repository</h2>
         <p className="mb-4 text-sm text-muted-foreground">Read any public GitHub repo in a VS Code-style editor and ask the Code Reviewer to explain code at your level. Nothing is ever pushed.</p>
         <form onSubmit={(e) => { e.preventDefault(); void openRepo(); }} className="flex gap-2">
           <input value={input} onChange={(e) => setInput(e.target.value)} aria-label="Repository" placeholder="owner/repo or github.com link" className="flex-1 rounded-md border bg-background px-3 py-2 text-sm" />
           <Button type="submit" disabled={loading}>{loading && <Loader2 className="animate-spin" />} Open</Button>
         </form>
-        {error && <p className="mt-2 text-sm text-rose-600">{error}</p>}
+        {error && <p className="mt-2 text-sm text-destructive">{error}</p>}
         {suggestions.length > 0 && (
           <div className="mt-4 flex flex-wrap gap-1.5 text-xs">
             <span className="text-muted-foreground">Your repos:</span>
@@ -115,15 +115,15 @@ export function CodeWorkspace({ auth, profile }: { auth: ApiAuth; profile: Devel
     );
 
   return (
-    <div className="overflow-hidden rounded-xl border bg-card">
+    <div className="overflow-hidden rounded-md border bg-card">
       <div className="flex items-center gap-2 border-b px-3 py-2 text-sm">
         <FolderGit2 className="size-4" />
         <span className="font-medium">{ref.owner}/{ref.repo}</span>
         <span className="flex items-center gap-1 text-xs text-muted-foreground"><GitBranch className="size-3" /> {branch}</span>
         <button onClick={() => setRef(null)} className="ml-auto text-xs text-muted-foreground hover:text-foreground">Open another repo</button>
       </div>
-      <div className="grid grid-cols-[200px_1fr] grid-rows-[560px_auto] xl:grid-cols-[240px_1fr_320px] xl:grid-rows-[620px]">
-        <nav aria-label="Explorer" className="overflow-auto border-r bg-muted/30 py-2 text-[13px]">
+      <div className="grid grid-cols-1 grid-rows-[180px_440px_auto] sm:grid-cols-[200px_1fr] sm:grid-rows-[560px_auto] xl:grid-cols-[240px_1fr_320px] xl:grid-rows-[620px]">
+        <nav aria-label="Explorer" className="overflow-auto border-b bg-muted/30 sm:border-r sm:border-b-0 py-2 text-[13px]">
           <p className="px-3 pb-1 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">Explorer</p>
           <TreeList nodes={tree} depth={0} open={open} active={active} onToggle={(p) => setOpen((o) => { const n = new Set(o); if (n.has(p)) n.delete(p); else n.add(p); return n; })} onOpen={(n) => void openFile(ref, branch, n.path, n.size ?? 0)} />
           {truncated && <p className="px-3 pt-2 text-xs text-muted-foreground">Large repo: showing the first 2,000 files.</p>}
@@ -165,11 +165,11 @@ export function CodeWorkspace({ auth, profile }: { auth: ApiAuth; profile: Devel
           </div>
         </section>
 
-        <aside className="col-span-2 flex flex-col overflow-auto border-t p-4 xl:col-span-1 xl:border-t-0 xl:border-l">
-          <h2 className="mb-1 flex items-center gap-2 text-sm font-semibold"><Sparkles className="size-4 text-primary" /> Code Reviewer</h2>
+        <aside className="flex flex-col overflow-auto border-t p-4 sm:col-span-2 xl:col-span-1 xl:border-t-0 xl:border-l">
+          <h2 className="mb-1 flex items-center gap-2 text-sm font-semibold">Code Reviewer</h2>
           <p className="mb-3 text-xs text-muted-foreground">Select code in the editor (or nothing for the whole file), then explain it at your {profile.level} level.</p>
           <Button onClick={runExplain} disabled={!current?.content || explain.status === "loading"}>
-            {explain.status === "loading" ? <Loader2 className="animate-spin" /> : <Sparkles />} Explain this
+            {explain.status === "loading" ? <Loader2 className="animate-spin" /> : null} Explain this
           </Button>
           {explain.status !== "idle" && explain.scope && <p className="mt-3 text-xs text-muted-foreground">Explaining {explain.scope} of {current?.path.split("/").pop()}</p>}
           {explain.status === "done" && (
@@ -178,7 +178,7 @@ export function CodeWorkspace({ auth, profile }: { auth: ApiAuth; profile: Devel
               {explain.mode === "limit" && <p className="mt-2 text-xs text-muted-foreground">(daily AI limit reached)</p>}
             </div>
           )}
-          {explain.status === "error" && <p className="mt-2 text-sm text-rose-600">{explain.text}</p>}
+          {explain.status === "error" && <p className="mt-2 text-sm text-destructive">{explain.text}</p>}
         </aside>
       </div>
     </div>

@@ -3,10 +3,13 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LogOut, Menu, Sparkles, X } from "lucide-react";
+import { toast } from "sonner";
 
+import { LogOut, Menu, X } from "@/components/icons";
 import { useAuth } from "@/components/auth-provider";
+import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
+import { githubAvatar } from "@/lib/avatar";
 import { GROUPS, MODULES } from "@/lib/modules";
 import { cn } from "@/lib/utils";
 
@@ -16,22 +19,28 @@ export function AppSidebar() {
   const { user, signOut } = useAuth();
   const [open, setOpen] = useState(false);
 
+  async function handleSignOut() {
+    try {
+      await signOut();
+      toast.success("Signed out");
+    } catch {
+      toast.error("Couldn't sign out. Check your connection and try again.");
+    }
+  }
+
   return (
-    <aside className="sticky top-0 z-30 flex w-full flex-col border-b bg-sidebar/90 text-sidebar-foreground backdrop-blur md:sticky md:top-0 md:h-screen md:w-64 md:shrink-0 md:border-r md:border-b-0">
-      <div className="flex items-center justify-between px-5 py-4">
-        <Link href="/home" className="flex items-center gap-2.5">
-          <span className="flex size-8 items-center justify-center rounded-lg bg-brand text-sm font-bold text-white shadow-md">DV</span>
-          <span className="text-lg font-bold tracking-tight">Dev<span className="text-brand">Verse</span></span>
-        </Link>
+    <aside className="sticky top-0 z-30 flex w-full flex-col border-b bg-sidebar text-sidebar-foreground md:h-screen md:w-60 md:shrink-0 md:border-r md:border-b-0">
+      <div className="flex items-center justify-between px-4 py-3.5">
+        <Logo href="/home" />
         <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-controls="app-nav" aria-label={open ? "Close menu" : "Open menu"}>
           {open ? <X /> : <Menu />}
         </Button>
       </div>
 
-      <nav id="app-nav" className={cn("flex-col gap-4 px-3 pb-4 md:flex md:flex-1 md:overflow-y-auto md:pb-2", open ? "flex" : "hidden")}>
+      <nav id="app-nav" aria-label="Tools" className={cn("max-h-[calc(100dvh-4rem)] flex-col gap-4 overflow-y-auto px-2 pb-4 md:flex md:max-h-none md:flex-1 md:pb-2", open ? "flex" : "hidden")}>
         {GROUPS.map((g) => (
-          <div key={g.id} className="flex flex-col gap-1">
-            <p className="px-3 pb-1 text-[11px] font-semibold tracking-wider text-muted-foreground/80 uppercase">{g.label}</p>
+          <div key={g.id} className="flex flex-col gap-px">
+            <p className="px-3 pb-1 font-mono text-[10px] tracking-widest text-muted-foreground uppercase">{g.label}</p>
             {MODULES.filter((m) => m.group === g.id).map(({ slug, name, icon: Icon }) => {
               const active = pathname === `/${slug}` || pathname.startsWith(`/${slug}/`);
               return (
@@ -41,41 +50,44 @@ export function AppSidebar() {
                   aria-current={active ? "page" : undefined}
                   onClick={() => setOpen(false)}
                   className={cn(
-                    "group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors md:py-2",
-                    active
-                      ? "bg-sidebar-accent font-medium text-sidebar-accent-foreground"
-                      : "text-muted-foreground hover:bg-sidebar-accent/70 hover:text-foreground",
+                    "flex items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-colors md:py-1.5",
+                    active ? "bg-sidebar-accent font-medium text-sidebar-accent-foreground" : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground",
                   )}
                 >
-                  {active && <span className="absolute top-1.5 bottom-1.5 left-0 w-1 rounded-full bg-brand" aria-hidden />}
-                  <Icon className={cn("size-4 transition-transform group-hover:scale-110", active && "text-primary")} />
+                  <Icon className={cn("size-4", active && "text-primary")} weight={active ? "bold" : "regular"} />
                   {name}
                 </Link>
               );
             })}
           </div>
         ))}
+        {user && (
+          <div className="flex items-center gap-3 border-t px-1 pt-3 md:hidden">
+            <SignedInUser photo={user.photoURL} name={user.displayName} onSignOut={handleSignOut} />
+          </div>
+        )}
       </nav>
-
-      <div className="hidden px-3 pb-3 md:block">
-        <div className="rounded-xl border bg-card p-3 text-xs">
-          <p className="mb-1 flex items-center gap-1.5 font-semibold"><Sparkles className="size-3.5 text-primary" /> 9 AI agents, one profile</p>
-          <p className="text-muted-foreground">Every tool learns from what you do in the others.</p>
-        </div>
-      </div>
 
       {user && (
         <div className="hidden items-center gap-3 border-t p-3 md:flex">
-          {user.photoURL && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={user.photoURL} alt="" className="size-8 rounded-full ring-2 ring-primary/30" />
-          )}
-          <span className="flex-1 truncate text-sm">{user.displayName ?? "You"}</span>
-          <Button variant="ghost" size="icon" onClick={signOut} aria-label="Sign out">
-            <LogOut />
-          </Button>
+          <SignedInUser photo={user.photoURL} name={user.displayName} onSignOut={handleSignOut} />
         </div>
       )}
     </aside>
+  );
+}
+
+function SignedInUser({ photo, name, onSignOut }: { photo: string | null; name: string | null; onSignOut: () => void }) {
+  return (
+    <>
+      {photo && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={githubAvatar(photo, 64)} alt="" width={32} height={32} loading="lazy" className="size-8 rounded-full border" />
+      )}
+      <span className="flex-1 truncate text-sm">{name ?? "You"}</span>
+      <Button variant="ghost" size="icon" onClick={onSignOut} aria-label="Sign out" title="Sign out">
+        <LogOut />
+      </Button>
+    </>
   );
 }

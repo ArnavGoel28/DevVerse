@@ -93,7 +93,7 @@ export const STRUGGLE_PACKS: Record<string, { explainer: string; resources: Lear
   },
   "Failing CI builds": {
     explainer:
-      "CI runs your checks on every push. When it fails, open the run, find the first red step, and reproduce that exact command locally — most failures are missing dependencies, secrets or environment variables.",
+      "CI runs your checks on every push. When it fails, open the run, find the first red step, and reproduce that exact command locally. Most failures are missing dependencies, secrets or environment variables.",
     resources: [r("GitHub Actions quickstart", "https://docs.github.com/en/actions/writing-workflows/quickstart")],
   },
   "Taking projects past the first few commits": {
@@ -103,7 +103,7 @@ export const STRUGGLE_PACKS: Record<string, { explainer: string; resources: Lear
   },
   "Staying consistent": {
     explainer:
-      "Consistency compounds. A small daily habit — 30 minutes of code pushed to GitHub — builds skill and shows steady activity on your profile.",
+      "Consistency compounds. A small daily habit, like 30 minutes of code pushed to GitHub, builds skill and shows steady activity on your profile.",
     resources: [r("#100DaysOfCode challenge", "https://www.100daysofcode.com/", "article")],
   },
   "Contributing to other projects": {

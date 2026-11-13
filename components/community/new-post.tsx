@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "@/components/icons";
 import { toast } from "sonner";
 
 import { useCommunity } from "@/components/community/use-community";
@@ -46,11 +46,12 @@ export function NewPost({ profile }: { profile: DeveloperProfile }) {
     router.push(`/community/${id}`);
   };
 
-  const err = (k: keyof typeof errors) => tried && errors[k] && <p className="mt-1 text-sm text-rose-600">{errors[k]}</p>;
+  const err = (k: keyof typeof errors) => tried && errors[k] && <p className="mt-1 text-sm text-destructive">{errors[k]}</p>;
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-5">
       <Link href="/community" className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"><ArrowLeft className="size-4" /> Community</Link>
+      <h1 className="text-2xl font-semibold tracking-tight">New post</h1>
       <div role="radiogroup" aria-label="Post type" className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         {(Object.keys(TYPE_LABEL) as PostType[]).map((t) => (
           <button key={t} role="radio" aria-checked={type === t} onClick={() => setType(t)} className={cn("rounded-lg border px-3 py-2 text-sm", type === t ? "border-primary bg-primary/10 font-medium" : "hover:bg-muted")}>
@@ -67,7 +68,7 @@ export function NewPost({ profile }: { profile: DeveloperProfile }) {
       </label>
 
       {similar.length > 0 && (
-        <div className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm dark:bg-amber-950/30">
+        <div className="rounded-md border border-highlight/60 bg-highlight/10 p-3 text-sm">
           <p className="mb-1 font-medium">Similar questions already exist. One might answer yours:</p>
           <ul className="list-disc pl-5">{similar.map((p) => <li key={p.id}><Link href={`/community/${p.id}`} className="text-primary hover:underline">{p.title}</Link></li>)}</ul>
         </div>

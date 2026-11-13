@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Editor from "@monaco-editor/react";
-import { CheckCircle2, Circle, Lightbulb, Loader2, Play, Send, Sparkles, XCircle } from "lucide-react";
+import { CheckCircle2, Circle, Lightbulb, Loader2, Play, Send, XCircle } from "@/components/icons";
 import { toast } from "sonner";
 
 import { type ApiAuth, apiJson, apiRequest } from "@/components/api";
@@ -36,9 +36,9 @@ function save(key: string, value: unknown) {
 }
 
 const DIFF_STYLE: Record<Difficulty, string> = {
-  easy: "text-emerald-700 dark:text-emerald-400",
-  medium: "text-amber-700 dark:text-amber-400",
-  hard: "text-rose-700 dark:text-rose-400",
+  easy: "text-success",
+  medium: "text-highlight",
+  hard: "text-destructive",
 };
 
 type Hint = { level: HintLevel; text: string; mode: string };
@@ -66,13 +66,13 @@ export function PracticeView({ auth, profile }: { auth: ApiAuth; profile: Develo
   return (
     <div className="grid gap-6 lg:grid-cols-[300px_1fr]">
       <aside className="flex flex-col gap-4">
-        <section className="rounded-xl border bg-card p-4">
+        <section className="rounded-md border bg-card p-4">
           <h2 className="mb-1 flex items-center gap-2 text-sm font-semibold">
-            <Sparkles className="size-4 text-primary" /> Recommended for you
+            Recommended for you
           </h2>
           <p className="mb-3 text-xs text-muted-foreground">Picked by the Practice Coach from your level and what you haven&apos;t solved.</p>
           {recs.length === 0 ? (
-            <p className="text-sm">You&apos;ve solved every problem. 🎉</p>
+            <p className="text-sm">You&apos;ve solved every problem in the set.</p>
           ) : (
             <ul className="flex flex-col gap-2">
               {recs.map((r) => (
@@ -87,7 +87,7 @@ export function PracticeView({ auth, profile }: { auth: ApiAuth; profile: Develo
           )}
         </section>
 
-        <section className="rounded-xl border bg-card p-4">
+        <section className="rounded-md border bg-card p-4">
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-sm font-semibold">All problems</h2>
             <span className="text-xs text-muted-foreground">{solved.size}/{PROBLEMS.length} solved</span>
@@ -113,7 +113,7 @@ export function PracticeView({ auth, profile }: { auth: ApiAuth; profile: Develo
                   className={`flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm hover:bg-muted ${q.id === problem.id ? "bg-muted font-medium" : ""}`}
                   onClick={() => setSelectedId(q.id)}
                 >
-                  {solved.has(q.id) ? <CheckCircle2 className="size-4 shrink-0 text-emerald-600" aria-label="Solved" /> : <Circle className="size-4 shrink-0 text-muted-foreground" />}
+                  {solved.has(q.id) ? <CheckCircle2 className="size-4 shrink-0 text-success" aria-label="Solved" /> : <Circle className="size-4 shrink-0 text-muted-foreground" />}
                   <span className="flex-1 truncate">{q.title}</span>
                   <span className={`text-xs capitalize ${DIFF_STYLE[q.difficulty]}`}>{q.difficulty}</span>
                 </button>
@@ -153,7 +153,7 @@ function ProblemPanel({ auth, problem, solved, onSolved }: { auth: ApiAuth; prob
     if (kind === "submit") {
       if (r.verdict === "accepted") {
         onSolved();
-        toast.success(`Accepted! ${problem.title} solved 🎉`, { description: "Added to your progress. Your profile strength just went up." });
+        toast.success(`Accepted: ${problem.title} solved`, { description: "Added to your progress. Your profile strength just went up." });
       }
       try {
         const res = await apiRequest("/api/practice/submit", auth, {
@@ -184,14 +184,14 @@ function ProblemPanel({ auth, problem, solved, onSolved }: { auth: ApiAuth; prob
 
   return (
     <section className="flex min-w-0 flex-col gap-4">
-      <div className="rounded-xl border bg-card p-5">
+      <div className="rounded-md border bg-card p-5">
         <div className="mb-2 flex flex-wrap items-center gap-2">
           <h2 className="text-xl font-semibold">{problem.title}</h2>
           <span className={`text-sm font-medium capitalize ${DIFF_STYLE[problem.difficulty]}`}>{problem.difficulty}</span>
           {problem.topics.map((t) => (
             <Badge key={t} variant="secondary">{TOPIC_NAMES[t] ?? t}</Badge>
           ))}
-          {solved && <Badge className="bg-emerald-600 text-white">Solved</Badge>}
+          {solved && <Badge className="bg-success text-primary-foreground">Solved</Badge>}
         </div>
         <Markdown>{problem.statement}</Markdown>
         <div className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
@@ -204,7 +204,7 @@ function ProblemPanel({ auth, problem, solved, onSolved }: { auth: ApiAuth; prob
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-xl border">
+      <div className="overflow-hidden rounded-md border">
         <div className="flex items-center justify-between border-b bg-muted/50 px-3 py-1.5 text-xs text-muted-foreground">
           <span>JavaScript · runs in your browser, not on our servers</span>
           <button className="hover:text-foreground" onClick={() => onChange(problem.starter)}>Reset code</button>
@@ -237,9 +237,9 @@ function ProblemPanel({ auth, problem, solved, onSolved }: { auth: ApiAuth; prob
       {note && <p className="text-sm text-muted-foreground">{note}</p>}
 
       {hints.length > 0 && (
-        <div className="rounded-xl border bg-card p-4">
+        <div className="rounded-md border bg-card p-4">
           <h3 className="mb-2 flex items-center gap-2 text-sm font-semibold">
-            <Lightbulb className="size-4 text-amber-500" /> Practice Coach
+            <Lightbulb className="size-4 text-highlight" /> Practice Coach
           </h3>
           <ol className="flex flex-col gap-2 text-sm">
             {hints.map((h) => (
@@ -258,9 +258,9 @@ function ProblemPanel({ auth, problem, solved, onSolved }: { auth: ApiAuth; prob
 function ResultPanel({ result }: { result: JudgeResult & { kind: "run" | "submit" } }) {
   const ok = result.verdict === "accepted";
   return (
-    <div className={`${ok ? "animate-pop " : ""}rounded-xl border p-4 ${ok ? "border-emerald-300 bg-emerald-50 dark:bg-emerald-950/30" : "border-rose-300 bg-rose-50 dark:bg-rose-950/30"}`}>
+    <div className={`${ok ? "animate-pop " : ""}rounded-md border p-4 ${ok ? "border-success/40 bg-success/10" : "border-destructive/40 bg-destructive/10"}`}>
       <div className="mb-2 flex items-center gap-2 font-semibold">
-        {ok ? <CheckCircle2 className="size-5 text-emerald-600" /> : <XCircle className="size-5 text-rose-600" />}
+        {ok ? <CheckCircle2 className="size-5 text-success" /> : <XCircle className="size-5 text-destructive" />}
         {VERDICT_LABEL[result.verdict]}
         <span className="text-sm font-normal text-muted-foreground">
           {result.passed}/{result.total} {result.kind === "run" ? "sample tests" : "tests"} passed

@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { PenSquare, Search } from "lucide-react";
+import { PenSquare, Search } from "@/components/icons";
 
 import { PostRow, Tag } from "@/components/community/parts";
 import { useCommunity } from "@/components/community/use-community";
@@ -77,19 +77,19 @@ export function CommunityFeed({ profile }: { profile: DeveloperProfile }) {
             </Link>
           )}
         </div>
-        {!saved && <p className="mb-2 text-xs text-amber-600">Your browser blocked storage, so changes last only for this visit.</p>}
+        {!saved && <p className="mb-2 text-xs text-highlight">Your browser blocked storage, so changes last only for this visit.</p>}
         {list.length === 0 ? (
-          <div className="rounded-xl border p-8 text-center text-sm text-muted-foreground">
+          <div className="rounded-md border p-8 text-center text-sm text-muted-foreground">
             Nothing here yet. {tab === "unanswered" ? "Every question has an answer. " : ""}
             <Link href="/community/new" className="text-primary hover:underline">Start the first post</Link>.
           </div>
         ) : (
-          <ul className="rounded-xl border bg-card">{list.map((p) => <PostRow key={p.id} post={p} now={now} />)}</ul>
+          <ul className="rounded-md border bg-card">{list.map((p) => <PostRow key={p.id} post={p} now={now} />)}</ul>
         )}
       </section>
 
       <aside className="grid gap-4 sm:grid-cols-2 lg:col-span-2 xl:col-span-1 xl:flex xl:flex-col">
-        <div className="rounded-xl border bg-card p-4">
+        <div className="rounded-md border bg-card p-4">
           <h2 className="mb-2 text-sm font-semibold">Questions you can answer</h2>
           {unansweredForYou.length ? (
             <ul className="flex flex-col gap-2 text-sm">
@@ -102,7 +102,7 @@ export function CommunityFeed({ profile }: { profile: DeveloperProfile }) {
           )}
         </div>
         {profile.struggles.length > 0 && (
-          <div className="rounded-xl border bg-card p-4">
+          <div className="rounded-md border bg-card p-4">
             <h2 className="mb-2 text-sm font-semibold">Your struggles</h2>
             <p className="mb-2 text-xs text-muted-foreground">The &quot;For you&quot; tab boosts posts about these.</p>
             <ul className="flex flex-col gap-1 text-sm">{profile.struggles.slice(0, 4).map((s) => <li key={s.topic}>• {s.topic}</li>)}</ul>

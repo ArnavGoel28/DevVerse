@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, CircleDot, ExternalLink, Loader2, MessageSquare, RefreshCw } from "lucide-react";
+import { ArrowRight, CircleDot, ExternalLink, Loader2, MessageSquare, RefreshCw } from "@/components/icons";
 
 import { apiJson, type ApiAuth } from "@/components/api";
 import { Badge } from "@/components/ui/badge";
@@ -55,7 +55,7 @@ export function OssIssues({ auth }: { auth: ApiAuth }) {
             <Loader2 className="size-4 animate-spin" /> Searching GitHub…
           </p>
         )}
-        {issues && !issues.length && <p className="text-sm text-muted-foreground">No matching issues right now — try again later.</p>}
+        {issues && !issues.length && <p className="text-sm text-muted-foreground">No matching issues right now. Try again later.</p>}
         {issues?.map((i) => (
           <a
             key={i.url}

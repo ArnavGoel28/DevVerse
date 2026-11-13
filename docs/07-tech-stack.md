@@ -19,7 +19,7 @@
 |-------|--------|-------|--------------------|
 | **Language** | TypeScript everywhere | ✅ | One language for UI, server and jobs |
 | **App framework** | Next.js 16 (App Router), modular monolith: `lib/<module>/` + `app/api/<module>/` | ✅ | UI + server routes in one deployable; keys stay server-side; NFR-MA-02 |
-| **UI** | Tailwind CSS v4 + shadcn/ui (Radix), lucide icons | ✅ | Familiar layouts fast (D-15); light/dark (NFR-UX-04) |
+| **UI** | Tailwind CSS v4 + shadcn/ui (Radix), Phosphor icons (`components/icons.tsx`), IBM Plex Sans/Mono, flat paper-and-ink palette (`docs/12` §2) | ✅ | Familiar layouts fast (D-15); light/dark (NFR-UX-04) |
 | **Charts** | Recharts | ✅ | Skills, growth, GitHub insights |
 | **Markdown** | react-markdown + remark-gfm | ✅ | AI answers, posts |
 | **Code editor + diff** | Monaco Editor (`@monaco-editor/react`), incl. DiffEditor | H (B3) | VS Code feel; JS/TS IntelliSense free; AI diffs (AI-05) |

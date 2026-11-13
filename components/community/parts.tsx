@@ -1,24 +1,24 @@
 "use client";
 
 import Link from "next/link";
-import { CheckCircle2, ChevronDown, ChevronUp } from "lucide-react";
+import { CheckCircle2, ChevronDown, ChevronUp } from "@/components/icons";
 
 import { type Post, timeAgo, TYPE_LABEL } from "@/lib/community/model";
 import { cn } from "@/lib/utils";
 
 export const TYPE_STYLE: Record<Post["type"], string> = {
-  question: "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300",
-  article: "bg-violet-100 text-violet-800 dark:bg-violet-950 dark:text-violet-300",
-  showcase: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300",
-  discussion: "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300",
+  question: "border-foreground/30 text-foreground",
+  article: "border-foreground/30 text-foreground",
+  showcase: "border-primary/50 text-primary",
+  discussion: "border-foreground/30 text-muted-foreground",
 };
 
 export function TypeBadge({ type }: { type: Post["type"] }) {
-  return <span className={cn("rounded px-1.5 py-0.5 text-[11px] font-medium", TYPE_STYLE[type])}>{TYPE_LABEL[type]}</span>;
+  return <span className={cn("rounded-sm border px-1.5 py-px font-mono text-[10px] tracking-wide uppercase", TYPE_STYLE[type])}>{TYPE_LABEL[type]}</span>;
 }
 
 export function Tag({ id, href }: { id: string; href?: string }) {
-  const cls = "rounded-md bg-primary/10 px-2 py-0.5 text-xs text-primary hover:bg-primary/20";
+  const cls = "rounded-sm border border-border bg-secondary px-1.5 py-px font-mono text-[11px] text-secondary-foreground hover:border-primary/50 hover:text-primary";
   return href ? <Link href={href} className={cls}>{id}</Link> : <span className={cls}>{id}</span>;
 }
 
@@ -27,9 +27,8 @@ export function SampleBadge() {
 }
 
 export function Avatar({ name, size = 6 }: { name: string; size?: number }) {
-  const hue = [...name].reduce((h, c) => h + c.charCodeAt(0), 0) % 360;
   return (
-    <span className="inline-flex shrink-0 items-center justify-center rounded-full text-[10px] font-semibold text-white" style={{ background: `hsl(${hue} 55% 45%)`, width: size * 4, height: size * 4 }} aria-hidden>
+    <span className="inline-flex shrink-0 items-center justify-center rounded-full bg-secondary text-[10px] font-semibold text-secondary-foreground ring-1 ring-border" style={{ width: size * 4, height: size * 4 }} aria-hidden>
       {name.charAt(0).toUpperCase()}
     </span>
   );
@@ -44,7 +43,7 @@ export function PostRow({ post, now }: { post: Post; now: number }) {
     <li className="flex gap-4 border-b px-4 py-3 last:border-b-0">
       <div className="hidden w-20 shrink-0 flex-col items-end gap-1 text-xs text-muted-foreground sm:flex">
         <span className="font-medium text-foreground">{post.score} votes</span>
-        <span className={cn("rounded px-1.5", accepted ? "bg-emerald-600 text-white" : answered ? "border border-emerald-600 text-emerald-700 dark:text-emerald-400" : "")}>
+        <span className={cn("rounded px-1.5", accepted ? "bg-success text-primary-foreground" : answered ? "border border-success/40 text-success" : "")}>
           {accepted && <CheckCircle2 className="mr-0.5 inline size-3" />}
           {post.answers.length} {post.type === "question" ? "answers" : "replies"}
         </span>
@@ -77,7 +76,7 @@ export function VoteColumn({ score, voted, onVote, disabled, label }: { score: n
         aria-pressed={voted}
         aria-label={voted ? `Remove your upvote from this ${label}` : `Upvote this ${label}`}
         title={disabled ? "You can't vote on your own post" : undefined}
-        className={cn("rounded-full border p-1.5 transition-colors disabled:opacity-40", voted ? "border-primary bg-primary text-primary-foreground" : "hover:bg-muted")}
+        className={cn("rounded-md border p-1.5 transition-colors disabled:opacity-40", voted ? "border-primary bg-primary text-primary-foreground" : "hover:bg-muted")}
       >
         <ChevronUp className="size-5" />
       </button>
