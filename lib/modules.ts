@@ -64,6 +64,7 @@ export const MODULES: AppModule[] = [
     icon: Sparkles,
     block: "B2",
     depth: "Real",
+    built: true,
     features: [
       { id: "AI-01", text: "Ask anything about your projects" },
       { id: "AI-03", text: "Explanations at your level" },
@@ -77,6 +78,7 @@ export const MODULES: AppModule[] = [
     icon: BookOpen,
     block: "B2",
     depth: "Real",
+    built: true,
     features: [
       { id: "LN-01", text: "Personal roadmap with linked resources" },
       { id: "LN-02", text: "Steps complete automatically from your activity" },

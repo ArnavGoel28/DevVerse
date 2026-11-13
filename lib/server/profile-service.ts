@@ -172,3 +172,10 @@ export async function buildDemoProfile(login: string): Promise<DeveloperProfile>
   demoCache.set(key, { at: Date.now(), profile });
   return profile;
 }
+
+/** The user's stored GitHub token, decrypted (server-only). Null if missing. */
+export async function getUserGitHubToken(uid: string): Promise<string | null> {
+  const secret = await userRef(uid).collection("private").doc("github").get();
+  if (!secret.exists) return null;
+  return decryptSecret(secret.get("encryptedToken") as string, encryptionKey());
+}

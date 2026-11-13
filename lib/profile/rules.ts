@@ -264,7 +264,7 @@ export function buildRulesProfile(s: GitHubSnapshot, evidence: Evidence[], now =
     (primaryLanguages.length ? `, working mostly in ${list(primaryLanguages)}` : "") +
     (focusAreas.length ? ` (${list(focusAreas)})` : "") +
     `. ${fmt(stats.totals.repos)} own repositories` +
-    (stats.totals.mergedExternalPRs ? `, ${fmt(stats.totals.mergedExternalPRs)} merged pull requests to other projects.` : ".") +
+    (stats.totals.mergedExternalPRs ? `, ${fmt(stats.totals.mergedExternalPRs)} merged pull request${stats.totals.mergedExternalPRs === 1 ? "" : "s"} to other projects.` : ".") +
     (struggles[0] ? ` Biggest area to improve: ${struggles[0].topic.toLowerCase()}.` : "");
 
   const strengths: string[] = [];

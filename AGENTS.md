@@ -50,7 +50,7 @@ and later enterprises and educational institutions.
 
 ## 5. Current state of the repo
 
-**Building — blocks B0 and B1 done.** The project was redesigned from scratch, needs first (D-09).
+**Building — blocks B0, B1 and B2 done.** The project was redesigned from scratch, needs first (D-09).
 Current target: a **24-hour Google hackathon build** by 2 people coding with AI help (D-13).
 Every module ships at Real / Lean / Later depth (`03` → *Hackathon build*), in the block order of `05 §2`.
 Stack is Google-first: Next.js + Firebase + Gemini (`07-tech-stack.md`).
@@ -69,13 +69,17 @@ Build priority: GitHub history → Developer Profile → personal AI mentor. Tho
 | `docs/07-tech-stack.md` | Hackathon tech stack, env vars, GitHub scopes, cost guardrails | Canonical |
 | `docs/08-data-model.md` | Firestore collections and TypeScript shapes — change here first | Canonical |
 
-### Code layout (blocks B0–B1 done)
+### Code layout (blocks B0–B2 done)
 
 - `app/page.tsx` landing + GitHub sign-in · `app/(app)/layout.tsx` signed-in shell with sidebar
 - B1 (GH-08/09, DI-*): `lib/github/history.ts` (GitHub import) → `lib/profile/evidence.ts` → `lib/profile/rules.ts`
   (skills, struggles, growth, insights) → `lib/profile/enrich.ts` (Gemini rewrites text only, D-19).
   Server: `lib/server/*` (Firebase Admin, token encryption, `profile-service.ts`), routes in `app/api/`.
   UI: `app/(app)/profile`, `app/(app)/github`, `components/profile/*` (`useProfile()` handles signed-in and demo mode, D-18).
+- B2: mentor `lib/mentor/mentor.ts` + `app/api/mentor` (streams; offline answer from the profile when Gemini is
+  off — NFR-AV-03); learning `lib/learn/*` + `app/api/learn/*` (curated tracks, Gemini + Google Search personalises);
+  open-source issues `lib/github/issues.ts` + `app/api/github/issues`. `lib/server/context.ts` = who is asking +
+  daily AI caps. Client calls go through `components/api.ts` (adds the ID token, or the demo profile).
 - **Testing (required for every block):** `npm run check` (typecheck + lint + Vitest unit tests in `tests/`),
   `npm run build`, then run the app and click through the feature (dynamic test).
 - `app/(app)/[module]/page.tsx` "coming soon" placeholder for every module. **To build a module, create

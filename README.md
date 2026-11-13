@@ -6,7 +6,7 @@ DevVerse brings a browser workspace, a personal AI assistant, coding practice, o
 community together around one idea: a **Developer Profile** that learns your skills, struggles and growth from
 what you actually do — and uses it to help you everywhere.
 
-> **Status:** hackathon build in progress — blocks B0 (app shell + GitHub sign-in) and B1 (GitHub history → Developer Profile) done.
+> **Status:** hackathon build in progress — blocks B0 (app shell + GitHub sign-in) B1 (GitHub history → Developer Profile) and B2 (AI mentor, learning roadmap, open-source issues) done.
 
 ## Run it locally
 
