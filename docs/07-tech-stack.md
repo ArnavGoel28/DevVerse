@@ -98,7 +98,7 @@ See `06-system-design.md §3` (diagram) and `§5` (flows). The core is still:
 | `AI_DAILY_LIMIT`, `AI_DEMO_DAILY_LIMIT` | AI caps | ✅ |
 | `JUDGE0_API_KEY`, `JUDGE0_API_HOST` | Hosted Judge0 | H (B3) |
 | `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` (public) | App Check | H/V1 |
-| `GOOGLE_GENAI_USE_VERTEXAI`, `GOOGLE_CLOUD_PROJECT`, `GOOGLE_CLOUD_LOCATION` | Switch to Vertex AI | V1 |
+| `GOOGLE_GENAI_USE_VERTEXAI`, `GOOGLE_CLOUD_PROJECT`, `GOOGLE_CLOUD_LOCATION` | Vertex AI with the service account (bills to Cloud Billing; needs the "Vertex AI User" role) | ✅ |
 
 Never commit these. Use `.env.local` locally and App Hosting secrets in production.
 

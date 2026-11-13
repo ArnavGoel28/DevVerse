@@ -5,7 +5,7 @@
 | # | Task | Status |
 |---|------|--------|
 | 1 | **UI uplift grounded in UX psychology research** (principles in §1 below): v1 done — brand system, grouped nav, Home strength ring + top pick, landing, Motion transitions, skeletons, toasts, mobile menu. Next: per-tool polish pass | 🟡 v1 done |
-| 2 | Cloud project + `.env.local` (checklist in `10` §8); test sign-in, Firestore and Gemini end to end | ⬜ needs keys |
+| 2 | Cloud project + `.env.local` (checklist in `10` §8); test sign-in, Firestore and Gemini end to end. Done: GitHub sign-in, profile import to Firestore, Gemini via Vertex AI for Mentor, Practice Coach, Code Reviewer, DevOps. Left: Learn roadmap and practice submit while signed in | 🟡 mostly done |
 | 3 | Deploy to Firebase App Hosting (asia-south1); live URL | ⬜ |
 | 4 | Merge `docs/system-design` + `feat/b3-practice` into `main` | ⬜ |
 | 5 | Agentic platform phases A1–A4 (registry, redaction guard, agent API + SSE, orchestrator routing) — `11` §12 | ⬜ |

@@ -9,14 +9,29 @@ export const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-3.8-flash";
 
 let client: GoogleGenAI | null = null;
 
+// GOOGLE_GENAI_USE_VERTEXAI=true bills through Cloud Billing (Vertex AI) using the service account instead of an API key.
+const vertexEnabled = () => process.env.GOOGLE_GENAI_USE_VERTEXAI === "true";
+
 export function isGeminiConfigured(): boolean {
-  return Boolean(process.env.GEMINI_API_KEY);
+  return vertexEnabled() || Boolean(process.env.GEMINI_API_KEY);
+}
+
+function vertexClient(): GoogleGenAI {
+  const sa = process.env.FIREBASE_SERVICE_ACCOUNT;
+  const credentials = sa ? JSON.parse(sa) : undefined;
+  return new GoogleGenAI({
+    vertexai: true,
+    project: process.env.GOOGLE_CLOUD_PROJECT || credentials?.project_id || process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    location: process.env.GOOGLE_CLOUD_LOCATION || "global",
+    googleAuthOptions: credentials ? { credentials } : undefined,
+  });
 }
 
 function ai(): GoogleGenAI {
+  if (client) return client;
+  if (vertexEnabled()) return (client = vertexClient());
   if (!process.env.GEMINI_API_KEY) throw new Error("GEMINI_API_KEY is not set");
-  client ??= new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-  return client;
+  return (client = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY }));
 }
 
 export type ChatTurn = { role: "user" | "model"; text: string };
