@@ -48,7 +48,7 @@ export const MODULES: AppModule[] = [
   {
     slug: "github",
     group: "grow",
-    name: "Grow your GitHub",
+    name: "Grow Your GitHub",
     tagline: "Your whole GitHub history, seen the way a recruiter sees it.",
     icon: GitBranch,
     block: "B1–B2",

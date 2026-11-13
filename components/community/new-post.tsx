@@ -51,7 +51,7 @@ export function NewPost({ profile }: { profile: DeveloperProfile }) {
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-5">
       <Link href="/community" className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"><ArrowLeft className="size-4" /> Community</Link>
-      <h1 className="text-2xl font-semibold tracking-tight">New post</h1>
+      <h1 className="text-2xl font-semibold tracking-tight">New Post</h1>
       <div role="radiogroup" aria-label="Post type" className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         {(Object.keys(TYPE_LABEL) as PostType[]).map((t) => (
           <button key={t} role="radio" aria-checked={type === t} onClick={() => setType(t)} className={cn("rounded-lg border px-3 py-2 text-sm", type === t ? "border-primary bg-primary/10 font-medium" : "hover:bg-muted")}>
@@ -63,7 +63,7 @@ export function NewPost({ profile }: { profile: DeveloperProfile }) {
 
       <label className="flex flex-col gap-1 text-sm font-medium">
         Title
-        <input aria-label="Title" value={title} onChange={(e) => setTitle(e.target.value)} maxLength={150} className="rounded-md border bg-background px-3 py-2 font-normal" placeholder={type === "question" ? "e.g. Why does my fetch return undefined in useEffect?" : "A clear, specific title"} />
+        <input aria-label="Title" name="title" autoComplete="off" value={title} onChange={(e) => setTitle(e.target.value)} maxLength={150} className="rounded-md border bg-background px-3 py-2 font-normal" placeholder={type === "question" ? "e.g. Why does my fetch return undefined in useEffect?" : "A clear, specific title"} />
         {err("title")}
       </label>
 
@@ -83,7 +83,7 @@ export function NewPost({ profile }: { profile: DeveloperProfile }) {
         {preview ? (
           <div className="min-h-48 rounded-md border p-3"><Markdown>{body || "_Nothing to preview._"}</Markdown></div>
         ) : (
-          <textarea value={body} onChange={(e) => setBody(e.target.value)} rows={10} aria-label="Body" placeholder="Markdown supported." className="w-full rounded-md border bg-background p-3 font-mono text-sm" />
+          <textarea value={body} onChange={(e) => setBody(e.target.value)} rows={10} aria-label="Body" name="body" placeholder="Markdown supported, e.g. ```js for code…" className="w-full rounded-md border bg-background p-3 font-mono text-sm" />
         )}
         {err("body")}
       </div>
@@ -91,14 +91,14 @@ export function NewPost({ profile }: { profile: DeveloperProfile }) {
       {type === "showcase" && (
         <label className="flex flex-col gap-1 text-sm font-medium">
           Project link (optional)
-          <input aria-label="Project link" value={url} onChange={(e) => setUrl(e.target.value)} className="rounded-md border bg-background px-3 py-2 font-normal" placeholder="https://" />
+          <input aria-label="Project link" type="url" name="url" autoComplete="off" spellCheck={false} value={url} onChange={(e) => setUrl(e.target.value)} className="rounded-md border bg-background px-3 py-2 font-normal" placeholder="https://github.com/you/project…" />
           {err("url")}
         </label>
       )}
 
       <label className="flex flex-col gap-1 text-sm font-medium">
         Tags (1–5, comma separated)
-        <input aria-label="Tags" value={tagText} onChange={(e) => setTagText(e.target.value)} className="rounded-md border bg-background px-3 py-2 font-normal" placeholder="react, typescript" />
+        <input aria-label="Tags" name="tags" autoComplete="off" spellCheck={false} value={tagText} onChange={(e) => setTagText(e.target.value)} className="rounded-md border bg-background px-3 py-2 font-normal" placeholder="e.g. react, typescript…" />
         {err("tags")}
       </label>
       {suggested.length > 0 && (
@@ -111,7 +111,7 @@ export function NewPost({ profile }: { profile: DeveloperProfile }) {
       )}
 
       <div className="flex gap-2">
-        <Button onClick={publish}>Publish {TYPE_LABEL[type].toLowerCase()}</Button>
+        <Button onClick={publish}>Publish {TYPE_LABEL[type]}</Button>
         <Button variant="ghost" asChild><Link href="/community">Cancel</Link></Button>
       </div>
     </div>

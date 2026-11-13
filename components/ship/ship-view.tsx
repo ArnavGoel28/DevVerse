@@ -83,8 +83,8 @@ export function ShipView({ auth, profile }: { auth: ApiAuth; profile: DeveloperP
         <form onSubmit={(e) => { e.preventDefault(); void load(); }} className="flex flex-col gap-2 rounded-md border bg-card p-4">
           <label className="text-sm font-semibold" htmlFor="ship-repo">Repository</label>
           <div className="flex gap-2">
-            <input id="ship-repo" value={input} onChange={(e) => setInput(e.target.value)} placeholder="owner/repo" className="flex-1 rounded-md border bg-background px-3 py-2 text-sm" />
-            <Button type="submit" disabled={loading === "runs"}>{loading === "runs" && <Loader2 className="animate-spin" />} Load runs</Button>
+            <input id="ship-repo" value={input} onChange={(e) => setInput(e.target.value)} name="repo" autoComplete="off" spellCheck={false} placeholder="owner/repo, e.g. vercel/next.js…" className="flex-1 rounded-md border bg-background px-3 py-2 text-sm" />
+            <Button type="submit" disabled={loading === "runs"}>{loading === "runs" && <Loader2 className="animate-spin" />} Load Runs</Button>
           </div>
           {suggestions.length > 0 && (
             <div className="flex flex-wrap gap-1.5 text-xs">
@@ -149,7 +149,7 @@ export function ShipView({ auth, profile }: { auth: ApiAuth; profile: DeveloperP
                 ))}
                 {jobs && selected.conclusion === "failure" && (
                   <Button onClick={runExplain} disabled={loading === "explain"}>
-                    {loading === "explain" ? <Loader2 className="animate-spin" /> : null} Explain this failure
+                    {loading === "explain" ? <Loader2 className="animate-spin" /> : null} Explain This Failure
                   </Button>
                 )}
                 {jobs && selected.conclusion === "success" && <p className="text-sm text-success">All green. Nothing to fix here.</p>}

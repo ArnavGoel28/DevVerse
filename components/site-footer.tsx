@@ -15,10 +15,10 @@ export function SiteFooter() {
           <p className="max-w-xs text-muted-foreground">One Developer Profile behind ten tools. Built for Startup Buildathon India 2026.</p>
         </div>
         <nav aria-label="Footer" className="grid grid-cols-2 gap-x-10 gap-y-2">
-          <Link href="/terms" className="text-muted-foreground hover:text-foreground">Terms of use</Link>
-          <Link href="/privacy" className="text-muted-foreground hover:text-foreground">Privacy policy</Link>
+          <Link href="/terms" className="text-muted-foreground hover:text-foreground">Terms of Use</Link>
+          <Link href="/privacy" className="text-muted-foreground hover:text-foreground">Privacy Policy</Link>
           <a href={`mailto:${CONTACT_EMAIL}`} className="text-muted-foreground hover:text-foreground">Contact</a>
-          <a href={SOURCE_URL} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">Source code</a>
+          <a href={SOURCE_URL} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">Source Code</a>
         </nav>
       </div>
       <div className="border-t">

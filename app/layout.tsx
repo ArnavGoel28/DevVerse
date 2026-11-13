@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
+import { IBM_Plex_Mono, IBM_Plex_Sans, Source_Serif_4 } from "next/font/google";
 
 import { Toaster } from "sonner";
 
@@ -8,6 +8,8 @@ import "./globals.css";
 
 const plexSans = IBM_Plex_Sans({ variable: "--font-plex-sans", subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 const plexMono = IBM_Plex_Mono({ variable: "--font-plex-mono", subsets: ["latin"], weight: ["400", "500"] });
+// Long-form reading (Community articles, D-33): an open-licence serif in the Medium / Substack tradition.
+const reading = Source_Serif_4({ variable: "--font-source-serif", subsets: ["latin"], style: ["normal", "italic"] });
 
 export const metadata: Metadata = {
   title: { default: "DevVerse: learn, build and ship with an AI mentor that knows your GitHub", template: "%s · DevVerse" },
@@ -20,11 +22,14 @@ export const viewport: Viewport = { themeColor: "#f8f5f0", width: "device-width"
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${plexSans.variable} ${plexMono.variable} h-full antialiased`}>
+    <html lang="en" className={`${plexSans.variable} ${plexMono.variable} ${reading.variable} h-full antialiased`}>
       <body className="min-h-full overflow-x-clip font-sans">
+        <a href="#main" className="sr-only z-50 rounded-md bg-primary px-3 py-2 text-sm text-primary-foreground focus:not-sr-only focus:fixed focus:top-2 focus:left-2">
+          Skip to Content
+        </a>
         <AuthProvider>{children}</AuthProvider>
         <Toaster
-          position="bottom-right"
+          position="top-right"
           closeButton
           toastOptions={{
             classNames: {

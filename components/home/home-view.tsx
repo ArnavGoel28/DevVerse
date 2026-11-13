@@ -40,7 +40,7 @@ export function buildActions(profile: DeveloperProfile, posts: Post[], solved: S
   const learn = profile.recommendations.find((r) => r.type === "learn");
   actions.push({ slug: "learn", title: learn?.title ?? "Build your personal roadmap", detail: learn?.reason ?? "Pick a goal; steps tick off from your real work.", href: "/learn", cta: "Open Learn" });
   const rec = recommend(PROBLEMS, profile, solved, 1)[0];
-  if (rec) actions.push({ slug: "practice", title: `Solve "${rec.problem.title}"`, detail: rec.reason, href: "/practice", cta: "Practise" });
+  if (rec) actions.push({ slug: "practice", title: `Solve "${rec.problem.title}"`, detail: rec.reason, href: `/practice?problem=${rec.problem.id}`, cta: "Practise" });
   const repo = profile.githubStats.topRepos[0];
   actions.push({ slug: "workspace", title: repo ? `Explore ${repo.name} with the Code Reviewer` : "Open a repo in the editor", detail: "Select any code and get it explained at your level.", href: "/workspace", cta: "Open Code" });
   const q = feed(posts, "unanswered", profile, {}, now).find((p) => p.tags.some((t) => profile.skills.some((s) => s.id === t)));
@@ -95,7 +95,7 @@ export function HomeView({ profile }: { profile: DeveloperProfile }) {
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
         <section aria-labelledby="moves">
-          <h2 id="moves" className="mb-3 text-lg font-semibold">Your next best moves</h2>
+          <h2 id="moves" className="mb-3 text-lg font-semibold">Your Next Best Moves</h2>
           <ol className="divide-y rounded-md border bg-card">
             {actions.map((a, i) => {
               const mod = getModule(a.slug);
@@ -153,7 +153,7 @@ export function HomeView({ profile }: { profile: DeveloperProfile }) {
           </div>
 
           <div className="rounded-md border bg-card p-4">
-            <h2 className="mb-1 flex items-center gap-2 text-sm font-semibold"><Bot className="size-4" /> Your AI agent team</h2>
+            <h2 className="mb-1 flex items-center gap-2 text-sm font-semibold"><Bot className="size-4" aria-hidden /> Your AI Agent Team</h2>
             <p className="mb-3 text-xs text-muted-foreground">Specialist agents that share your profile as memory.</p>
             <ul className="flex flex-col gap-2 text-sm">
               {AGENTS.map((a) => (
@@ -168,7 +168,7 @@ export function HomeView({ profile }: { profile: DeveloperProfile }) {
 
           {profile.struggles.length > 0 && (
             <div className="rounded-md border bg-card p-4">
-              <h2 className="mb-2 text-sm font-semibold">Working on</h2>
+              <h2 className="mb-2 text-sm font-semibold">Working On</h2>
               <ul className="list-disc pl-4 text-sm marker:text-muted-foreground">{profile.struggles.slice(0, 4).map((x) => <li key={x.topic}>{x.topic}</li>)}</ul>
             </div>
           )}

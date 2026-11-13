@@ -15,8 +15,8 @@ anti-vibecode rules (`12` §2) stay DevVerse's own. Everything also gains one th
 | DevVerse tool | Familiar pattern borrowed from | What we keep | What we add / change |
 |---------------|-------------------------------|--------------|----------------------|
 | Home | GitHub home, LinkedIn feed | Left identity card, centre activity, right suggestions | Every suggestion comes from your profile, one per tool |
-| Practice | LeetCode | Problem list with difficulty, split statement / editor, Run vs Submit | Coach hints instead of solutions; "why this problem" |
-| Community | Stack Overflow + Medium + dev.to | Vote column, accepted answer, tags, Q&A thread; long-form reading view; tabs Newest/Top/Unanswered | "For you" tab ranked by your struggles; one feed for 4 post types; similar-question check while writing |
+| Practice | LeetCode | Problem table (status, number, title, topics, easy / medium / hard colours), workspace with Description / Hints / Submissions tabs, editor with Testcase / Test Result console, Run vs Submit, prev / next; state in the URL (`?problem=`) | Coach hints instead of solutions; "why this problem" |
+| Community | Stack Overflow + Medium / Substack + dev.to | Vote column, accepted answer, tags, Q&A thread; articles in a 680 px serif reading column (Source Serif 4) with byline, read time and a clap / responses / copy-link bar; tabs and type filter in the URL | "For you" tab ranked by your struggles; one feed for 4 post types; similar-question check while writing |
 | Code | VS Code / github.dev | Activity bar, file tree, tabs, editor, side panel | "Explain this" panel by the Code Reviewer agent, at your level |
 | Ship | GitHub Actions + Vercel | Runs list with status dots, run detail with steps | DevOps agent explains why a run failed in plain words |
 | Jobs | LinkedIn Jobs + Wellfound | Filters, job list, job detail side by side, save | Match % from proven skills + your gap per job |

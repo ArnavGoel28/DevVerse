@@ -48,7 +48,7 @@ export function LiveDemo() {
           id="demo-login"
           value={login}
           onChange={(e) => setLogin(e.target.value)}
-          placeholder="any public username"
+          name="login" placeholder="any public username, e.g. octocat…"
           autoComplete="off"
           spellCheck={false}
           className="h-9 min-w-0 flex-1 rounded-md border border-input bg-background px-3 font-mono text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"

@@ -36,7 +36,7 @@ export function TeamsView({ profile }: { profile: DeveloperProfile }) {
       </div>
 
       <section className="overflow-x-auto rounded-md border bg-card">
-        <h3 className="border-b px-4 py-2 text-sm font-semibold">Team skill matrix</h3>
+        <h3 className="border-b px-4 py-2 text-sm font-semibold">Team Skill Matrix</h3>
         <table className="w-full text-sm">
           <thead>
             <tr>
@@ -69,7 +69,7 @@ export function TeamsView({ profile }: { profile: DeveloperProfile }) {
 
       <div className="grid gap-4 lg:grid-cols-3">
         <section className="rounded-md border bg-card p-4">
-          <h3 className="mb-2 flex items-center gap-2 text-sm font-semibold"><AlertTriangle className="size-4 text-highlight" /> Single points of failure</h3>
+          <h3 className="mb-2 flex items-center gap-2 text-sm font-semibold"><AlertTriangle className="size-4 text-highlight" /> Single Points of Failure</h3>
           {risks.length ? (
             <ul className="flex flex-col gap-1 text-sm">{risks.map((r) => <li key={r.skill}><b>{r.skill}</b>: only {r.owner} is strong here</li>)}</ul>
           ) : (
@@ -78,7 +78,7 @@ export function TeamsView({ profile }: { profile: DeveloperProfile }) {
         </section>
 
         <section className="rounded-md border bg-card p-4">
-          <h3 className="mb-2 flex items-center gap-2 text-sm font-semibold"><Route className="size-4 text-primary" /> Onboarding path for {member.name}</h3>
+          <h3 className="mb-2 flex items-center gap-2 text-sm font-semibold"><Route className="size-4 text-primary" /> Onboarding Path for {member.name}</h3>
           {path.length ? (
             <ol className="flex flex-col gap-2 text-sm">
               {path.map((p, i) => (
@@ -95,7 +95,7 @@ export function TeamsView({ profile }: { profile: DeveloperProfile }) {
         </section>
 
         <section className="rounded-md border border-dashed bg-card p-4">
-          <h3 className="mb-2 flex items-center gap-2 text-sm font-semibold"><Bot className="size-4" /> Codebase agent <span className="rounded bg-muted px-1.5 text-[11px] font-normal">Enterprise</span></h3>
+          <h3 className="mb-2 flex items-center gap-2 text-sm font-semibold"><Bot className="size-4" /> Codebase Agent <span className="rounded bg-muted px-1.5 text-[11px] font-normal">Enterprise</span></h3>
           <p className="mb-3 text-sm text-muted-foreground">Ask questions about your team&apos;s private repositories: where things live, why they were built that way, who to ask. Runs on Gemini 4 Carbon or a private Gemma 4.</p>
           <p className="text-xs text-muted-foreground">Not available yet. It ships with the Enterprise tier (TM-03).</p>
         </section>

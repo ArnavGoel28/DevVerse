@@ -16,7 +16,7 @@ export function GitHubInsights({ profile }: { profile: DeveloperProfile }) {
     <div className="flex flex-col gap-4">
       <Card>
         <CardHeader>
-          <CardTitle>What a recruiter sees</CardTitle>
+          <CardTitle>What a Recruiter Sees</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <p className="text-sm leading-relaxed">{i.recruiterView}</p>
@@ -30,7 +30,7 @@ export function GitHubInsights({ profile }: { profile: DeveloperProfile }) {
       <div className="grid gap-4 lg:grid-cols-5">
         <Card className="lg:col-span-3">
           <CardHeader>
-            <CardTitle>Contributions by year</CardTitle>
+            <CardTitle>Contributions by Year</CardTitle>
             <CardDescription>
               {s.source === "public"
                 ? "Public data only: repositories created/updated and pull requests per year."
@@ -67,7 +67,7 @@ export function GitHubInsights({ profile }: { profile: DeveloperProfile }) {
 
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>Top languages</CardTitle>
+            <CardTitle>Top Languages</CardTitle>
             <CardDescription>Share of code across your own repositories.</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-2">
@@ -90,7 +90,7 @@ export function GitHubInsights({ profile }: { profile: DeveloperProfile }) {
       <div className="grid gap-4 lg:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Most notable repositories</CardTitle>
+            <CardTitle>Most Notable Repositories</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col gap-2">
             {!s.topRepos.length && <p className="text-sm text-muted-foreground">No repositories yet.</p>}
@@ -119,7 +119,7 @@ export function GitHubInsights({ profile }: { profile: DeveloperProfile }) {
 
         <Card>
           <CardHeader>
-            <CardTitle>Open-source contributions</CardTitle>
+            <CardTitle>Open-Source Contributions</CardTitle>
             <CardDescription>Pull requests to other people&apos;s projects.</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-2">

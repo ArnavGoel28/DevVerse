@@ -15,6 +15,7 @@ import {
   CaretRightIcon,
   CaretUpIcon,
   ChatCircleDotsIcon,
+  ChatCircleIcon,
   ChatTextIcon,
   CheckCircleIcon,
   CheckIcon,
@@ -28,9 +29,11 @@ import {
   GitBranchIcon,
   GitPullRequestIcon,
   GraduationCapIcon,
+  HandsClappingIcon,
   HeartIcon,
   HouseIcon,
   LightbulbIcon,
+  LinkSimpleIcon,
   ListIcon,
   MagnifyingGlassIcon,
   MapPinIcon,
@@ -60,58 +63,69 @@ import {
 
 export type AppIcon = React.ComponentType<IconProps>;
 
-export const AlertTriangle = WarningIcon;
-export const ArrowLeft = ArrowLeftIcon;
-export const ArrowRight = ArrowRightIcon;
-export const BookOpen = BookOpenIcon;
-export const Bookmark = BookmarkSimpleIcon;
-export const BookmarkCheck = (p: IconProps) => <BookmarkSimpleIcon weight="fill" {...p} />;
-export const Bot = RobotIcon;
-export const Briefcase = BriefcaseIcon;
-export const Check = CheckIcon;
-export const CheckCircle2 = CheckCircleIcon;
-export const ChevronDown = CaretDownIcon;
-export const ChevronRight = CaretRightIcon;
-export const ChevronUp = CaretUpIcon;
-export const Circle = CircleIcon;
-export const CircleDashed = CircleDashedIcon;
-export const CircleDot = RecordIcon;
-export const Code = CodeIcon;
-export const ExternalLink = ArrowSquareOutIcon;
-export const EyeOff = EyeSlashIcon;
-export const File = FileIcon;
-export const FolderGit2 = FolderIcon;
-export const GitBranch = GitBranchIcon;
-export const GitPullRequest = GitPullRequestIcon;
-export const GraduationCap = GraduationCapIcon;
-export const Heart = HeartIcon;
-export const Home = HouseIcon;
-export const Lightbulb = LightbulbIcon;
-export const Loader2 = CircleNotchIcon;
-export const LogOut = SignOutIcon;
-export const MapPin = MapPinIcon;
-export const Mentor = ChatCircleDotsIcon;
-export const Menu = ListIcon;
-export const MessageSquare = ChatTextIcon;
-export const Minus = MinusIcon;
-export const PenSquare = NotePencilIcon;
-export const Play = PlayIcon;
-export const Practice = BarbellIcon;
-export const RefreshCw = ArrowsClockwiseIcon;
-export const Rocket = RocketIcon;
-export const Route = PathIcon;
-export const Search = MagnifyingGlassIcon;
-export const Send = PaperPlaneTiltIcon;
-export const SendHorizontal = PaperPlaneRightIcon;
-export const Star = StarIcon;
-export const Target = TargetIcon;
-export const ThumbsDown = ThumbsDownIcon;
-export const ThumbsUp = ThumbsUpIcon;
-export const Trash2 = TrashIcon;
-export const TrendingDown = TrendDownIcon;
-export const TrendingUp = TrendUpIcon;
-export const Undo2 = ArrowCounterClockwiseIcon;
-export const User = UserCircleIcon;
-export const Users = UsersIcon;
-export const X = XIcon;
-export const XCircle = XCircleIcon;
+/** Icons are decorative (aria-hidden) unless given an aria-label (web interface guidelines). */
+function decorative(Icon: AppIcon): AppIcon {
+  function A11yIcon(p: IconProps) {
+    return <Icon aria-hidden={p["aria-label"] ? undefined : true} {...p} />;
+  }
+  return A11yIcon;
+}
+
+export const AlertTriangle = decorative(WarningIcon);
+export const ArrowLeft = decorative(ArrowLeftIcon);
+export const ArrowRight = decorative(ArrowRightIcon);
+export const BookOpen = decorative(BookOpenIcon);
+export const Bookmark = decorative(BookmarkSimpleIcon);
+export const BookmarkCheck = decorative((p: IconProps) => <BookmarkSimpleIcon weight="fill" {...p} />);
+export const Bot = decorative(RobotIcon);
+export const Briefcase = decorative(BriefcaseIcon);
+export const Check = decorative(CheckIcon);
+export const CheckCircle2 = decorative(CheckCircleIcon);
+export const Clap = decorative(HandsClappingIcon);
+export const Comment = decorative(ChatCircleIcon);
+export const ChevronDown = decorative(CaretDownIcon);
+export const ChevronRight = decorative(CaretRightIcon);
+export const ChevronUp = decorative(CaretUpIcon);
+export const Circle = decorative(CircleIcon);
+export const CircleDashed = decorative(CircleDashedIcon);
+export const CircleDot = decorative(RecordIcon);
+export const Code = decorative(CodeIcon);
+export const ExternalLink = decorative(ArrowSquareOutIcon);
+export const EyeOff = decorative(EyeSlashIcon);
+export const File = decorative(FileIcon);
+export const FolderGit2 = decorative(FolderIcon);
+export const GitBranch = decorative(GitBranchIcon);
+export const GitPullRequest = decorative(GitPullRequestIcon);
+export const GraduationCap = decorative(GraduationCapIcon);
+export const Heart = decorative(HeartIcon);
+export const Home = decorative(HouseIcon);
+export const Lightbulb = decorative(LightbulbIcon);
+export const LinkIcon = decorative(LinkSimpleIcon);
+export const Loader2 = decorative(CircleNotchIcon);
+export const LogOut = decorative(SignOutIcon);
+export const MapPin = decorative(MapPinIcon);
+export const Mentor = decorative(ChatCircleDotsIcon);
+export const Menu = decorative(ListIcon);
+export const MessageSquare = decorative(ChatTextIcon);
+export const Minus = decorative(MinusIcon);
+export const PenSquare = decorative(NotePencilIcon);
+export const Play = decorative(PlayIcon);
+export const Practice = decorative(BarbellIcon);
+export const RefreshCw = decorative(ArrowsClockwiseIcon);
+export const Rocket = decorative(RocketIcon);
+export const Route = decorative(PathIcon);
+export const Search = decorative(MagnifyingGlassIcon);
+export const Send = decorative(PaperPlaneTiltIcon);
+export const SendHorizontal = decorative(PaperPlaneRightIcon);
+export const Star = decorative(StarIcon);
+export const Target = decorative(TargetIcon);
+export const ThumbsDown = decorative(ThumbsDownIcon);
+export const ThumbsUp = decorative(ThumbsUpIcon);
+export const Trash2 = decorative(TrashIcon);
+export const TrendingDown = decorative(TrendDownIcon);
+export const TrendingUp = decorative(TrendUpIcon);
+export const Undo2 = decorative(ArrowCounterClockwiseIcon);
+export const User = decorative(UserCircleIcon);
+export const Users = decorative(UsersIcon);
+export const X = decorative(XIcon);
+export const XCircle = decorative(XCircleIcon);

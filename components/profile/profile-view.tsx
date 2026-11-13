@@ -8,6 +8,7 @@ import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, X
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { githubAvatar } from "@/lib/avatar";
 import { parentName } from "@/lib/profile/skills";
 import type { DeveloperProfile, ProfileSkill, SkillFeedback } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -44,7 +45,7 @@ function SummaryCard({ profile }: { profile: DeveloperProfile }) {
       <CardContent className="flex flex-col gap-4 sm:flex-row sm:items-start">
         {s.avatarUrl && (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={s.avatarUrl} alt="" className="size-16 shrink-0 rounded-full border" />
+          <img src={githubAvatar(s.avatarUrl, 128)} alt="" width={64} height={64} fetchPriority="high" className="size-16 shrink-0 rounded-full border" />
         )}
         <div className="flex min-w-0 flex-col gap-2">
           <div className="flex flex-wrap items-center gap-2">
@@ -73,7 +74,7 @@ function SummaryCard({ profile }: { profile: DeveloperProfile }) {
 function Stat({ label, value, hint }: { label: string; value: number; hint?: string }) {
   return (
     <span>
-      <span className="font-semibold text-foreground">{value.toLocaleString()}</span> {label}
+      <span className="font-semibold text-foreground tabular-nums">{new Intl.NumberFormat().format(value)}</span> {label}
       {hint && <span className="ml-1 opacity-70">({hint})</span>}
     </span>
   );
@@ -145,10 +146,10 @@ function SkillRow({ skill, onFeedback }: { skill: ProfileSkill; onFeedback: Prop
           ) : (
             <>
               <Button size="sm" variant="outline" onClick={() => onFeedback(skill.id, "confirmed")}>
-                <Check /> That&apos;s right
+                <Check /> That&apos;s Right
               </Button>
               <Button size="sm" variant="outline" onClick={() => onFeedback(skill.id, "wrong")}>
-                <X /> I don&apos;t know this
+                <X /> I Don&apos;t Know This
               </Button>
               <Button size="sm" variant="outline" onClick={() => onFeedback(skill.id, "hidden")}>
                 <EyeOff /> Hide
@@ -202,7 +203,7 @@ function RecommendationsCard({ profile }: { profile: DeveloperProfile }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Next steps</CardTitle>
+        <CardTitle>Next Steps</CardTitle>
         <CardDescription>Based on your goals and struggles.</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">

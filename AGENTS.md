@@ -96,7 +96,9 @@ Build priority: GitHub history → Developer Profile → personal AI mentor. Tho
   until the backend exists), `lib/server/agent-call.ts` (caps + offline fallback for every agent).
 - UI rules (`docs/12` §2): icons only from `components/icons.tsx` (Phosphor), never an icon package directly; colours only
   from theme tokens (`primary`, `success`, `destructive`, `highlight`), no gradients, shadows, glass, emojis or em dashes;
-  every action shows a toast on success and a clear message on error; every page has a title via its `layout.tsx`
+  every action shows a toast on success and a clear message on error; follow Vercel's Web Interface Guidelines
+  (`web-design-guidelines` skill: Title Case labels, labelled fields with `name`/`autocomplete`, URL-synced state, undo for
+  destructive actions, `Intl` for dates and numbers); every page has a title via its `layout.tsx`
   (`moduleMetadata`). Public pages: landing with live demo, `/terms`, `/privacy`, 404 (`app/not-found.tsx`), `SiteFooter`.
 - Every tool has its own `app/(app)/<slug>/page.tsx` plus a `layout.tsx` for its title. Modules are listed in `lib/modules.ts`;
   a new tool needs an entry there, a page and a layout.

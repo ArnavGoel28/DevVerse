@@ -23,7 +23,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
       <AppSidebar />
-      <main className="min-h-screen min-w-0 flex-1">
+      <main id="main" tabIndex={-1} className="min-h-screen min-w-0 flex-1 outline-none">
         {!configured && (
           <div className="border-b bg-muted px-4 py-2 text-center text-xs text-muted-foreground">
             Demo mode. Sign-in is turned off on this server, so nothing you do is saved.

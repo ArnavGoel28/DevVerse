@@ -20,8 +20,8 @@ const STEPS = [
 ];
 
 const NAV = [
-  { href: "#demo", label: "Live demo" },
-  { href: "#how", label: "How it works" },
+  { href: "#demo", label: "Live Demo" },
+  { href: "#how", label: "How It Works" },
   { href: "#tools", label: "Tools" },
 ];
 
@@ -37,10 +37,10 @@ export default function LandingPage() {
   const tools = MODULES.filter((m) => m.slug !== "home");
   const signIn = configured ? (
     <Button onClick={signInWithGitHub} disabled={loading || !!user}>
-      <GitHubIcon /> {loading ? "Checking sign-in…" : "Sign in with GitHub"}
+      <GitHubIcon /> {loading ? "Checking sign-in…" : "Sign In with GitHub"}
     </Button>
   ) : (
-    <Button onClick={() => router.push("/home")}>Open the app</Button>
+    <Button onClick={() => router.push("/home")}>Open the App</Button>
   );
 
   return (
@@ -62,7 +62,7 @@ export default function LandingPage() {
         </nav>
       </header>
 
-      <main className="flex-1">
+      <main id="main" tabIndex={-1} className="flex-1 outline-none">
         <section className="mx-auto grid max-w-6xl gap-10 px-4 pt-12 pb-16 md:pt-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,460px)] lg:items-start">
           <div className="flex flex-col gap-6">
             <p className="font-mono text-xs tracking-widest text-muted-foreground uppercase">For students and working developers</p>
@@ -87,7 +87,7 @@ export default function LandingPage() {
 
         <section id="how" className="scroll-mt-16 border-t bg-card">
           <div className="mx-auto grid max-w-6xl gap-8 px-4 py-14 md:grid-cols-[240px_minmax(0,1fr)]">
-            <h2 className="text-2xl font-semibold tracking-tight">How it works</h2>
+            <h2 className="text-2xl font-semibold tracking-tight">How It Works</h2>
             <ol className="flex flex-col divide-y">
               {STEPS.map((s, i) => (
                 <li key={s.title} className="flex gap-5 py-5 first:pt-0 last:pb-0">
@@ -105,7 +105,7 @@ export default function LandingPage() {
         <section id="tools" className="scroll-mt-16 border-t">
           <div className="mx-auto grid max-w-6xl gap-8 px-4 py-14 md:grid-cols-[240px_minmax(0,1fr)]">
             <div>
-              <h2 className="text-2xl font-semibold tracking-tight">The tools</h2>
+              <h2 className="text-2xl font-semibold tracking-tight">The Tools</h2>
               <p className="mt-2 text-sm text-muted-foreground">Ten tools on one profile, run by an orchestrator and nine specialist AI agents.</p>
             </div>
             <dl className="grid gap-x-10 sm:grid-cols-2">

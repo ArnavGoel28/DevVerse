@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, CheckCircle2, ExternalLink, Heart } from "@/components/icons";
+import { ArrowLeft, CheckCircle2, Clap, Comment, ExternalLink, LinkIcon } from "@/components/icons";
 import { toast } from "sonner";
 
 import { Avatar, SampleBadge, Tag, TypeBadge, VoteColumn } from "@/components/community/parts";
@@ -49,23 +49,28 @@ export function PostView({ id, profile }: { id: string; profile: DeveloperProfil
       <Link href="/community" className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"><ArrowLeft className="size-4" /> Community</Link>
 
       {reading ? (
-        <article className="mx-auto w-full max-w-2xl">
-          <div className="mb-3 flex items-center gap-2"><TypeBadge type={post.type} />{post.sample && <SampleBadge />}</div>
-          <h1 className="mb-4 font-serif text-3xl leading-tight font-bold sm:text-4xl">{post.title}</h1>
-          <div className="mb-6 flex items-center gap-3 border-y py-3 text-sm text-muted-foreground">
-            <Avatar name={post.author} size={8} />
-            <span className="font-medium text-foreground">{post.author}</span>· {readingMinutes(post.body)} min read · {timeAgo(post.createdAt, now)}
-            <button onClick={() => c.vote(post.id)} disabled={post.author === me} aria-pressed={!!c.votes[post.id]} className={cn("ml-auto flex items-center gap-1 rounded-md px-2 py-1 disabled:opacity-40", c.votes[post.id] ? "text-destructive" : "hover:text-foreground")}>
-              <Heart className={cn("size-4", c.votes[post.id] && "fill-current")} /> {post.score}
-            </button>
+        // D-33: the long-form reading layout people know from Medium and Substack, in DevVerse's own style.
+        <article className="mx-auto w-full max-w-[680px]">
+          <div className="mb-4 flex items-center gap-2"><TypeBadge type={post.type} />{post.sample && <SampleBadge />}</div>
+          <h1 className="mb-6 text-[32px] leading-[1.15] font-bold tracking-tight text-balance sm:text-[42px]">{post.title}</h1>
+          <div className="mb-2 flex items-center gap-3">
+            <Avatar name={post.author} size={11} />
+            <div className="text-sm">
+              <p className="font-medium">{post.author}</p>
+              <p className="text-muted-foreground">
+                {readingMinutes(post.body)} min read · <time dateTime={post.createdAt}>{new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(new Date(post.createdAt))}</time>
+              </p>
+            </div>
           </div>
+          <ActionBar post={post} me={me} voted={!!c.votes[post.id]} onClap={() => c.vote(post.id)} />
           {post.url && (
-            <a href={post.url} target="_blank" rel="noopener noreferrer" className="mb-4 inline-flex items-center gap-1 text-sm text-primary hover:underline">
-              Open the project <ExternalLink className="size-3.5" />
+            <a href={post.url} target="_blank" rel="noopener noreferrer" className="mt-6 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+              Open the Project <ExternalLink className="size-3.5" aria-hidden />
             </a>
           )}
-          <div className="text-[17px] leading-8"><Markdown>{post.body}</Markdown></div>
-          <div className="mt-6 flex flex-wrap gap-1.5">{post.tags.map((t) => <Tag key={t} id={t} href={`/community?tag=${t}`} />)}</div>
+          <div className="mt-8"><Markdown reading>{post.body}</Markdown></div>
+          <div className="mt-10 flex flex-wrap gap-1.5">{post.tags.map((t) => <Tag key={t} id={t} href={`/community?tag=${t}`} />)}</div>
+          <ActionBar post={post} me={me} voted={!!c.votes[post.id]} onClap={() => c.vote(post.id)} />
         </article>
       ) : (
         <div>
@@ -85,7 +90,7 @@ export function PostView({ id, profile }: { id: string; profile: DeveloperProfil
         </div>
       )}
 
-      <section className={cn(reading && "mx-auto w-full max-w-2xl")}>
+      <section id="responses" className={cn("scroll-mt-6", reading && "mx-auto w-full max-w-[680px]")}>
         <h2 className="mb-3 border-b pb-2 text-lg font-semibold">
           {post.answers.length} {post.type === "question" ? (post.answers.length === 1 ? "Answer" : "Answers") : post.answers.length === 1 ? "Response" : "Responses"}
         </h2>
@@ -111,8 +116,40 @@ export function PostView({ id, profile }: { id: string; profile: DeveloperProfil
             );
           })}
         </ul>
-        <AnswerForm onSubmit={(body) => c.answer(post.id, body)} label={post.type === "question" ? "Your answer" : "Your response"} />
+        <AnswerForm onSubmit={(body) => c.answer(post.id, body)} label={post.type === "question" ? "Your Answer" : "Your Response"} />
       </section>
+    </div>
+  );
+}
+
+function ActionBar({ post, me, voted, onClap }: { post: Post; me: string; voted: boolean; onClap: () => void }) {
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      toast.success("Link copied");
+    } catch {
+      toast.error("Couldn't copy the link. Copy it from the address bar instead.");
+    }
+  };
+  return (
+    <div className="mt-4 flex items-center gap-1 border-y py-1.5 text-sm text-muted-foreground">
+      <button
+        type="button"
+        onClick={onClap}
+        disabled={post.author === me}
+        aria-pressed={voted}
+        aria-label={voted ? "Remove your clap" : "Clap for this post"}
+        title={post.author === me ? "You can't clap for your own post" : undefined}
+        className={cn("flex items-center gap-1.5 rounded-md px-2 py-1.5 transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none disabled:opacity-40", voted && "text-primary")}
+      >
+        <Clap className="size-5" weight={voted ? "fill" : "regular"} aria-hidden /> <span className="tabular-nums">{post.score}</span>
+      </button>
+      <a href="#responses" className="flex items-center gap-1.5 rounded-md px-2 py-1.5 transition-colors hover:bg-accent hover:text-foreground" aria-label={`${post.answers.length} responses`}>
+        <Comment className="size-5" aria-hidden /> <span className="tabular-nums">{post.answers.length}</span>
+      </a>
+      <button type="button" onClick={copy} className="ml-auto flex items-center gap-1.5 rounded-md px-2 py-1.5 transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none" aria-label="Copy link to this post">
+        <LinkIcon className="size-5" aria-hidden /> <span className="hidden sm:inline">Copy Link</span>
+      </button>
     </div>
   );
 }
@@ -139,10 +176,10 @@ function AnswerForm({ onSubmit, label }: { onSubmit: (body: string) => void; lab
       {preview ? (
         <div className="min-h-32 rounded-md border p-3"><Markdown>{body || "_Nothing to preview._"}</Markdown></div>
       ) : (
-        <textarea value={body} onChange={(e) => setBody(e.target.value)} rows={6} aria-label={label} placeholder="Markdown supported. Use ``` for code." className="w-full rounded-md border bg-background p-3 font-mono text-sm" />
+        <textarea value={body} onChange={(e) => setBody(e.target.value)} rows={6} aria-label={label} name="answer" placeholder="Markdown supported. Use ``` for code…" className="w-full rounded-md border bg-background p-3 font-mono text-sm" />
       )}
       {error && <p className="mt-1 text-sm text-destructive">{error}</p>}
-      <Button className="mt-2" onClick={submit}>Post {label.toLowerCase().replace("your ", "")}</Button>
+      <Button className="mt-2" onClick={submit}>Post {label.replace("Your ", "")}</Button>
     </div>
   );
 }

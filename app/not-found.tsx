@@ -14,7 +14,7 @@ export default function NotFound() {
           <Logo />
         </div>
       </header>
-      <main className="mx-auto flex w-full max-w-xl flex-1 flex-col justify-center gap-4 px-4 py-16">
+      <main id="main" tabIndex={-1} className="mx-auto flex w-full max-w-xl flex-1 flex-col justify-center gap-4 px-4 py-16 outline-none">
         <p className="font-mono text-sm text-muted-foreground">404</p>
         <h1 className="text-3xl font-semibold tracking-tight">This page doesn&apos;t exist.</h1>
         <p className="text-muted-foreground">The link may be old or mistyped. These usually help:</p>

@@ -54,7 +54,7 @@ function ImportCard({ state }: { state: ProfileState }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Build your Developer Profile</CardTitle>
+        <CardTitle>Build Your Developer Profile</CardTitle>
         <CardDescription>
           We read your whole GitHub history: repositories, languages, commits, pull requests and open-source work,
           and turn it into skills, struggles and growth you can check and correct.
@@ -62,7 +62,7 @@ function ImportCard({ state }: { state: ProfileState }) {
       </CardHeader>
       <CardContent>
         <Button onClick={() => void state.importNow()} disabled={state.status === "importing"}>
-          <GitHubIcon className="size-4" /> Import my GitHub history
+          <GitHubIcon className="size-4" /> Import My GitHub History
         </Button>
       </CardContent>
     </Card>
@@ -83,7 +83,7 @@ export function DemoForm({ state, compact = false }: { state: ProfileState; comp
       <input
         aria-label="GitHub username"
         className="h-9 min-w-0 flex-1 rounded-md border bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        placeholder="GitHub username, e.g. octocat"
+        name="login" autoComplete="off" spellCheck={false} placeholder="GitHub username, e.g. octocat…"
         value={login}
         onChange={(e) => setLogin(e.target.value)}
         maxLength={39}
@@ -100,7 +100,7 @@ function DemoCard({ state }: { state: ProfileState }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Try it with any GitHub username</CardTitle>
+        <CardTitle>Try It with Any GitHub Username</CardTitle>
         <CardDescription>
           See the Developer Profile DevVerse builds from public GitHub activity. Nothing is saved. Sign in with GitHub
           to import your full history, including contribution counts.
@@ -114,7 +114,7 @@ function DemoCard({ state }: { state: ProfileState }) {
 }
 
 function SourceBar({ state, profile }: { state: ProfileState; profile: DeveloperProfile }) {
-  const updated = new Date(profile.updatedAt).toLocaleString();
+  const updated = new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(profile.updatedAt));
   const busy = state.status === "importing";
   return (
     <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
@@ -129,7 +129,7 @@ function SourceBar({ state, profile }: { state: ProfileState; profile: Developer
         </Button>
       ) : (
         <Button size="sm" variant="outline" onClick={state.clearDemo} disabled={busy}>
-          Try another username
+          Try Another Username
         </Button>
       )}
     </div>

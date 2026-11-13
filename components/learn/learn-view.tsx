@@ -97,7 +97,7 @@ export function LearnView({ auth, profile }: { auth: ApiAuth; profile: Developer
     <div className="flex flex-col gap-4">
       <Card>
         <CardHeader>
-          <CardTitle>Your goal</CardTitle>
+          <CardTitle>Your Goal</CardTitle>
           <CardDescription>
             Gemini plans the steps for your profile and finds free resources on the web. Steps tick themselves off when
             your work shows the skill.
@@ -117,11 +117,11 @@ export function LearnView({ auth, profile }: { auth: ApiAuth; profile: Developer
               value={goal}
               maxLength={100}
               onChange={(e) => setGoal(e.target.value)}
-              placeholder="e.g. Backend developer internship"
+              name="goal" autoComplete="off" placeholder="e.g. Backend developer internship…"
             />
             <Button type="submit" disabled={busy || goal.trim().length < 3}>
               {busy ? <Loader2 className="animate-spin" /> : null}
-              {busy ? "Planning…" : roadmap ? "Rebuild roadmap" : "Build my roadmap"}
+              {busy ? "Planning…" : roadmap ? "Rebuild Roadmap" : "Build My Roadmap"}
             </Button>
           </form>
           {error && <p role="alert" className="mt-2 text-sm text-destructive">{error}</p>}
@@ -203,7 +203,7 @@ export function LearnView({ auth, profile }: { auth: ApiAuth; profile: Developer
       )}
 
       <div className="flex flex-col gap-2">
-        <h2 className="text-lg font-semibold">Learning packs for your struggles</h2>
+        <h2 className="text-lg font-semibold">Learning Packs for Your Struggles</h2>
         {!packs.length && <p className="text-sm text-muted-foreground">No struggles detected, so there is nothing to fix right now.</p>}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {packs.map((p) => (
