@@ -97,6 +97,13 @@ conflict → what we decided → why. **Technology conflicts are intentionally d
 | D-18 | **Try without signing in** | — | Anyone can type a public GitHub username and see the profile DevVerse would build (public data only, nothing saved). Signing in adds full history. | Judges and first-time visitors see the core value in seconds, before trusting us with sign-in. |
 | D-20 | **Mentor chats stay on the device (for now)** | — | Mentor conversations are kept only in the browser tab. The profile learns from short facts ("asked about React"), never from chat text; answer ratings are kept to measure quality. | Matches the privacy rule (evidence, not transcripts) and saves build time. Saved chat history can come later. |
 | D-19 | **Explainable profile first, AI wording second** | — | Skills, confidence and struggles are computed from evidence by fixed rules; the AI only writes the summary, explanations and next steps. If the AI is unavailable, the profile still works. | Every skill can show *why* (DI-06), results are testable and stable, and AI cost or outages never break the core feature. |
+| D-21 | **System shape** | Old docs: serverless Lambdas vs. containers/microservices. | A **modular monolith** (one Next.js app, one folder per module) on App Hosting/Cloud Run, plus **async jobs** (Cloud Tasks, Scheduler, Cloud Functions, Pub/Sub) from V1 and **separate sandboxes** for untrusted code. See `06-system-design.md`. | Smallest thing that meets every NFR at 1,000 users; modules can be split out later (NFR-MA-02). |
+| D-22 | **Practice judge** | — | Hackathon: hosted **Judge0 CE**. V1: our own judge on **Cloud Run** (gVisor, no network egress, concurrency 1) behind a Cloud Tasks queue. | Fastest safe start; V1 removes the third-party daily limit and keeps everything on Google Cloud. |
+| D-23 | **Search** | Old docs: OpenSearch / separate search. | **Gemini Embeddings + Firestore vector search** for community search, similar questions and (V1) project-code retrieval. No separate search service. | Firestore has no full-text search; one vector index gives semantic search and similarity without another system to run. |
+| D-24 | **User deployments** | D-06 said templates, no tech. | **Cloud Build (buildpacks) → Artifact Registry → Cloud Run** in a **separate GCP project** (`devverse-apps`) with per-service caps; env vars in Secret Manager; rollback via revisions. | Isolates users' apps from our data and budget (NFR-SE-06); Cloud Run gives URLs, revisions and logs for free. |
+| D-25 | **Gemini access** | — | Hackathon: Gemini API with an **AI Studio** key. V1: **Vertex AI** through the same `@google/genai` SDK (config switch). | No code change (NFR-AI-06); V1 gets IAM auth, quotas and enterprise data terms. |
+| D-26 | **Workspace runtime** | Old docs: Fargate / EFS. | V1: one **GKE Sandbox (gVisor)** pod per workspace on **GKE Autopilot**, WebSocket terminal, idle stop. **Spike before committing** (M1). Not Cloud Workstations (too heavy) or Cloud Run (no persistent interactive sessions). | Strongest isolation for interactive untrusted code that still scales to zero nodes. |
+| D-27 | **Evidence from every module** | — | One shared `recordEvidence()` writer; the rules engine recomputes the profile inline after each event (V1: Firestore trigger). Gemini rewording only on import / daily. | Meets "profile updated within 1 min" (NFR-PF-11) cheaply; keeps every module feeding the twin (principle 2). |
 
 ## 5. Open questions
 
@@ -111,4 +118,5 @@ All of Q-01 to Q-06 are answered (D-13 to D-17). New ones:
 
 1. `07-tech-stack.md` — **written** (Google-first, hackathon build).
 2. `08-data-model.md` — data shapes both builders share (write in B0).
-3. `06-architecture.md`, `09-ai-architecture.md`, `10-workspace-and-execution.md`, `11-security.md`, `12-api-spec.md` — after the hackathon, for V1.
+3. `06-system-design.md` — **written** (system design, feature gap audit, D-21–D-27).
+4. `09-ai-architecture.md`, `10-workspace-and-execution.md`, `11-security.md`, `12-api-spec.md` — after the hackathon, for V1.

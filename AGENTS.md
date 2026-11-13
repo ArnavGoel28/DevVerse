@@ -66,9 +66,9 @@ Build priority: GitHub history → Developer Profile → personal AI mentor. Tho
 | `docs/03-functional-requirements.md` | Requirements by module with IDs (e.g. `WS-03`) and priorities | Canonical |
 | `docs/04-non-functional-requirements.md` | Quality targets with IDs (e.g. `NFR-SE-01`) | Canonical |
 | `docs/05-scope-and-roadmap.md` | **24 h build plan**, V1 milestones, **decision log (D-xx)**, open questions (Q-xx) | Canonical |
-| `docs/07-tech-stack.md` | Hackathon tech stack, env vars, GitHub scopes, cost guardrails | Canonical |
+| `docs/06-system-design.md` | System design: architecture, per-module feature gap audit, key flows, security, scaling | Canonical |
+| `docs/07-tech-stack.md` | **Final** tech stack by phase (hackathon / V1 / V2), env vars, GitHub scopes, cost guardrails | Canonical |
 | `docs/08-data-model.md` | Firestore collections and TypeScript shapes — change here first | Canonical |
-
 ### Code layout (blocks B0–B2 done)
 
 - `app/page.tsx` landing + GitHub sign-in · `app/(app)/layout.tsx` signed-in shell with sidebar
