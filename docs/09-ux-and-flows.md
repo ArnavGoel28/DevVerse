@@ -4,11 +4,13 @@
 > Community, Jobs and Teams is planned in `10-backend-plan.md` and decided together before it is built.
 > Diagrams are Mermaid (render on GitHub / VS Code).
 
-## 1. Design principle: familiar, not copied (D-15)
+## 1. Design principle: familiar, not copied (D-15, amended by D-33)
 
-Every DevVerse tool replaces an app developers already know, so each screen uses that app's **layout pattern**
-(where things are, how you act) so switching costs nothing — but with DevVerse's own visual style, no copied
-assets, code or wording. Everything also gains one thing the original can't do: **it knows your profile**.
+Every DevVerse tool replaces an app developers already know. Each screen uses that app's **layout pattern**
+(where things are, how you act) and, since D-33, may also echo its **look and conventions** (density, terminology,
+reading typography, difficulty colours), so people switching over feel at home. Limits: no logos, names, trademarks,
+exact brand palettes or proprietary fonts, and no copied code, CSS, images or text. The shell, tokens and the
+anti-vibecode rules (`12` §2) stay DevVerse's own. Everything also gains one thing the original can't do: **it knows your profile**.
 
 | DevVerse tool | Familiar pattern borrowed from | What we keep | What we add / change |
 |---------------|-------------------------------|--------------|----------------------|

@@ -109,7 +109,8 @@ Build priority: GitHub history → Developer Profile → personal AI mentor. Tho
 Rules: the `docs/0x` files win over anything in `docs/archive/`. Reference requirement and decision IDs in
 code, commits and PRs. Don't renumber IDs. If you change direction, add a decision to `05 §4`.
 Docs 01–05 are deliberately technology-free; technology lives in `07` and later docs.
-Never scrape or copy other sites' code/designs — reuse open-source components and familiar layouts instead (D-15).
+Never scrape or copy other sites' code, assets or text. Each tool may borrow the layout, look and conventions of the
+platform it replaces (D-15, amended by D-33), but never logos, trademarks, exact brand palettes or proprietary fonts.
 
 ## 6. Guidance for agents working here
 
