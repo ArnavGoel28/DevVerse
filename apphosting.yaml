@@ -1,20 +1,32 @@
 # Firebase App Hosting settings: https://firebase.google.com/docs/app-hosting/configure
 runConfig:
-  minInstances: 0   # scale to zero when idle (NFR-CO-02)
-  maxInstances: 2   # keep cost inside the hackathon credits
+  minInstances: 0 # scale to zero when idle (NFR-CO-02)
+  maxInstances: 2 # keep cost inside the hackathon credits
 
 env:
-  # Public Firebase web config — fill in from Firebase console -> Project settings.
+  # Public Firebase web config (sent to every browser by design; not secrets).
   - variable: NEXT_PUBLIC_FIREBASE_API_KEY
-    value: REPLACE_ME
-    availability: [BUILD, RUNTIME]
+    value: AIzaSyBGOvWs6HiFkwg4nX0D-ldxfPZc28PrhbU
+    availability: [ BUILD, RUNTIME ]
   - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
-    value: REPLACE_ME
-    availability: [BUILD, RUNTIME]
+    value: devverse-project.firebaseapp.com
+    availability: [ BUILD, RUNTIME ]
   - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
-    value: REPLACE_ME
-    availability: [BUILD, RUNTIME]
+    value: devverse-project
+    availability: [ BUILD, RUNTIME ]
   - variable: NEXT_PUBLIC_FIREBASE_APP_ID
-    value: REPLACE_ME
-    availability: [BUILD, RUNTIME]
-  # Secrets are added in later blocks with: firebase apphosting:secrets:set GEMINI_API_KEY
+    value: 1:74783023288:web:0fbe677464165d9613944d
+    availability: [ BUILD, RUNTIME ]
+
+  # Gemini through Vertex AI with the backend's own service account (D-25); no API key in production.
+  - variable: GOOGLE_GENAI_USE_VERTEXAI
+    value: "true"
+    availability: [ RUNTIME ]
+  - variable: GOOGLE_CLOUD_LOCATION
+    value: global
+    availability: [ RUNTIME ]
+
+  # Secret Manager: must match the local key, or tokens already stored in Firestore can't be decrypted.
+  - variable: GITHUB_TOKEN_ENCRYPTION_KEY
+    secret: github-token-encryption-key
+    availability: [ RUNTIME ]
