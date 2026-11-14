@@ -5,7 +5,7 @@
 | # | Task | Status |
 |---|------|--------|
 | 1 | **UI uplift grounded in UX psychology research** (principles in §1 below): v1 done — brand system, grouped nav, Home strength ring + top pick, landing, Motion transitions, skeletons, toasts, mobile menu. v2 done: "vibecoded" tells removed and site basics fixed (checklist in §2). v3 done: familiar look per tool (D-33) for Practice, articles, Code (VS Code), Ship (GitHub Actions), Jobs (LinkedIn) and Teams (Linear), plus a Vercel Web Interface Guidelines audit | ✅ v3 done |
-| 2 | Cloud project + `.env.local` (checklist in `10` §8); test sign-in, Firestore and Gemini end to end. Done: GitHub sign-in, profile import to Firestore, Gemini via Vertex AI for Mentor, Practice Coach, Code Reviewer, DevOps. Left: Learn roadmap and practice submit while signed in | 🟡 mostly done |
+| 2 | Cloud project + `.env.local` (checklist in `10` §8); test sign-in, Firestore and Gemini end to end. Verified: GitHub sign-in, profile import, Gemini via Vertex AI for every agent, Learn roadmap and Practice submissions saved to Firestore with evidence and daily AI caps | ✅ done |
 | 3 | Deploy to Firebase App Hosting (asia-south1); live URL | ⬜ |
 | 4 | Merge `docs/system-design` + `feat/b3-practice` into `main` | ✅ merged (PR 1) |
 | 5 | Agentic platform phases A1–A4 (registry, redaction guard, agent API + SSE, orchestrator routing) — `11` §12 | ⬜ |
