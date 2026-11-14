@@ -5,7 +5,7 @@ import { buildTree, isPreviewable, languageOf, parseRepo } from "@/lib/code/repo
 import { feed, forYouScore, normaliseTags, type Post, similarQuestions, timeAgo, toggleVote, validateDraft } from "@/lib/community/model";
 import { seedPosts } from "@/lib/community/seed";
 import { filterJobs, matchJob, SAMPLE_JOBS } from "@/lib/jobs/model";
-import { buildCiPrompt, diagnose, formatDiagnosis } from "@/lib/ship/ci";
+import { buildCiPrompt, diagnose, formatDiagnosis, formatDuration } from "@/lib/ship/ci";
 import { memberFromProfile, onboardingPath, sampleTeam, singlePoints, teamStack } from "@/lib/teams/model";
 import type { DeveloperProfile, ProfileSkill } from "@/lib/types";
 
@@ -132,6 +132,12 @@ describe("Ship CI diagnosis (DP-05)", () => {
     expect(diagnose([{ job: "deploy", step: "Deploy to Firebase" }], "Release").struggle).toMatch(/secrets/i);
     expect(diagnose([], "CI").cause).toMatch(/no individual step/);
     expect(diagnose([{ job: "x", step: "Mystery step" }], "Y").cause).toContain("Mystery step");
+  });
+  it("formats run durations like the Actions list", () => {
+    expect(formatDuration(null)).toBe("");
+    expect(formatDuration(45)).toBe("45s");
+    expect(formatDuration(83)).toBe("1m 23s");
+    expect(formatDuration(3725)).toBe("1h 2m");
   });
   it("formats a diagnosis and builds a prompt with steps as data", () => {
     expect(formatDiagnosis(diagnose([{ job: "b", step: "npm ci" }], "CI"))).toMatch(/\*\*How to fix it:\*\*\n1\./);

@@ -17,10 +17,10 @@ anti-vibecode rules (`12` §2) stay DevVerse's own. Everything also gains one th
 | Home | GitHub home, LinkedIn feed | Left identity card, centre activity, right suggestions | Every suggestion comes from your profile, one per tool |
 | Practice | LeetCode | Problem table (status, number, title, topics, easy / medium / hard colours), workspace with Description / Hints / Submissions tabs, editor with Testcase / Test Result console, Run vs Submit, prev / next; state in the URL (`?problem=`) | Coach hints instead of solutions; "why this problem" |
 | Community | Stack Overflow + Medium / Substack + dev.to | Vote column, accepted answer, tags, Q&A thread; articles in a 680 px serif reading column (Source Serif 4) with byline, read time and a clap / responses / copy-link bar; tabs and type filter in the URL | "For you" tab ranked by your struggles; one feed for 4 post types; similar-question check while writing |
-| Code | VS Code / github.dev | Activity bar, file tree, tabs, editor, side panel | "Explain this" panel by the Code Reviewer agent, at your level |
-| Ship | GitHub Actions + Vercel | Runs list with status dots, run detail with steps | DevOps agent explains why a run failed in plain words |
-| Jobs | LinkedIn Jobs + Wellfound | Filters, job list, job detail side by side, save | Match % from proven skills + your gap per job |
-| Teams | GitHub org + Linear | Members list, team overview | Team skill matrix, onboarding path per new member |
+| Code | VS Code / github.dev | Activity bar toggling Explorer and Code Reviewer, file-type icons, tabs, breadcrumbs, editor, status bar with Ln/Col; side bars take turns below 1280 px | "Explain this" panel by the Code Reviewer agent, at your level |
+| Ship | GitHub Actions + Vercel | Workflows sidebar, run rows (commit title, workflow #number, branch, time, duration), run page with summary, jobs list and steps with durations; repo, workflow, run and job in the URL | DevOps agent explains why a run failed in plain words |
+| Jobs | LinkedIn Jobs + Wellfound | Search plus filter chips, "Top job picks" list with skills-match line beside the job detail, How You Match, About the Job, save; filters and job in the URL | Match % from proven skills + your gap per job |
+| Teams | GitHub org + Linear | Team key and name, Overview / Members / Skills tabs, dense list rows with progress icons; tab and member in the URL | Team skill matrix, onboarding path per new member |
 | AI Mentor | ChatGPT / Gemini app | Chat with streaming answers | Knows your history |
 
 No real-time chat (D-05): Discord's role is covered by Community discussions.

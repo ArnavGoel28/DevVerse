@@ -13,9 +13,16 @@ export type Run = {
   createdAt: string;
   url: string;
   sha: string;
+  /** Commit message or PR title shown as the run title, like GitHub Actions. */
+  title: string;
+  runNumber: number;
+  actor: string;
+  durationSec: number | null;
 };
-export type Step = { name: string; number: number; status: string; conclusion: string | null };
-export type Job = { id: number; name: string; conclusion: string | null; status: string; steps: Step[] };
+export type Step = { name: string; number: number; status: string; conclusion: string | null; durationSec: number | null };
+export type Job = { id: number; name: string; conclusion: string | null; status: string; steps: Step[]; durationSec: number | null };
+
+const seconds = (start?: string | null, end?: string | null) => (start && end ? Math.max(0, Math.round((Date.parse(end) - Date.parse(start)) / 1000)) : null);
 export type FailedStep = { job: string; step: string };
 
 async function gh<T>(url: string): Promise<T> {
@@ -31,20 +38,28 @@ async function gh<T>(url: string): Promise<T> {
   return (await res.json()) as T;
 }
 
-type RawRun = { id: number; name: string | null; status: string; conclusion: string | null; head_branch: string | null; event: string; created_at: string; html_url: string; head_sha: string };
+type RawRun = {
+  id: number; name: string | null; status: string; conclusion: string | null; head_branch: string | null; event: string; created_at: string; html_url: string; head_sha: string;
+  display_title?: string; run_number?: number; actor?: { login: string } | null; run_started_at?: string; updated_at?: string;
+};
 
 export async function fetchRuns(ref: RepoRef): Promise<Run[]> {
   const data = await gh<{ workflow_runs: RawRun[] }>(`https://api.github.com/repos/${ref.owner}/${ref.repo}/actions/runs?per_page=20`);
   return data.workflow_runs.map((r) => ({
     id: r.id, name: r.name ?? "Workflow", status: r.status, conclusion: r.conclusion, branch: r.head_branch ?? "", event: r.event, createdAt: r.created_at, url: r.html_url, sha: r.head_sha.slice(0, 7),
+    title: r.display_title ?? r.name ?? "Workflow run", runNumber: r.run_number ?? 0, actor: r.actor?.login ?? "", durationSec: r.status === "completed" ? seconds(r.run_started_at, r.updated_at) : null,
   }));
 }
 
 export async function fetchJobs(ref: RepoRef, runId: number): Promise<Job[]> {
-  const data = await gh<{ jobs: { id: number; name: string; status: string; conclusion: string | null; steps?: Step[] }[] }>(
+  type RawStep = { name: string; number: number; status: string; conclusion: string | null; started_at?: string | null; completed_at?: string | null };
+  const data = await gh<{ jobs: { id: number; name: string; status: string; conclusion: string | null; started_at?: string | null; completed_at?: string | null; steps?: RawStep[] }[] }>(
     `https://api.github.com/repos/${ref.owner}/${ref.repo}/actions/runs/${runId}/jobs`,
   );
-  return data.jobs.map((j) => ({ id: j.id, name: j.name, status: j.status, conclusion: j.conclusion, steps: (j.steps ?? []).map((s) => ({ name: s.name, number: s.number, status: s.status, conclusion: s.conclusion })) }));
+  return data.jobs.map((j) => ({
+    id: j.id, name: j.name, status: j.status, conclusion: j.conclusion, durationSec: seconds(j.started_at, j.completed_at),
+    steps: (j.steps ?? []).map((s) => ({ name: s.name, number: s.number, status: s.status, conclusion: s.conclusion, durationSec: seconds(s.started_at, s.completed_at) })),
+  }));
 }
 
 export function failedSteps(jobs: Job[]): FailedStep[] {
@@ -88,4 +103,12 @@ export function buildCiSystem(profile: Pick<DeveloperProfile, "level" | "struggl
 
 export function buildCiPrompt(repo: string, workflow: string, steps: FailedStep[]): string {
   return `Repository: ${repo}\nWorkflow: ${workflow}\nFailed steps:\n${steps.map((s) => `- job "${s.job}", step "${s.step}"`).join("\n") || "- (none marked; run failed)"}`;
+}
+
+/** "1m 23s" / "45s", like the Actions run list. */
+export function formatDuration(sec: number | null): string {
+  if (sec === null) return "";
+  if (sec < 60) return `${sec}s`;
+  const m = Math.floor(sec / 60);
+  return m < 60 ? `${m}m ${sec % 60}s` : `${Math.floor(m / 60)}h ${m % 60}m`;
 }
