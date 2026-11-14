@@ -59,6 +59,20 @@ import {
   WarningIcon,
   XCircleIcon,
   XIcon,
+  BuildingsIcon,
+  CalendarBlankIcon,
+  CircleHalfIcon,
+  FileCodeIcon,
+  FileCssIcon,
+  FileHtmlIcon,
+  FileJsIcon,
+  FileMdIcon,
+  FileTsIcon,
+  FileTsxIcon,
+  FilesIcon,
+  FolderOpenIcon,
+  ListChecksIcon,
+  TimerIcon,
 } from "@phosphor-icons/react/dist/ssr";
 
 export type AppIcon = React.ComponentType<IconProps>;
@@ -129,3 +143,18 @@ export const User = decorative(UserCircleIcon);
 export const Users = decorative(UsersIcon);
 export const X = decorative(XIcon);
 export const XCircle = decorative(XCircleIcon);
+export const Buildings = decorative(BuildingsIcon);
+export const Calendar = decorative(CalendarBlankIcon);
+export const CircleHalf = decorative(CircleHalfIcon);
+export const FileCode = decorative(FileCodeIcon);
+export const FileCss = decorative(FileCssIcon);
+export const FileHtml = decorative(FileHtmlIcon);
+export const FileJs = decorative(FileJsIcon);
+export const FileMd = decorative(FileMdIcon);
+export const FileTs = decorative(FileTsIcon);
+export const FileTsx = decorative(FileTsxIcon);
+export const Files = decorative(FilesIcon);
+export const FolderOpen = decorative(FolderOpenIcon);
+export const Folder = decorative(FolderIcon);
+export const ListChecks = decorative(ListChecksIcon);
+export const Timer = decorative(TimerIcon);
